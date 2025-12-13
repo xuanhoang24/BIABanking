@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankingSystemAPI.Models.Users
+namespace BankingSystemAPI.Models.Users.Admin
 {
     public enum AdminRole
     {

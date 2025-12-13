@@ -1,7 +1,17 @@
+using BankingSystemMVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddHttpClient("BankingSystemAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7098/");
+});
+
+builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
 
 var app = builder.Build();
 

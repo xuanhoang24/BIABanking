@@ -18,6 +18,9 @@ namespace BankingSystemAPI.Models.Users
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
+        [Required]
+        public string PasswordSalt { get; set; } = string.Empty;
+
         [Required, StringLength(20)]
         public string PhoneNumber { get; set; } = string.Empty;
 
@@ -27,6 +30,9 @@ namespace BankingSystemAPI.Models.Users
         public string Address { get; set; } = string.Empty;
 
         public bool IsKYCVerified { get; set; } = false;
+
+        public int FailedLoginAttempts { get; set; } = 0;
+        public DateTime? LockedUntil { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
