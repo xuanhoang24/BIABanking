@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankingSystemMVC.Models.Auth
+namespace BankingSystemAPI.Models.DTOs.Auth
 {
-    public class RegisterViewModel
+    public class RegisterRequestDto
     {
         [Required]
         public string FirstName { get; set; } = string.Empty;
@@ -13,11 +13,8 @@ namespace BankingSystemMVC.Models.Auth
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
 
-        [Required, MinLength(3)]
+        [Required]
         public string Password { get; set; } = string.Empty;
-
-        [Required, Compare(nameof(Password))]
-        public string ConfirmPassword { get; set; } = string.Empty;
 
         [Required]
         public string PhoneNumber { get; set; } = string.Empty;
@@ -26,5 +23,4 @@ namespace BankingSystemMVC.Models.Auth
 
         public string Address { get; set; } = string.Empty;
     }
-
 }

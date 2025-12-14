@@ -4,39 +4,48 @@
 
 <form asp-action="Register" method="post">
     <div>
-        <label>First Name</label>
+        <label>First Name</label><br />
         <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName"></span>
     </div>
 
     <div>
-        <label>Last Name</label>
+        <label>Last Name</label><br />
         <input asp-for="LastName" />
-        <span asp-validation-for="LastName"></span>
     </div>
 
     <div>
-        <label>Email</label>
+        <label>Email</label><br />
         <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
     </div>
 
     <div>
-        <label>Password</label>
+        <label>Password</label><br />
         <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
     </div>
 
     <div>
-        <label>Confirm Password</label>
+        <label>Confirm Password</label><br />
         <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword"></span>
     </div>
+
+    <div>
+        <label>Phone Number</label><br />
+        <input asp-for="PhoneNumber" />
+    </div>
+
+    <div>
+        <label>Date of Birth</label><br />
+        <input asp-for="DateOfBirth" type="date" />
+    </div>
+
+    <div>
+        <label>Address</label><br />
+        <input asp-for="Address" />
+    </div>
+
+
 
     <button type="submit">Register</button>
-
-    <p>
-        Already have an account?
-        <a asp-action="Login">Login</a>
-    </p>
 </form>
+
+<div asp-validation-summary="All"></div>

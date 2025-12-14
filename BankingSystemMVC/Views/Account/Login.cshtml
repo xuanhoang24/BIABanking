@@ -4,21 +4,22 @@
 
 <form asp-action="Login" method="post">
     <div>
-        <label>Email</label>
+        <label>Email</label><br />
         <input asp-for="Email" />
         <span asp-validation-for="Email"></span>
     </div>
 
     <div>
-        <label>Password</label>
+        <label>Password</label><br />
         <input asp-for="Password" type="password" />
         <span asp-validation-for="Password"></span>
     </div>
 
     <button type="submit">Login</button>
-
-    <p>
-        No account?
-        <a asp-action="Register">Register</a>
-    </p>
 </form>
+
+<p> 
+    If dont have account yet: <a asp-action="Register">Register</a>
+</p>
+
+<div asp-validation-summary="All"></div>

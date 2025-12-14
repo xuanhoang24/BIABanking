@@ -1,6 +1,6 @@
 ﻿using BankingSystemMVC.Models.Auth;
 
-namespace BankingSystemMVC.Services
+namespace BankingSystemMVC.Services.Interfaces
 {
     public interface IAuthApiClient
     {

@@ -1,5 +1,5 @@
 ﻿using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Services;
+using BankingSystemMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Controllers
@@ -41,7 +41,9 @@ namespace BankingSystemMVC.Controllers
                 new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true,
+                    Secure = false, // localhost only
+                    SameSite = SameSiteMode.Lax,
+                    Path = "/",
                     Expires = result.ExpiresAt
                 }
             );

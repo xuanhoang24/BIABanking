@@ -1,8 +1,9 @@
 ﻿using BankingSystemMVC.Models.Auth;
+using BankingSystemMVC.Services.Interfaces;
 using System.Text;
 using System.Text.Json;
 
-namespace BankingSystemMVC.Services
+namespace BankingSystemMVC.Services.Implements
 {
     public class AuthApiClient : IAuthApiClient
     {
