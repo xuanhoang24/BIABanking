@@ -1,6 +1,7 @@
-﻿namespace BankingSystemAPI.Models.DTOs.Account
+﻿namespace BankingSystemAPI.Models.DTOs.Accounts
 {
-    public class AccountDto
+    // Used for a single account detail page
+    public class AccountDetailDto
     {
         public int Id { get; set; }
         public string AccountNumber { get; set; } = string.Empty;

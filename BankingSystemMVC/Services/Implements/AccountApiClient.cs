@@ -1,6 +1,7 @@
 ﻿using BankingSystemMVC.Models.Accounts;
 using BankingSystemMVC.Services.Interfaces;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace BankingSystemMVC.Services.Implements
@@ -31,5 +32,18 @@ namespace BankingSystemMVC.Services.Implements
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             ) ?? new();
         }
+
+        public async Task<bool> CreateAccountAsync(string token, CreateAccountViewModel model)
+        {
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var json = JsonSerializer.Serialize(model);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("api/accounts", content);
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

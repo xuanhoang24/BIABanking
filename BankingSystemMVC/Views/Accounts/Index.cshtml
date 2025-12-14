@@ -4,25 +4,44 @@
     ViewData["Title"] = "My Accounts";
 }
 
-<h2>My Accounts</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>My Accounts</h2>
 
-<table class="table table-striped">
+    <a asp-controller="Accounts"
+       asp-action="Create"
+       class="btn btn-primary">
+        + Create Account
+    </a>
+</div>
+
+<table class="table table-striped align-middle">
     <thead>
         <tr>
             <th>Account</th>
+            <th>Account Number</th>
             <th>Type</th>
             <th>Balance</th>
             <th>Status</th>
+            <th class="text-end">Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var a in Model)
         {
             <tr>
-                <td>@a.AccountName (@a.AccountNumber)</td>
+                <td>@a.AccountName</td>
+                <td>@a.AccountNumber</td>
                 <td>@a.AccountType</td>
                 <td>@a.Balance.ToString("C")</td>
                 <td>@a.Status</td>
+                <td class="text-end">
+                    <a asp-controller="Accounts"
+                       asp-action="Details"
+                       asp-route-id="@a.Id"
+                       class="btn btn-sm btn-outline-primary">
+                        Details
+                    </a>
+                </td>
             </tr>
         }
     </tbody>
