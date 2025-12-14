@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnChallenge = context =>
             {
                 context.HandleResponse();
-                context.Response.Redirect("/Account/Login");
+                context.Response.Redirect("/Auth/Login");
                 return Task.CompletedTask;
             }
         };
@@ -63,6 +63,7 @@ builder.Services.AddAuthorization();
 // App services
 builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
 builder.Services.AddScoped<IUserApiClient, UserApiClient>();
+builder.Services.AddScoped<IAccountApiClient, AccountApiClient>();
 
 var app = builder.Build();
 

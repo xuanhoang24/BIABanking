@@ -1,27 +1,34 @@
 ﻿using BankingSystemMVC.Models.Auth;
 using BankingSystemMVC.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Controllers
 {
-    public class AccountController : Controller
+    public class AuthController : Controller
     {
         private readonly IAuthApiClient _authApi;
 
-        public AccountController(IAuthApiClient authApi)
+        public AuthController(IAuthApiClient authApi)
         {
             _authApi = authApi;
         }
 
         // LOGIN
-
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
+            // If already logged in, redirect
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -31,7 +38,7 @@ namespace BankingSystemMVC.Controllers
 
             if (result == null)
             {
-                ModelState.AddModelError("", "Invalid email or password");
+                ModelState.AddModelError(string.Empty, "Invalid email or password");
                 return View(model);
             }
 
@@ -52,14 +59,19 @@ namespace BankingSystemMVC.Controllers
         }
 
         // REGISTER
-
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -69,7 +81,7 @@ namespace BankingSystemMVC.Controllers
 
             if (!success)
             {
-                ModelState.AddModelError("", "Registration failed");
+                ModelState.AddModelError(string.Empty, "Registration failed");
                 return View(model);
             }
 
@@ -77,10 +89,14 @@ namespace BankingSystemMVC.Controllers
         }
 
         // LOGOUT
-
+        [Authorize]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("access_token");
+            Response.Cookies.Delete("access_token", new CookieOptions
+            {
+                Path = "/"
+            });
+
             return RedirectToAction("Login");
         }
     }

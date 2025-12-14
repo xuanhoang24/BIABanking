@@ -18,11 +18,11 @@ namespace BankingSystemMVC.Controllers
         {
             var token = Request.Cookies["access_token"];
             if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Auth");
 
             var me = await _usersApi.GetMeAsync(token);
             if (me == null)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Auth");
 
             return View(me);
         }
