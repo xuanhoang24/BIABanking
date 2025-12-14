@@ -1,4 +1,5 @@
-﻿using BankingSystemMVC.Areas.Admin.Services.Interfaces;
+﻿using BankingSystemMVC.Areas.Admin.Models;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +10,26 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
     public class DashboardController : Controller
     {
         private readonly IAdminAuditApiClient _auditApi;
-        public DashboardController(IAdminAuditApiClient auditApi)
+        private readonly IAdminDashboardApiClient _dashboardApi;
+
+        public DashboardController(IAdminAuditApiClient auditApi, IAdminDashboardApiClient dashboardApi)
         {
             _auditApi = auditApi;
+            _dashboardApi = dashboardApi;
         }
 
         public async Task<IActionResult> Index()
         {
             var logs = await _auditApi.GetRecentAsync();
-            return View(logs);
+            var stats = await _dashboardApi.GetDashboardStatsAsync();
+
+            var viewModel = new DashboardViewModel
+            {
+                Stats = stats ?? new DashboardStatsViewModel(),
+                RecentAuditLogs = logs ?? new List<AuditLogViewModel>()
+            };
+
+            return View(viewModel);
         }
     }
 }

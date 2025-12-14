@@ -26,6 +26,7 @@ builder.Services.Configure<PasswordOptions>(
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<AdminUserService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 

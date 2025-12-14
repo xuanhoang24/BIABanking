@@ -1,4 +1,4 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.AuditLogViewModel>
+@model BankingSystemMVC.Areas.Admin.Models.DashboardViewModel
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -22,7 +22,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4>Total Users</h4>
-                            <h2>Coming Soon</h2>
+                            <h2>@Model.Stats.TotalUsers</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-users fa-2x"></i>
@@ -38,7 +38,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4>Active Accounts</h4>
-                            <h2>Coming Soon</h2>
+                            <h2>@Model.Stats.ActiveAccounts</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-credit-card fa-2x"></i>
@@ -54,7 +54,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4>Pending KYC</h4>
-                            <h2>Coming Soon</h2>
+                            <h2>@Model.Stats.PendingKYC</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-file-alt fa-2x"></i>
@@ -70,7 +70,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4>Today's Transactions</h4>
-                            <h2>Coming Soon</h2>
+                            <h2>@Model.Stats.TodaysTransactions</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-exchange-alt fa-2x"></i>
@@ -143,7 +143,7 @@
                     </a>
                 </div>
                 <div class="card-body p-0">
-                    @if (Model != null && Model.Any())
+                    @if (Model.RecentAuditLogs != null && Model.RecentAuditLogs.Any())
                     {
                         <div class="table-responsive">
                             <table class="table table-sm table-striped mb-0">
@@ -157,7 +157,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var log in Model)
+                                    @foreach (var log in Model.RecentAuditLogs)
                                     {
                                         <tr>
                                             <td>
