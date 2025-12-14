@@ -37,6 +37,7 @@ builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
 builder.Services.AddScoped<IUserApiClient, UserApiClient>();
 builder.Services.AddScoped<IAccountApiClient, AccountApiClient>();
 builder.Services.AddScoped<IAdminAuthApiClient, AdminAuthApiClient>();
+builder.Services.AddScoped<IAdminAuditApiClient, AdminAuditApiClient>();
 
 var app = builder.Build();
 

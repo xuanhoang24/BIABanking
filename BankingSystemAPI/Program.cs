@@ -59,10 +59,10 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("is_admin", "true"));
 });
 
-
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

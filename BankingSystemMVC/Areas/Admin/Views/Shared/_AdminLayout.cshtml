@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Banking System Admin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystemMVC.styles.css" asp-append-version="true" />
 </head>
@@ -49,7 +50,7 @@
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Audit" asp-action="Index">
                         <i class="fas fa-bell"></i> Audit Logs
                     </a>
                 </li>

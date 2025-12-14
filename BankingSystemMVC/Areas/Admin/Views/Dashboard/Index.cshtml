@@ -1,3 +1,4 @@
+@model List<BankingSystemMVC.Areas.Admin.Models.AuditLogViewModel>
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -135,16 +136,66 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    <h5>Recent Activity</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Activity</h5>
+                    <a href="@Url.Action("Index", "Audit", new { area = "Admin" })" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-external-link-alt"></i> View All
+                    </a>
                 </div>
-                <div class="card-body text-center">
-                    <div class="py-5">
-                        <i class="fas fa-clock fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">Coming Soon</h4>
-                        <p class="text-muted">Recent system activities will be displayed here</p>
-                    </div>
+                <div class="card-body p-0">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 100px;">Action</th>
+                                        <th style="width: 150px;">Entity</th>
+                                        <th style="width: 100px;">User ID</th>
+                                        <th>Description</th>
+                                        <th style="width: 160px;">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-primary">
+                                                    @log.ActionNumber
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    @log.Entity
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    @log.UserId
+                                                </small>
+                                            </td>
+                                            <td>@log.Description</td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    @log.Date
+                                                </small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <p class="mb-0">No recent audit activity</p>
+                        </div>
+                    }
                 </div>
+
             </div>
         </div>
 

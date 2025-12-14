@@ -1,6 +1,8 @@
 ﻿using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.Models;
 using BankingSystemAPI.Models.DTOs.Accounts;
+using BankingSystemAPI.Models.Users.Admin;
+using BankingSystemAPI.Services.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +17,12 @@ namespace BankingSystemAPI.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly AuditService _auditService;
 
-        public AccountsController(AppDbContext context)
+        public AccountsController(AppDbContext context, AuditService auditService)
         {
             _context = context;
+            _auditService = auditService;
         }
 
         // GET: api/accounts
@@ -67,6 +71,14 @@ namespace BankingSystemAPI.Controllers
 
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                AuditAction.AccountCreated,
+                "Account",
+                account.Id,
+                userId,
+                $"Account created with number {account.AccountNumber}"
+            );
 
             return Ok(new { account.Id });
         }

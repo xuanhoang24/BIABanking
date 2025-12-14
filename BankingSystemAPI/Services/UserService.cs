@@ -1,7 +1,8 @@
 ﻿using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models;
 using BankingSystemAPI.Models.Users;
+using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Security.Interfaces;
+using BankingSystemAPI.Services.Admin;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Services

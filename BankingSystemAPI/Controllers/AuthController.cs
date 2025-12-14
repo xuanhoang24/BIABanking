@@ -1,6 +1,8 @@
 ﻿using BankingSystemAPI.Models.DTOs.Auth;
+using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Security.Interfaces;
 using BankingSystemAPI.Services;
+using BankingSystemAPI.Services.Admin;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemAPI.Controllers
@@ -10,11 +12,13 @@ namespace BankingSystemAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly AuditService _auditService;
         private readonly IJwtTokenService _jwt;
 
-        public AuthController(UserService userService, IJwtTokenService jwt)
+        public AuthController(UserService userService, AuditService auditService, IJwtTokenService jwt)
         {
             _userService = userService;
+            _auditService = auditService;
             _jwt = jwt;
         }
 
@@ -29,6 +33,14 @@ namespace BankingSystemAPI.Controllers
                 request.PhoneNumber,
                 request.DateOfBirth,
                 request.Address
+            );
+
+            await _auditService.LogAsync(
+                AuditAction.UserRegistration,
+                "User",
+                user.Id,
+                user.Id,
+                $"User registered with email {user.Email}"
             );
 
             return Ok(new { user.Id });
