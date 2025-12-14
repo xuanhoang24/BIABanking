@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [AllowAnonymous]
     public class AdminAuthController : Controller
     {
         private readonly IAdminAuthApiClient _authApi;
@@ -16,12 +15,14 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(AdminLoginViewModel model)
         {

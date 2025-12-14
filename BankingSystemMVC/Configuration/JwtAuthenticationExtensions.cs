@@ -33,8 +33,13 @@ namespace BankingSystemMVC.Configuration
                         },
                         OnChallenge = context =>
                         {
-                            context.HandleResponse();
-                            context.Response.Redirect("/Auth/Login");
+                            // Only redirect if not in admin area and not already on login page
+                            if (!context.Request.Path.StartsWithSegments("/Admin") && 
+                                !context.Request.Path.StartsWithSegments("/Auth/Login"))
+                            {
+                                context.HandleResponse();
+                                context.Response.Redirect("/Auth/Login");
+                            }
                             return Task.CompletedTask;
                         }
                     };
@@ -57,8 +62,13 @@ namespace BankingSystemMVC.Configuration
                         },
                         OnChallenge = context =>
                         {
-                            context.HandleResponse();
-                            context.Response.Redirect("/Admin/AdminAuth/Login");
+                            // Only redirect if in admin area and not already on login page
+                            if (context.Request.Path.StartsWithSegments("/Admin") && 
+                                !context.Request.Path.StartsWithSegments("/Admin/AdminAuth/Login"))
+                            {
+                                context.HandleResponse();
+                                context.Response.Redirect("/Admin/AdminAuth/Login");
+                            }
                             return Task.CompletedTask;
                         }
                     };
@@ -72,8 +82,11 @@ namespace BankingSystemMVC.Configuration
                 {
                     policy.AuthenticationSchemes.Add("AdminScheme");
                     policy.RequireAuthenticatedUser();
-                    policy.RequireRole("Admin");
+                    policy.RequireClaim("is_admin", "true");
                 });
+                
+                // Default policy allows anonymous access
+                options.FallbackPolicy = null;
             });
 
             return services;
