@@ -28,7 +28,8 @@ namespace BankingSystemMVC.Controllers
             return View(accounts);
         }
 
-
+        // CREATE ACCOUNT
+        // GET: /Accounts/Create
         [HttpGet]
         public IActionResult Create()
         {
@@ -57,12 +58,20 @@ namespace BankingSystemMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ACCOUNT DETAILS (future)
+        // ACCOUNT DETAILS
         // GET: /Accounts/Details/{id}
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            // Placeholder
-            return NotFound();
+            var token = Request.Cookies["access_token"];
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Login", "Account");
+
+            var account = await _accountApi.GetAccountDetailAsync(id, token);
+
+            if (account == null)
+                return RedirectToAction("Index");
+
+            return View(account);
         }
     }
 }

@@ -71,6 +71,34 @@ namespace BankingSystemAPI.Controllers
             return Ok(new { account.Id });
         }
 
+        // GET: api/accounts/{id}
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetAccountDetail(int id)
+        {
+            var userId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!
+            );
+
+            var account = await _context.Accounts
+                .Where(a => a.Id == id && a.UserId == userId)
+                .Select(a => new AccountDetailDto
+                {
+                    Id = a.Id,
+                    AccountNumber = a.AccountNumber,
+                    AccountName = a.AccountName,
+                    AccountType = a.AccountType.ToString(),
+                    Balance = a.Balance,
+                    Status = a.Status.ToString()
+                })
+                .FirstOrDefaultAsync();
+
+            if (account == null)
+                return NotFound();
+
+            return Ok(account);
+        }
+
         // Helpers
         private async Task<string> GenerateUniqueAccountNumberAsync()
         {

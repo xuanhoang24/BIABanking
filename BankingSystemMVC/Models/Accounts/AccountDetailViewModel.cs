@@ -1,6 +1,6 @@
 ﻿namespace BankingSystemMVC.Models.Accounts
 {
-    public class AccountViewModel
+    public class AccountDetailViewModel
     {
         public int Id { get; set; }
         public string AccountNumber { get; set; } = string.Empty;

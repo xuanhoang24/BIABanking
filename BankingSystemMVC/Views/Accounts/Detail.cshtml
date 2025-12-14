@@ -1,0 +1,32 @@
+﻿@model BankingSystemMVC.Models.Accounts.AccountDetailViewModel
+
+@{
+    ViewData["Title"] = "Account Detail";
+}
+
+<h2>Account Detail</h2>
+
+<table class="table">
+    <tr>
+        <th>Account Name</th>
+        <td>@Model.AccountName</td>
+    </tr>
+    <tr>
+        <th>Account Number</th>
+        <td>@Model.AccountNumber</td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>@Model.AccountType</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>@Model.Status</td>
+    </tr>
+    <tr>
+        <th>Balance</th>
+        <td>@Model.Balance.ToString("C")</td>
+    </tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>

@@ -15,7 +15,7 @@ namespace BankingSystemMVC.Services.Implements
             _client = factory.CreateClient("BankingSystemAPI");
         }
 
-        public async Task<List<AccountViewModel>> GetMyAccountsAsync(string token)
+        public async Task<List<AccountSummaryViewModel>> GetMyAccountsAsync(string token)
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -23,11 +23,11 @@ namespace BankingSystemMVC.Services.Implements
             var response = await _client.GetAsync("api/accounts");
 
             if (!response.IsSuccessStatusCode)
-                return new List<AccountViewModel>();
+                return new List<AccountSummaryViewModel>();
 
             var json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<List<AccountViewModel>>(
+            return JsonSerializer.Deserialize<List<AccountSummaryViewModel>>(
                 json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             ) ?? new();
@@ -45,5 +45,22 @@ namespace BankingSystemMVC.Services.Implements
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string token)
+        {
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _client.GetAsync($"api/accounts/{accountId}");
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<AccountDetailViewModel>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+        }
     }
 }

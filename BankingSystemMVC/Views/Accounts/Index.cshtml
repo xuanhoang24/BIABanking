@@ -1,4 +1,4 @@
-﻿@model List<BankingSystemMVC.Models.Accounts.AccountViewModel>
+﻿@model List<BankingSystemMVC.Models.Accounts.AccountSummaryViewModel>
 
 @{
     ViewData["Title"] = "My Accounts";
@@ -36,7 +36,7 @@
                 <td>@a.Status</td>
                 <td class="text-end">
                     <a asp-controller="Accounts"
-                       asp-action="Details"
+                       asp-action="Detail"
                        asp-route-id="@a.Id"
                        class="btn btn-sm btn-outline-primary">
                         Details
