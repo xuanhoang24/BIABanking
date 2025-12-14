@@ -11,7 +11,7 @@ namespace BankingSystemMVC.Services.Implements
 
         public AuthApiClient(IHttpClientFactory factory)
         {
-            _client = factory.CreateClient("BankingSystemAPI");
+            _client = factory.CreateClient("UserApi");
         }
 
         public async Task<LoginResponseDto?> LoginAsync(LoginViewModel model)

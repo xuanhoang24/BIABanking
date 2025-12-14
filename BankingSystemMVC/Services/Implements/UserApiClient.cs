@@ -11,14 +11,11 @@ namespace BankingSystemMVC.Services.Implements
 
         public UserApiClient(IHttpClientFactory factory)
         {
-            _client = factory.CreateClient("BankingSystemAPI");
+            _client = factory.CreateClient("UserApi");
         }
 
-        public async Task<UserMeViewModel?> GetMeAsync(string accessToken)
+        public async Task<UserMeViewModel?> GetMeAsync()
         {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-
             var response = await _client.GetAsync("api/users/me");
 
             if (!response.IsSuccessStatusCode)
@@ -32,4 +29,5 @@ namespace BankingSystemMVC.Services.Implements
             );
         }
     }
+
 }

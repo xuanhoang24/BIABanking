@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankingSystemMVC.Controllers
+namespace BankingSystemMVC.Controllers.User
 {
     [Authorize]
     public class ProfileController : Controller
@@ -16,11 +16,7 @@ namespace BankingSystemMVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var token = Request.Cookies["access_token"];
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Auth");
-
-            var me = await _usersApi.GetMeAsync(token);
+            var me = await _usersApi.GetMeAsync();
             if (me == null)
                 return RedirectToAction("Login", "Auth");
 

@@ -8,7 +8,6 @@ namespace BankingSystemMVC.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthApiClient _authApi;
-
         public AuthController(IAuthApiClient authApi)
         {
             _authApi = authApi;
@@ -42,9 +41,7 @@ namespace BankingSystemMVC.Controllers
                 return View(model);
             }
 
-            Response.Cookies.Append(
-                "access_token",
-                result.AccessToken,
+            Response.Cookies.Append("user_access_token", result.AccessToken,
                 new CookieOptions
                 {
                     HttpOnly = true,
@@ -92,7 +89,7 @@ namespace BankingSystemMVC.Controllers
         [Authorize]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("access_token", new CookieOptions
+            Response.Cookies.Delete("user_access_token", new CookieOptions
             {
                 Path = "/"
             });

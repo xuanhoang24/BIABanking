@@ -1,5 +1,5 @@
 ﻿using BankingSystemAPI.Models.DTOs.Auth;
-using BankingSystemAPI.Security;
+using BankingSystemAPI.Security.Interfaces;
 using BankingSystemAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +45,7 @@ namespace BankingSystemAPI.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var token = _jwt.GenerateToken(user);
+            var token = _jwt.GenerateUserToken(user);
 
             return Ok(new LoginResponseDto
             {

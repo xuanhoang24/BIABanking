@@ -28,6 +28,9 @@ namespace BankingSystemAPI.Models.Users.Admin
         public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
+        public string PasswordSalt { get; set; } = string.Empty;
+
+        [Required]
         public AdminRole Role { get; set; }
 
         public bool IsActive { get; set; } = true;

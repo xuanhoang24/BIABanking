@@ -3,7 +3,7 @@ using BankingSystemMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankingSystemMVC.Controllers
+namespace BankingSystemMVC.Controllers.User
 {
     [Authorize]
     public class AccountsController : Controller
@@ -19,12 +19,7 @@ namespace BankingSystemMVC.Controllers
         // GET: /Accounts
         public async Task<IActionResult> Index()
         {
-            var token = Request.Cookies["access_token"];
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Account");
-
-            var accounts = await _accountApi.GetMyAccountsAsync(token);
-
+            var accounts = await _accountApi.GetMyAccountsAsync();
             return View(accounts);
         }
 
@@ -43,15 +38,11 @@ namespace BankingSystemMVC.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var token = Request.Cookies["access_token"];
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Auth");
-
-            var success = await _accountApi.CreateAccountAsync(token, model);
+            var success = await _accountApi.CreateAccountAsync(model);
 
             if (!success)
             {
-                ModelState.AddModelError("", "Failed to create account");
+                ModelState.AddModelError(string.Empty, "Failed to create account");
                 return View(model);
             }
 
@@ -62,14 +53,10 @@ namespace BankingSystemMVC.Controllers
         // GET: /Accounts/Details/{id}
         public async Task<IActionResult> Detail(int id)
         {
-            var token = Request.Cookies["access_token"];
-            if (string.IsNullOrEmpty(token))
-                return RedirectToAction("Login", "Account");
-
-            var account = await _accountApi.GetAccountDetailAsync(id, token);
+            var account = await _accountApi.GetAccountDetailAsync(id);
 
             if (account == null)
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
 
             return View(account);
         }

@@ -4,6 +4,6 @@ namespace BankingSystemMVC.Services.Interfaces
 {
     public interface IUserApiClient
     {
-        Task<UserMeViewModel?> GetMeAsync(string accessToken);
+        Task<UserMeViewModel?> GetMeAsync();
     }
 }

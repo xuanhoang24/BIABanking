@@ -1,10 +1,12 @@
 ﻿using BankingSystemAPI.Models.Users;
+using BankingSystemAPI.Models.Users.Admin;
+using BankingSystemAPI.Security.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BankingSystemAPI.Security
+namespace BankingSystemAPI.Security.Implements
 {
     public class JwtTokenService : IJwtTokenService
     {
@@ -15,16 +17,33 @@ namespace BankingSystemAPI.Security
             _config = config;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateUserToken(User user)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("firstname", user.FirstName)
-
             };
 
+            return BuildToken(claims, 15);
+        }
+
+        public string GenerateAdminToken(AdminUser admin)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, admin.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, admin.Email),
+                new Claim("is_admin", "true"),
+                new Claim(ClaimTypes.Role, admin.Role.ToString())
+            };
+
+            return BuildToken(claims, 30);
+        }
+
+        private string BuildToken(Claim[] claims, int minutes)
+        {
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config["Jwt:Key"])
             );
@@ -35,7 +54,7 @@ namespace BankingSystemAPI.Security
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(15),
+                expires: DateTime.UtcNow.AddMinutes(minutes),
                 signingCredentials: creds
             );
 

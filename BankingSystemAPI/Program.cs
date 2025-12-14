@@ -1,7 +1,10 @@
 using BankingSystemAPI.DataLayer;
+using BankingSystemAPI.DataLayer.Seed;
 using BankingSystemAPI.Models.Security;
-using BankingSystemAPI.Security;
+using BankingSystemAPI.Security.Implements;
+using BankingSystemAPI.Security.Interfaces;
 using BankingSystemAPI.Services;
+using BankingSystemAPI.Services.Admin;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,7 +25,9 @@ builder.Services.Configure<PasswordOptions>(
 // Services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuditService>();
+builder.Services.AddScoped<AdminUserService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,9 +53,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireClaim("is_admin", "true"));
+});
+
+
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -61,10 +72,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+
+await AdminSeeder.SeedAsync(app.Services);
 
 app.Run();
