@@ -1,0 +1,29 @@
+﻿@model List<BankingSystemMVC.Models.Accounts.AccountViewModel>
+
+@{
+    ViewData["Title"] = "My Accounts";
+}
+
+<h2>My Accounts</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Account</th>
+            <th>Type</th>
+            <th>Balance</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.AccountName (@a.AccountNumber)</td>
+                <td>@a.AccountType</td>
+                <td>@a.Balance.ToString("C")</td>
+                <td>@a.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
