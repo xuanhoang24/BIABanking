@@ -92,41 +92,37 @@ namespace BankingSystemAPI.Controllers.Accounts
                 ?? User.FindFirstValue("sub")!
             );
 
-            // Load account first
             var account = await _context.Accounts
                 .Where(a => a.Id == id && a.CustomerId == customerId)
                 .Select(a => new AccountDetailDto
                 {
                     Id = a.Id,
-                    AccountName = a.AccountName,
                     AccountNumber = a.AccountNumber,
+                    AccountName = a.AccountName,
                     AccountType = a.AccountType.ToString(),
-                    Status = a.Status.ToString(),
-                    Balance = a.Balance
+                    Balance = a.Balance,
+                    Status = a.Status.ToString()
                 })
                 .FirstOrDefaultAsync();
 
             if (account == null)
                 return NotFound();
 
-            // Load transactions separately
-            account.RecentTransactions = await _context.Transactions
-                .Where(t =>
-                    (t.FromAccountId == account.Id || t.ToAccountId == account.Id) &&
-                    t.Status == TransactionStatus.Completed
-                )
-                .OrderByDescending(t => t.ProcessedAt)
+            account.RecentTransactions = await _context.LedgerEntries
+                .Where(l => l.AccountId == account.Id)
+                .OrderByDescending(l => l.CreatedAt)
                 .Take(10)
-                .Select(t => new AccountTransactionDto
+                .Select(l => new AccountTransactionDto
                 {
-                    Date = t.ProcessedAt,
-                    Type = t.Type.ToString(),
-                    Description = t.Description,
-                    Amount =
-                        t.ToAccountId == account.Id
-                            ? t.Amount
-                            : -t.Amount,
-                    Status = t.Status.ToString()
+                    Reference = l.Transaction!.TransactionReference,
+                    Date = l.CreatedAt,
+                    Type = l.Transaction!.Type.ToString(),
+                    Description = l.Description,
+                    Amount = l.EntryType == EntryType.Debit
+                        ? -l.Amount
+                        : l.Amount,
+                    PostBalance = l.PostTransactionBalance,
+                    Status = l.Transaction!.Status.ToString()
                 })
                 .ToListAsync();
 

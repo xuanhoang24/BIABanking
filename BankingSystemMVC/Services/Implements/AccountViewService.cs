@@ -13,9 +13,7 @@ namespace BankingSystemMVC.Services.Implements
             _accountApi = accountApi;
         }
 
-        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(
-            int accountId,
-            string timeZoneId)
+        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string timeZoneId)
         {
             var apiResult = await _accountApi.GetAccountDetailAsync(accountId);
             if (apiResult == null)
@@ -24,14 +22,14 @@ namespace BankingSystemMVC.Services.Implements
             apiResult.RecentTransactions = apiResult.RecentTransactions
                 .Select(t => new AccountTransactionViewModel
                 {
-                    Amount = t.Amount,
-                    Description = t.Description,
-                    Status = t.Status,
+                    Date = t.Date,
+                    LocalTime = TimeZoneHelper.ConvertUtcToLocal(t.Date, timeZoneId),
                     Type = t.Type,
-                    LocalTime = TimeZoneHelper.ConvertUtcToLocal(
-                        t.Date,
-                        timeZoneId
-                    )
+                    Description = t.Description,
+                    Amount = t.Amount,
+                    PostBalance = t.PostBalance,
+                    Status = t.Status,
+                    Reference = t.Reference
                 })
                 .ToList();
 

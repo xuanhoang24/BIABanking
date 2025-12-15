@@ -1,0 +1,40 @@
+﻿@model BankingSystemMVC.Models.Accounts.Transactions.TransactionConfirmViewModel
+
+<h2>@Model.Title</h2>
+
+<div class="card">
+    <div class="card-body">
+
+        <p class="fw-bold text-success">
+            @Model.Type successful
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.FromAccountNumber))
+        {
+            <p>
+                <strong>From account:</strong> @Model.FromAccountNumber
+            </p>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ToAccountNumber))
+        {
+            <p>
+                <strong>To account:</strong> @Model.ToAccountNumber
+            </p>
+        }
+
+        <p>
+            <strong>Amount:</strong> @Model.Amount.ToString("C")
+        </p>
+
+        <p>
+            <strong>Reference:</strong> @Model.Reference
+        </p>
+    </div>
+</div>
+
+<a asp-controller="Accounts"
+   asp-action="Index"
+   class="btn btn-primary mt-3">
+    Go back
+</a>

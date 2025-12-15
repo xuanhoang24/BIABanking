@@ -10,10 +10,19 @@ namespace BankingSystemMVC.Controllers.Accounts
     {
         private readonly ITransactionApiClient _transactionApi;
         private readonly IAccountApiClient _accountApi;
-        public TransactionsController(ITransactionApiClient transactionApi, IAccountApiClient accountApiClient)
+
+        public TransactionsController(
+            ITransactionApiClient transactionApi,
+            IAccountApiClient accountApi)
         {
             _transactionApi = transactionApi;
-            _accountApi = accountApiClient;
+            _accountApi = accountApi;
+        }
+
+        [HttpGet]
+        public IActionResult Confirm(TransactionConfirmViewModel vm)
+        {
+            return View(vm);
         }
 
         // DEPOSIT
@@ -30,13 +39,19 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (!await _transactionApi.DepositAsync(model))
-            {
-                ModelState.AddModelError("", "Deposit failed");
-                return View(model);
-            }
+            var reference = await _transactionApi.DepositAsync(model);
 
-            return RedirectToAction("Index", "Accounts");
+            var account = (await _accountApi.GetMyAccountsAsync())
+                .First(a => a.Id == model.AccountId);
+
+            return RedirectToAction("Confirm", new TransactionConfirmViewModel
+            {
+                Title = "Deposit Confirmation",
+                Type = "Deposit",
+                ToAccountNumber = account.AccountNumber,
+                Amount = model.Amount,
+                Reference = reference
+            });
         }
 
         // WITHDRAW
@@ -53,27 +68,29 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (!await _transactionApi.WithdrawAsync(model))
-            {
-                ModelState.AddModelError("", "Withdraw failed");
-                return View(model);
-            }
+            var reference = await _transactionApi.WithdrawAsync(model);
 
-            return RedirectToAction("Index", "Accounts");
+            var account = (await _accountApi.GetMyAccountsAsync())
+                .First(a => a.Id == model.AccountId);
+
+            return RedirectToAction("Confirm", new TransactionConfirmViewModel
+            {
+                Title = "Withdraw Confirmation",
+                Type = "Withdraw",
+                FromAccountNumber = account.AccountNumber,
+                Amount = model.Amount,
+                Reference = reference
+            });
         }
 
         // TRANSFER
         [HttpGet]
         public async Task<IActionResult> Transfer()
         {
-            var accounts = await _accountApi.GetMyAccountsAsync();
-
-            var vm = new TransferPageViewModel
+            return View(new TransferPageViewModel
             {
-                Accounts = accounts
-            };
-
-            return View(vm);
+                Accounts = await _accountApi.GetMyAccountsAsync()
+            });
         }
 
         [HttpPost]
@@ -86,51 +103,39 @@ namespace BankingSystemMVC.Controllers.Accounts
                 return View(vm);
             }
 
-            var model = vm.Transfer;
             var accounts = await _accountApi.GetMyAccountsAsync();
             vm.Accounts = accounts;
 
-            // INTERNAL TRANSFER
-            if (model.TransferType == "Internal")
+            var fromAccount = accounts.First(a => a.Id == vm.Transfer.FromAccountId);
+
+            if (vm.Transfer.TransferType == "Internal")
             {
-                if (!model.ToAccountId.HasValue)
+                if (!vm.Transfer.ToAccountId.HasValue)
                 {
                     ModelState.AddModelError("", "Please select destination account");
-                    vm.Accounts = await _accountApi.GetMyAccountsAsync();
                     return View(vm);
                 }
 
-                var toAccount = accounts
-                    .FirstOrDefault(a => a.Id == model.ToAccountId.Value);
+                var toAccountInternal = accounts
+                    .First(a => a.Id == vm.Transfer.ToAccountId.Value);
 
-                if (toAccount == null)
-                {
-                    ModelState.AddModelError("", "Invalid destination account");
-                    return View(vm);
-                }
-
-                model.ToAccountNumber = toAccount.AccountNumber;
+                vm.Transfer.ToAccountNumber = toAccountInternal.AccountNumber;
             }
 
-            // EXTERNAL TRANSFER
-            if (model.TransferType == "External")
+            var reference = await _transactionApi.TransferAsync(vm.Transfer);
+
+            var toAccount = accounts
+                .First(a => a.AccountNumber == vm.Transfer.ToAccountNumber);
+
+            return RedirectToAction("Confirm", new TransactionConfirmViewModel
             {
-                if (string.IsNullOrWhiteSpace(model.ToAccountNumber))
-                {
-                    ModelState.AddModelError("", "Please enter destination account number");
-                    vm.Accounts = await _accountApi.GetMyAccountsAsync();
-                    return View(vm);
-                }
-            }
-
-            if (!await _transactionApi.TransferAsync(model))
-            {
-                ModelState.AddModelError("", "Transfer failed");
-                vm.Accounts = await _accountApi.GetMyAccountsAsync();
-                return View(vm);
-            }
-
-            return RedirectToAction("Index", "Accounts");
+                Title = "Transfer Confirmation",
+                Type = "Transfer",
+                FromAccountNumber = fromAccount.AccountNumber,
+                ToAccountNumber = toAccount.AccountNumber,
+                Amount = vm.Transfer.Amount,
+                Reference = reference
+            });
         }
 
         // PAYMENT
@@ -147,13 +152,19 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (!await _transactionApi.PaymentAsync(model))
-            {
-                ModelState.AddModelError("", "Payment failed");
-                return View(model);
-            }
+            var reference = await _transactionApi.PaymentAsync(model);
 
-            return RedirectToAction("Index", "Accounts");
+            var account = (await _accountApi.GetMyAccountsAsync())
+                .First(a => a.Id == model.AccountId);
+
+            return RedirectToAction("Confirm", new TransactionConfirmViewModel
+            {
+                Title = "Payment Confirmation",
+                Type = "Payment",
+                FromAccountNumber = account.AccountNumber,
+                Amount = model.Amount,
+                Reference = reference
+            });
         }
     }
 }

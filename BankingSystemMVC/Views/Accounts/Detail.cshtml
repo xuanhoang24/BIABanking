@@ -62,26 +62,45 @@
     <div class="card-header">
         <h5>Recent Transactions</h5>
     </div>
+
     <div class="card-body p-0">
         @if (Model.RecentTransactions.Any())
         {
-            <table class="table table-striped mb-0">
-                <thead>
+            <table class="table table-borderless mb-0 align-middle">
+                <thead class="table-light">
                     <tr>
-                        <th>Amount</th>
-                        <th>Description</th>
                         <th>Date</th>
+                        <th>Transactions</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-end">Balance</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var tx in Model.RecentTransactions)
                     {
                         <tr>
-                            <td class="fw-bold @(tx.Amount >= 0 ? "text-success" : "text-danger")">
-                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
+                            <td>
+                                <div class="fw-semibold">
+                                    @tx.Date.ToString("MMM dd")
+                                </div>
+                                <div class="text-muted small">
+                                    @tx.Date.ToString("HH:mm")
+                                </div>
                             </td>
-                            <td>@tx.Description</td>
-                            <td>@tx.LocalTime</td>
+                            <td>
+                                <div class="fw-semibold">
+                                    @tx.Type
+                                </div>
+                                <div class="text-muted small">
+                                    @tx.Reference
+                                </div>
+                            </td>
+                            <td class="text-end fw-semibold @(tx.Amount >= 0 ? "text-success" : "text-danger")">
+                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("0.##")
+                            </td>
+                            <td class="text-end fw-semibold">
+                                @tx.PostBalance.ToString("0.##")
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -90,11 +109,12 @@
         else
         {
             <div class="text-center text-muted py-4">
-                No recent transactions found
+                No recent transactions
             </div>
         }
     </div>
 </div>
+
 
 
 <a asp-action="Index" class="btn btn-secondary">Back</a>
