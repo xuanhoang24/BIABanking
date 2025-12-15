@@ -18,15 +18,15 @@ namespace BankingSystemAPI.Services.Admin.Implements
         public async Task<DashboardStatsDto> GetDashboardStatsAsync()
         {
             var totalCustomers = await _context.Customers.CountAsync();
-            
+
             var activeAccounts = await _context.Accounts
                 .Where(a => a.Status == AccountStatus.Active)
                 .CountAsync();
-            
+
             var pendingKYC = await _context.Customers
                 .Where(u => !u.IsKYCVerified)
                 .CountAsync();
-            
+
             var todaysTransactions = await _context.Transactions
                 .Where(t => t.CreatedAt.Date == DateTime.Today)
                 .CountAsync();

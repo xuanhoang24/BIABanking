@@ -20,7 +20,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
         }
 
         // DEPOSIT
-        public async Task DepositAsync(int customerId, int accountId, decimal amount, string? description)
+        public async Task<string> DepositAsync(int customerId, int accountId, decimal amount, string? description)
         {
             var amountInCents = ValidateAmount(amount);
 
@@ -47,13 +47,17 @@ namespace BankingSystemAPI.Services.Customer.Implements
                 "Deposit"
             );
 
-            await LogAsync($"Deposit of ${amount:F2} to account {account.AccountNumber}", transaction.Id, customerId);
+            await LogAsync($"Deposit of ${amount:F2} to account {account.AccountNumber} (Ref: {transaction.TransactionReference})",
+                transaction.Id,
+                customerId);
 
             await tx.CommitAsync();
+
+            return transaction.TransactionReference;
         }
 
         // WITHDRAW
-        public async Task WithdrawAsync(int customerId, int accountId, decimal amount, string? description)
+        public async Task<string> WithdrawAsync(int customerId, int accountId, decimal amount, string? description)
         {
             var amountInCents = ValidateAmount(amount);
 
@@ -82,13 +86,18 @@ namespace BankingSystemAPI.Services.Customer.Implements
                 "Withdrawal"
             );
 
-            await LogAsync($"Withdrawal of ${amount:F2} from account {account.AccountNumber}", transaction.Id, customerId);
+            await LogAsync(
+                $"Withdrawal of ${amount:F2} from account {account.AccountNumber} (Ref: {transaction.TransactionReference})",
+                transaction.Id,
+                customerId);
 
             await tx.CommitAsync();
+
+            return transaction.TransactionReference;
         }
 
         // TRANSFER
-        public async Task TransferAsync(int customerId, int fromAccountId, string toAccountNumber, decimal amount, string? description)
+        public async Task<string> TransferAsync(int customerId, int fromAccountId, string toAccountNumber, decimal amount, string? description)
         {
             var amountInCents = ValidateAmount(amount);
 
@@ -114,7 +123,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
 
             var transaction = new Transaction
             {
-                TransactionReference = GenerateReference(),
+                TransactionReference = GenerateReference(GetPrefix(TransactionType.Transfer)),
                 Type = TransactionType.Transfer,
                 Status = TransactionStatus.Completed,
                 AmountInCents = amountInCents,
@@ -157,15 +166,17 @@ namespace BankingSystemAPI.Services.Customer.Implements
                 "Transaction",
                 transaction.Id,
                 customerId,
-                $"Transfer of ${amount:F2} from account {fromAccount.AccountNumber} to {toAccount.AccountNumber}"
+                $"Transfer of ${amount:F2} from account {fromAccount.AccountNumber} to {toAccount.AccountNumber} (Ref: {transaction.TransactionReference})"
             );
 
             await tx.CommitAsync();
+
+            return transaction.TransactionReference;
         }
 
 
         // PAYMENT
-        public async Task PaymentAsync(int customerId, int accountId, decimal amount, string merchant)
+        public async Task<string> PaymentAsync(int customerId, int accountId, decimal amount, string merchant)
         {
             var amountInCents = ValidateAmount(amount);
 
@@ -195,12 +206,14 @@ namespace BankingSystemAPI.Services.Customer.Implements
             );
 
             await LogAsync(
-                $"Payment of ${amount:F2} to {merchant} from account {account.AccountNumber}",
+                $"Payment of ${amount:F2} to {merchant} from account {account.AccountNumber} (Ref: {transaction.TransactionReference})",
                 transaction.Id,
                 customerId
             );
 
             await tx.CommitAsync();
+
+            return transaction.TransactionReference;
         }
 
         // HELPERS
@@ -257,7 +270,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
             );
         }
 
-        private static Transaction CreateTransaction( 
+        private static Transaction CreateTransaction(
             TransactionType type,
             long amountInCents,
             Account? fromAccount = null,
@@ -267,7 +280,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
         {
             return new Transaction
             {
-                TransactionReference = GenerateReference(),
+                TransactionReference = GenerateReference(GetPrefix(type)),
                 Type = type,
                 Status = TransactionStatus.Completed,
                 AmountInCents = amountInCents,
@@ -281,9 +294,28 @@ namespace BankingSystemAPI.Services.Customer.Implements
             };
         }
 
-        private static string GenerateReference()
+        private static string GenerateReference(string prefix = "TX")
         {
-            return $"TX-{DateTime.UtcNow:yyyyMMdd}-{RandomNumberGenerator.GetInt32(100000, 999999)}";
+            var datePart = DateTime.UtcNow.ToString("yyyyMMdd");
+
+            var randomBytes = RandomNumberGenerator.GetBytes(4); // 8 hex chars
+            var hexPart = Convert.ToHexString(randomBytes);
+
+            return $"{prefix}-{datePart}-{hexPart}";
+        }
+
+        private static string GetPrefix(TransactionType type)
+        {
+            return type switch
+            {
+                TransactionType.Deposit => "DEP",
+                TransactionType.Withdrawal => "WIT",
+                TransactionType.Transfer => "TXN",
+                TransactionType.Fee => "FEE",
+                TransactionType.Interest => "INT",
+                TransactionType.Refund => "REF",
+                _ => "TXN"
+            };
         }
     }
 }

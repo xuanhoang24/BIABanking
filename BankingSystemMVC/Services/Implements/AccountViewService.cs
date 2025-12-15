@@ -4,7 +4,7 @@ using BankingSystemMVC.Services.Interfaces;
 
 namespace BankingSystemMVC.Services.Implements
 {
-public class AccountViewService : IAccountViewService
+    public class AccountViewService : IAccountViewService
     {
         private readonly IAccountApiClient _accountApi;
 

@@ -30,35 +30,35 @@ namespace BankingSystemAPI.Controllers.Accounts
         [HttpPost("deposit")]
         public async Task<IActionResult> Deposit(DepositRequestDto dto)
         {
-            await _transactionService.DepositAsync(
+            var reference = await _transactionService.DepositAsync(
                 GetCustomerId(),
                 dto.AccountId,
                 dto.Amount,
                 dto.Description
             );
 
-            return Ok();
+            return Ok(new TransactionResultDto { Reference = reference });
         }
 
         // WITHDRAW
         [HttpPost("withdraw")]
         public async Task<IActionResult> Withdraw(WithdrawRequestDto dto)
         {
-            await _transactionService.WithdrawAsync(
+            var reference = await _transactionService.WithdrawAsync(
                 GetCustomerId(),
                 dto.AccountId,
                 dto.Amount,
                 dto.Description
             );
 
-            return Ok();
+            return Ok(new TransactionResultDto { Reference = reference });
         }
 
         // TRANSFER
         [HttpPost("transfer")]
         public async Task<IActionResult> Transfer(TransferRequestDto dto)
         {
-            await _transactionService.TransferAsync(
+            var reference = await _transactionService.TransferAsync(
                 GetCustomerId(),
                 dto.FromAccountId,
                 dto.ToAccountNumber,
@@ -66,21 +66,21 @@ namespace BankingSystemAPI.Controllers.Accounts
                 dto.Description
             );
 
-            return Ok();
+            return Ok(new TransactionResultDto { Reference = reference });
         }
 
         // PAYMENT
         [HttpPost("payment")]
         public async Task<IActionResult> Payment(PaymentRequestDto dto)
         {
-            await _transactionService.PaymentAsync(
+            var reference = await _transactionService.PaymentAsync(
                 GetCustomerId(),
                 dto.AccountId,
                 dto.Amount,
                 dto.Merchant
             );
 
-            return Ok();
+            return Ok(new TransactionResultDto { Reference = reference });
         }
     }
 }
