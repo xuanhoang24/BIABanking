@@ -4,64 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Banking System Admin</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystemMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
+
     <div class="d-flex">
+
         <!-- Sidebar -->
-        <nav class="sidebar bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+        <nav class="sidebar bg-dark text-white p-3" style="width:250px; min-height:100vh;">
             <div class="sidebar-header mb-4">
                 <h4><i class="fas fa-shield-alt"></i> Admin Panel</h4>
                 <hr class="text-white">
             </div>
-            
+
             <ul class="nav flex-column">
                 <li class="nav-item mb-2">
                     <a class="nav-link text-white" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-users"></i> User Management
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-credit-card"></i> Account Management
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-file-alt"></i> KYC Review
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-exchange-alt"></i> Transactions
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-chart-bar"></i> Reports
-                    </a>
-                </li>
+
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-users"></i> User Management</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-credit-card"></i> Account Management</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-file-alt"></i> KYC Review</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
+
                 <li class="nav-item mb-2">
                     <a class="nav-link text-white" asp-area="Admin" asp-controller="Audit" asp-action="Index">
                         <i class="fas fa-bell"></i> Audit Logs
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-cog"></i> Settings
-                    </a>
-                </li>
-                
+
+                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+
                 <hr class="text-white mt-4">
-                
+
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminAuth" asp-action="Logout">
                         <i class="fas fa-sign-out-alt"></i> Logout
@@ -72,17 +54,43 @@
 
         <!-- Main Content -->
         <div class="flex-grow-1">
+
             <!-- Top Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-                <div class="container-fluid">
+            <nav class="navbar navbar-light bg-light border-bottom">
+                <div class="container-fluid d-flex align-items-center justify-content-between">
+
                     <span class="navbar-brand mb-0 h1">@ViewData["Title"]</span>
-                    
-                    <div class="navbar-nav ms-auto">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <!-- Time Block -->
+                        <div class="time-tabs">
+                            <div class="time-tab local-time">
+                                <i class="fas fa-clock"></i>
+                                <span class="time-label">Local:</span>
+                                <span id="localTime" class="time-value">--:--:--</span>
+                            </div>
+
+                            <div class="time-separator">|</div>
+
+                            <div class="time-tab utc-time">
+                                <i class="fas fa-globe"></i>
+                                <span class="time-label">UTC:</span>
+                                <span id="utcTime" class="time-value">--:--:--</span>
+                            </div>
+                        </div>
+
+                        <!-- Admin Dropdown -->
                         <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> Admin User
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fs-5"></i>
+                                Admin User
                             </a>
-                            <ul class="dropdown-menu">
+
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -93,6 +101,7 @@
                                 </li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </nav>
@@ -101,32 +110,94 @@
             <main class="p-4">
                 @RenderBody()
             </main>
+
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 
     <style>
-        .sidebar .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-        }
-        
-        .sidebar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
-        
         .navbar-brand {
             font-weight: 600;
         }
-        
+
         .dropdown-menu {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+        }
+
+        .time-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 14px;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+        }
+
+            .time-tabs > * {
+                flex-shrink: 0;
+            }
+
+        .time-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            color: #495057;
+        }
+
+            .time-tab i {
+                font-size: 16px;
+            }
+
+        .local-time i {
+            color: #0d6efd;
+        }
+
+        .utc-time i {
+            color: #6c757d;
+        }
+
+        .time-label,
+        .time-value {
+            white-space: nowrap;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+        }
+
+        .time-separator {
+            color: #dee2e6;
+            font-weight: bold;
         }
     </style>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('localTime').textContent =
+                now.toLocaleTimeString('en-US', options);
+
+            const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+            document.getElementById('utcTime').textContent =
+                utc.toLocaleTimeString('en-US', options);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+
 </body>
 </html>
