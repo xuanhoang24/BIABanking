@@ -38,6 +38,8 @@ builder.Services.AddScoped<ICustomerApiClient, CustomerApiClient>();
 builder.Services.AddScoped<IAccountApiClient, AccountApiClient>();
 builder.Services.AddScoped<IAdminAuthApiClient, AdminAuthApiClient>();
 builder.Services.AddScoped<IAdminAuditApiClient, AdminAuditApiClient>();
+builder.Services.AddScoped<IAccountViewService, AccountViewService>();
+
 builder.Services.AddScoped<IAdminDashboardApiClient>(provider =>
 {
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();

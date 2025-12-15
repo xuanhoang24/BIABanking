@@ -9,10 +9,12 @@ namespace BankingSystemMVC.Controllers.Customer
     public class AccountsController : Controller
     {
         private readonly IAccountApiClient _accountApi;
+        private readonly IAccountViewService _accountViewService;
 
-        public AccountsController(IAccountApiClient accountApi)
+        public AccountsController(IAccountApiClient accountApi, IAccountViewService accountViewService)
         {
             _accountApi = accountApi;
+            _accountViewService = accountViewService;
         }
 
         // LIST ACCOUNTS
@@ -53,7 +55,12 @@ namespace BankingSystemMVC.Controllers.Customer
         // GET: /Accounts/Details/{id}
         public async Task<IActionResult> Detail(int id)
         {
-            var account = await _accountApi.GetAccountDetailAsync(id);
+            var timeZoneId = Request.Cookies["timezone"];
+
+            if (string.IsNullOrWhiteSpace(timeZoneId))
+                timeZoneId = TimeZoneInfo.Local.Id;
+
+            var account = await _accountViewService.GetAccountDetailAsync(id, timeZoneId);
 
             if (account == null)
                 return RedirectToAction(nameof(Index));

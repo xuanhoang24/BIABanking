@@ -95,3 +95,12 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    (function () {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            if (tz) {
+                document.cookie = "timezone=" + tz + "; path=/";
+            }
+        })();
+</script>
