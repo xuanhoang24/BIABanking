@@ -7,5 +7,6 @@ namespace BankingSystemMVC.Services.Interfaces
         Task<List<AccountSummaryViewModel>> GetMyAccountsAsync();
         Task<bool> CreateAccountAsync(CreateAccountViewModel model);
         Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId);
+        Task<bool> DepositAsync(int accountId, long amountInCents, string? description);
     }
 }

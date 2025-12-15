@@ -130,5 +130,39 @@ namespace BankingSystemAPI.Controllers
 
             return accountNumber;
         }
+
+        // POST: api/accounts/{id}/deposit
+        [HttpPost("{id:int}/deposit")]
+        public async Task<IActionResult> Deposit(int id, DepositRequestDto dto)
+        {
+            var userId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!
+            );
+
+            try
+            {
+                var account = await _accountService.DepositAsync(
+                    id,
+                    userId,
+                    dto.AmountInCents,
+                    dto.Description
+                );
+
+                if (account == null)
+                    return NotFound();
+
+                return Ok(new
+                {
+                    account.Id,
+                    account.AccountNumber,
+                    NewBalance = account.Balance
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

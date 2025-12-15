@@ -70,7 +70,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
                 "Account",
                 account.Id,
                 customerId,
-                $"Deposit {amountInCents / 100.0m} to account {account.AccountNumber}"
+                $"Deposit ${amountInCents / 100.0m} to account {account.AccountNumber}"
             );
 
             await transaction.CommitAsync();

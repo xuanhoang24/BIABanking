@@ -42,6 +42,14 @@
                         Details
                     </a>
                 </td>
+                <td>
+                    <a asp-controller="Accounts"
+                       asp-action="Deposit"
+                       asp-route-id="@a.Id"
+                       class="btn btn-success btn-sm">
+                        Deposit
+                    </a>
+                </td>
             </tr>
         }
     </tbody>

@@ -60,5 +60,41 @@ namespace BankingSystemMVC.Controllers.Customer
 
             return View(account);
         }
+
+        // DEPOSIT FUNDS
+        // GET: /Accounts/Deposit/{id}
+        [Authorize]
+        public IActionResult Deposit(int id)
+        {
+            return View(new DepositViewModel
+            {
+                AccountId = id
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Deposit(DepositViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var amountInCents = (long)(model.Amount * 100);
+
+            var success = await _accountApi.DepositAsync(
+                model.AccountId,
+                amountInCents,
+                model.Description
+            );
+
+            if (!success)
+            {
+                ModelState.AddModelError("", "Deposit failed");
+                return View(model);
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
