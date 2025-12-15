@@ -9,5 +9,8 @@
         public string AccountType { get; set; } = string.Empty;
         public decimal Balance { get; set; }
         public string Status { get; set; } = string.Empty;
+
+        public List<RecentDepositDto> RecentDeposits { get; set; } = new();
+
     }
 }

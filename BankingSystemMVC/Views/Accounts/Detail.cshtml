@@ -28,5 +28,42 @@
         <td>@Model.Balance.ToString("C")</td>
     </tr>
 </table>
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Recent Deposits</h5>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.RecentDeposits.Any())
+        {
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var deposit in Model.RecentDeposits)
+                    {
+                        <tr>
+                            <td class="text-success fw-bold">
+                                +@deposit.Amount.ToString("C")
+                            </td>
+                            <td>@deposit.Description</td>
+                            <td>@deposit.Date.ToString("MM-dd-yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="text-center text-muted py-4">
+                No recent deposits found
+            </div>
+        }
+    </div>
+</div>
 
 <a asp-action="Index" class="btn btn-secondary">Back</a>

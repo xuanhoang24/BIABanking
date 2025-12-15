@@ -105,7 +105,23 @@ namespace BankingSystemAPI.Controllers
                     AccountName = a.AccountName,
                     AccountType = a.AccountType.ToString(),
                     Balance = a.Balance,
-                    Status = a.Status.ToString()
+                    Status = a.Status.ToString(),
+                    RecentDeposits = _context.Transactions
+                        .Where(t =>
+                            t.Type == TransactionType.Deposit &&
+                            t.ToAccountId == a.Id &&
+                            t.Status == TransactionStatus.Completed
+                        )
+                        .OrderByDescending(t => t.CreatedAt)
+                        .Take(5)
+                        .Select(t => new RecentDepositDto
+                        {
+                            TransactionId = t.Id,
+                            Amount = t.Amount,
+                            Description = t.Description,
+                            Date = t.CreatedAt
+                        })
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
 
@@ -114,6 +130,7 @@ namespace BankingSystemAPI.Controllers
 
             return Ok(account);
         }
+
 
         // Helpers
         private async Task<string> GenerateUniqueAccountNumberAsync()
