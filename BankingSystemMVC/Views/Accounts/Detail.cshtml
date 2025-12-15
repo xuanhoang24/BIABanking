@@ -60,10 +60,10 @@
 
 <div class="card mt-4">
     <div class="card-header">
-        <h5>Recent Deposits</h5>
+        <h5>Recent Transactions</h5>
     </div>
     <div class="card-body p-0">
-        @if (Model.RecentDeposits.Any())
+        @if (Model.RecentTransactions.Any())
         {
             <table class="table table-striped mb-0">
                 <thead>
@@ -74,14 +74,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var deposit in Model.RecentDeposits)
+                    @foreach (var tx in Model.RecentTransactions)
                     {
                         <tr>
-                            <td class="text-success fw-bold">
-                                +@deposit.Amount.ToString("C")
+                            <td class="fw-bold @(tx.Amount >= 0 ? "text-success" : "text-danger")">
+                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
                             </td>
-                            <td>@deposit.Description</td>
-                            <td>@deposit.LocalTime</td>
+                            <td>@tx.Description</td>
+                            <td>@tx.LocalTime</td>
                         </tr>
                     }
                 </tbody>
@@ -90,10 +90,11 @@
         else
         {
             <div class="text-center text-muted py-4">
-                No recent deposits found
+                No recent transactions found
             </div>
         }
     </div>
 </div>
+
 
 <a asp-action="Index" class="btn btn-secondary">Back</a>

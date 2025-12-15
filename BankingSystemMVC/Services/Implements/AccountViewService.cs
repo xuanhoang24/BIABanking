@@ -13,19 +13,23 @@ public class AccountViewService : IAccountViewService
             _accountApi = accountApi;
         }
 
-        public async Task<AccountDetailViewModel?> GetAccountDetailAsync( int accountId, string timeZoneId)
+        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(
+            int accountId,
+            string timeZoneId)
         {
             var apiResult = await _accountApi.GetAccountDetailAsync(accountId);
             if (apiResult == null)
                 return null;
 
-            apiResult.RecentDeposits = apiResult.RecentDeposits
-                .Select(d => new RecentDepositViewModel
+            apiResult.RecentTransactions = apiResult.RecentTransactions
+                .Select(t => new AccountTransactionViewModel
                 {
-                    Amount = d.Amount,
-                    Description = d.Description,
+                    Amount = t.Amount,
+                    Description = t.Description,
+                    Status = t.Status,
+                    Type = t.Type,
                     LocalTime = TimeZoneHelper.ConvertUtcToLocal(
-                        d.Date,
+                        t.Date,
                         timeZoneId
                     )
                 })
@@ -33,5 +37,6 @@ public class AccountViewService : IAccountViewService
 
             return apiResult;
         }
+
     }
 }
