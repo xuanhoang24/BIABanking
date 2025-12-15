@@ -1,9 +1,7 @@
 ﻿using BankingSystemMVC.Models.Accounts;
 using BankingSystemMVC.Services.Interfaces;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using static System.Net.WebRequestMethods;
 
 namespace BankingSystemMVC.Services.Implements
 {
@@ -54,20 +52,5 @@ namespace BankingSystemMVC.Services.Implements
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );
         }
-
-        public async Task<bool> DepositAsync(int accountId, long amountInCents, string? description)
-        {
-            var response = await _client.PostAsJsonAsync(
-                $"api/accounts/{accountId}/deposit",
-                new
-                {
-                    AmountInCents = amountInCents,
-                    Description = description
-                }
-            );
-
-            return response.IsSuccessStatusCode;
-        }
-
     }
 }

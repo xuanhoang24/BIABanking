@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using BankingSystemAPI.Models.Users;
 
-namespace BankingSystemAPI.Models
+namespace BankingSystemAPI.Models.Accounts
 {
     public enum TransactionType
     {

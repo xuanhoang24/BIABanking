@@ -7,11 +7,19 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>My Accounts</h2>
 
-    <a asp-controller="Accounts"
-       asp-action="Create"
-       class="btn btn-primary">
-        + Create Account
-    </a>
+    <div class="d-flex gap-2">
+        <a asp-controller="Transactions"
+           asp-action="Transfer"
+           class="btn btn-outline-primary">
+            Transfer
+        </a>
+
+        <a asp-controller="Accounts"
+           asp-action="Create"
+           class="btn btn-primary">
+            + Create Account
+        </a>
+    </div>
 </div>
 
 <table class="table table-striped align-middle">
@@ -40,14 +48,6 @@
                        asp-route-id="@a.Id"
                        class="btn btn-sm btn-outline-primary">
                         Details
-                    </a>
-                </td>
-                <td>
-                    <a asp-controller="Accounts"
-                       asp-action="Deposit"
-                       asp-route-id="@a.Id"
-                       class="btn btn-success btn-sm">
-                        Deposit
                     </a>
                 </td>
             </tr>

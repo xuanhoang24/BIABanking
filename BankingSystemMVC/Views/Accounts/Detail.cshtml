@@ -28,6 +28,36 @@
         <td>@Model.Balance.ToString("C")</td>
     </tr>
 </table>
+<div class="mb-3">
+    <a asp-controller="Transactions"
+       asp-action="Deposit"
+       asp-route-accountId="@Model.Id"
+       class="btn btn-success me-2">
+        Deposit
+    </a>
+
+    <a asp-controller="Transactions"
+       asp-action="Withdraw"
+       asp-route-accountId="@Model.Id"
+       class="btn btn-danger me-2">
+        Withdraw
+    </a>
+
+    <a asp-controller="Transactions"
+       asp-action="Transfer"
+       asp-route-fromAccountId="@Model.Id"
+       class="btn btn-primary me-2">
+        Transfer
+    </a>
+
+    <a asp-controller="Transactions"
+       asp-action="Payment"
+       asp-route-accountId="@Model.Id"
+       class="btn btn-warning">
+        Payment
+    </a>
+</div>
+
 <div class="card mt-4">
     <div class="card-header">
         <h5>Recent Deposits</h5>

@@ -1,4 +1,4 @@
-﻿using BankingSystemAPI.Models;
+﻿using BankingSystemAPI.Models.Accounts;
 using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
 using Microsoft.EntityFrameworkCore;

@@ -1,0 +1,143 @@
+﻿@using BankingSystemMVC.Models.Accounts
+@using BankingSystemMVC.Models.Accounts.Transactions
+@model TransferPageViewModel
+
+@{
+    ViewData["Title"] = "Transfer Funds";
+    var accounts = Model.Accounts ?? new List<AccountSummaryViewModel>();
+}
+
+<h2 class="mb-4">Transfer Funds</h2>
+
+<form asp-action="Transfer" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- TRANSFER TYPE -->
+    <div class="mb-3">
+        <label class="form-label">Transfer Type</label>
+        <select asp-for="Transfer.TransferType"
+                class="form-select"
+                id="transferType">
+            <option value="Internal">Between my accounts</option>
+            <option value="External">To another user</option>
+        </select>
+    </div>
+
+    <!-- FROM ACCOUNT -->
+    <div class="mb-3">
+        <label class="form-label">From Account</label>
+        <select asp-for="Transfer.FromAccountId"
+                class="form-select"
+                id="fromAccountSelect">
+            <option value="">Select account</option>
+
+            @foreach (var a in accounts)
+            {
+                <option value="@a.Id">
+                    @a.AccountName (@a.AccountNumber)
+                    | Balance: @a.Balance.ToString("C")
+                </option>
+            }
+        </select>
+
+        <span asp-validation-for="Transfer.FromAccountId"
+              class="text-danger"></span>
+    </div>
+
+    <!-- INTERNAL TRANSFER -->
+    <div id="internalTransferSection" class="mb-3">
+        <label class="form-label">To Account (Internal)</label>
+
+        <select asp-for="Transfer.ToAccountId"
+                class="form-select"
+                id="toAccountSelect">
+            <option value="">Select destination account</option>
+
+            @foreach (var a in accounts)
+            {
+                <option value="@a.Id">
+                    @a.AccountName (@a.AccountNumber)
+                    | Balance: @a.Balance.ToString("C")
+                </option>
+            }
+        </select>
+
+        <span asp-validation-for="Transfer.ToAccountId"
+              class="text-danger"></span>
+    </div>
+
+    <!-- EXTERNAL TRANSFER -->
+    <div id="externalTransferSection"
+         class="mb-3"
+         style="display:none;">
+        <label class="form-label">Destination Account Number</label>
+        <input asp-for="Transfer.ToAccountNumber"
+               class="form-control" />
+
+        <span asp-validation-for="Transfer.ToAccountNumber"
+              class="text-danger"></span>
+    </div>
+
+    <!-- AMOUNT -->
+    <div class="mb-3">
+        <label class="form-label">Amount</label>
+        <input asp-for="Transfer.Amount"
+               class="form-control" />
+
+        <span asp-validation-for="Transfer.Amount"
+              class="text-danger"></span>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea asp-for="Transfer.Description"
+                  class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Transfer
+    </button>
+
+    <a asp-controller="Accounts"
+       asp-action="Index"
+       class="btn btn-secondary ms-2">
+        Cancel
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const transferType = document.getElementById("transferType");
+        const internalSection = document.getElementById("internalTransferSection");
+        const externalSection = document.getElementById("externalTransferSection");
+        const fromSelect = document.getElementById("fromAccountSelect");
+        const toSelect = document.getElementById("toAccountSelect");
+
+        function updateTransferType() {
+            if (transferType.value === "Internal") {
+                internalSection.style.display = "block";
+                externalSection.style.display = "none";
+            } else {
+                internalSection.style.display = "none";
+                externalSection.style.display = "block";
+            }
+        }
+
+        function updateInternalOptions() {
+            const fromValue = fromSelect.value;
+
+            Array.from(toSelect.options).forEach(opt => {
+                if (!opt.value) return;
+                opt.hidden = opt.value === fromValue;
+            });
+        }
+
+        transferType.addEventListener("change", updateTransferType);
+        fromSelect.addEventListener("change", updateInternalOptions);
+
+        updateTransferType();
+    </script>
+}

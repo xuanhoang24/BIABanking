@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BankingSystemAPI.Models
+namespace BankingSystemAPI.Models.Accounts
 {
     public enum EntryType
     {

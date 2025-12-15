@@ -1,5 +1,5 @@
 using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models;
+using BankingSystemAPI.Models.Accounts;
 using BankingSystemAPI.Models.DTOs.Admin;
 using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;

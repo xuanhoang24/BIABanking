@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankingSystemMVC.Models.Accounts
+namespace BankingSystemAPI.Models.DTOs.Accounts.Transactions
 {
-    public class DepositViewModel
+    public class WithdrawRequestDto
     {
+        [Required]
         public int AccountId { get; set; }
 
-        [Required]
-        [Range(1, long.MaxValue)]
+        [Range(0.01, double.MaxValue)]
         public decimal Amount { get; set; }
 
+        [StringLength(500)]
         public string? Description { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BankingSystemAPI.Models.DTOs.Customer;
-using BankingSystemAPI.Models.Users;
 namespace BankingSystemAPI.Services.Customer.Interfaces
 {
     public interface ICustomerService

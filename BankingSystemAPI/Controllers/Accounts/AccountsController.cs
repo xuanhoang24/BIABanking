@@ -1,17 +1,15 @@
 ﻿using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models;
+using BankingSystemAPI.Models.Accounts;
 using BankingSystemAPI.Models.DTOs.Accounts;
-using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Services.Admin.Implements;
-using BankingSystemAPI.Services.Customer.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace BankingSystemAPI.Controllers
+namespace BankingSystemAPI.Controllers.Accounts
 {
     [ApiController]
     [Route("api/accounts")]
@@ -20,13 +18,11 @@ namespace BankingSystemAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly AuditService _auditService;
-        private readonly IAccountService _accountService;
 
-        public AccountsController(AppDbContext context, AuditService auditService, IAccountService accountService)
+        public AccountsController(AppDbContext context, AuditService auditService)
         {
             _context = context;
             _auditService = auditService;
-            _accountService = accountService;
         }
 
         // GET: api/accounts
@@ -146,40 +142,6 @@ namespace BankingSystemAPI.Controllers
             while (await _context.Accounts.AnyAsync(a => a.AccountNumber == accountNumber));
 
             return accountNumber;
-        }
-
-        // POST: api/accounts/{id}/deposit
-        [HttpPost("{id:int}/deposit")]
-        public async Task<IActionResult> Deposit(int id, DepositRequestDto dto)
-        {
-            var userId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
-
-            try
-            {
-                var account = await _accountService.DepositAsync(
-                    id,
-                    userId,
-                    dto.AmountInCents,
-                    dto.Description
-                );
-
-                if (account == null)
-                    return NotFound();
-
-                return Ok(new
-                {
-                    account.Id,
-                    account.AccountNumber,
-                    NewBalance = account.Balance
-                });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
     }
 }

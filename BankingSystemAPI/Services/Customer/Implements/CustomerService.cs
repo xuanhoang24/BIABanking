@@ -1,6 +1,5 @@
 ﻿using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.Models.DTOs.Customer;
-using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Security.Interfaces;
 using BankingSystemAPI.Services.Admin.Implements;

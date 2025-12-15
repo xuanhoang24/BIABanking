@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BankingSystemAPI.Models.Accounts;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystemAPI.Models.DTOs.Accounts
 {

@@ -1,0 +1,32 @@
+﻿@model BankingSystemMVC.Models.Accounts.Transactions.PaymentViewModel
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h2>Payment</h2>
+
+<form asp-action="Payment" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="AccountId" />
+
+    <div class="mb-3">
+        <label class="form-label">Merchant</label>
+        <input asp-for="Merchant" class="form-control" />
+        <span asp-validation-for="Merchant" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Amount</label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Pay</button>
+    <a asp-controller="Accounts" asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

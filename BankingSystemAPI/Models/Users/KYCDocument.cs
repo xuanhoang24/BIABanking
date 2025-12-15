@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
 
-namespace BankingSystemAPI.Models
+namespace BankingSystemAPI.Models.Users
 {
     public enum DocumentType
     {
