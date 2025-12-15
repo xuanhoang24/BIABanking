@@ -3,7 +3,7 @@ namespace BankingSystemAPI.Services.Customer.Interfaces
 {
     public interface ICustomerService
     {
-        Task<BankingSystemAPI.Models.Users.Customer> RegisterCustomerAsync(
+        Task<BankingSystemAPI.Models.Users.Customers.Customer> RegisterCustomerAsync(
             string firstName,
             string lastName,
             string email,
@@ -13,7 +13,7 @@ namespace BankingSystemAPI.Services.Customer.Interfaces
             string address
         );
 
-        Task<BankingSystemAPI.Models.Users.Customer?> AuthenticateCustomerAsync( string email, string password);
+        Task<BankingSystemAPI.Models.Users.Customers.Customer?> AuthenticateCustomerAsync( string email, string password);
         Task<CustomerMeDto?> GetMeAsync(int customerId);
     }
 }

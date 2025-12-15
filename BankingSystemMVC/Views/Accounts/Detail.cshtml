@@ -96,10 +96,10 @@
                                 </div>
                             </td>
                             <td class="text-end fw-semibold @(tx.Amount >= 0 ? "text-success" : "text-danger")">
-                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("0.##")
+                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
                             </td>
                             <td class="text-end fw-semibold">
-                                @tx.PostBalance.ToString("0.##")
+                                @tx.PostBalance.ToString("C")
                             </td>
                         </tr>
                     }

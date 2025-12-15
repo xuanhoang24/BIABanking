@@ -1,7 +1,7 @@
 ﻿using BankingSystemAPI.Models.Accounts;
 using System.ComponentModel.DataAnnotations;
 
-namespace BankingSystemAPI.Models.Users
+namespace BankingSystemAPI.Models.Users.Customers
 {
     public class Customer
     {

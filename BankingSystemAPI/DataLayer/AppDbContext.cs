@@ -1,6 +1,6 @@
 ﻿using BankingSystemAPI.Models.Accounts;
-using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
+using BankingSystemAPI.Models.Users.Customers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.DataLayer

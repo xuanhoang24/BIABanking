@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BankingSystemAPI.Models.Users;
+using BankingSystemAPI.Models.Users.Customers;
 
 namespace BankingSystemAPI.Models.Accounts
 {

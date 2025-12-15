@@ -1,5 +1,5 @@
-﻿using BankingSystemAPI.Models.Users;
-using BankingSystemAPI.Models.Users.Admin;
+﻿using BankingSystemAPI.Models.Users.Admin;
+using BankingSystemAPI.Models.Users.Customers;
 
 namespace BankingSystemAPI.Security.Interfaces
 {

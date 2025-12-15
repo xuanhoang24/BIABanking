@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using BankingSystemAPI.Models.Users.Admin;
 
-namespace BankingSystemAPI.Models.Users
+namespace BankingSystemAPI.Models.Users.Customers
 {
     public enum DocumentType
     {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BankingSystemAPI.Models.Users.Customers;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystemAPI.Models.Users.Admin
 {

@@ -21,7 +21,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<BankingSystemAPI.Models.Users.Customer> RegisterCustomerAsync(
+        public async Task<BankingSystemAPI.Models.Users.Customers.Customer> RegisterCustomerAsync(
             string firstName,
             string lastName,
             string email,
@@ -39,7 +39,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
 
             _passwordHasher.CreateHash(password, out var hash, out var salt);
 
-            var customer = new BankingSystemAPI.Models.Users.Customer
+            var customer = new BankingSystemAPI.Models.Users.Customers.Customer
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -66,7 +66,7 @@ namespace BankingSystemAPI.Services.Customer.Implements
             return customer;
         }
 
-        public async Task<BankingSystemAPI.Models.Users.Customer?> AuthenticateCustomerAsync(string email, string password)
+        public async Task<Models.Users.Customers.Customer?> AuthenticateCustomerAsync(string email, string password)
         {
             email = email.ToLowerInvariant();
 

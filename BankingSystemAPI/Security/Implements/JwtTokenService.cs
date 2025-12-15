@@ -1,5 +1,5 @@
-﻿using BankingSystemAPI.Models.Users;
-using BankingSystemAPI.Models.Users.Admin;
+﻿using BankingSystemAPI.Models.Users.Admin;
+using BankingSystemAPI.Models.Users.Customers;
 using BankingSystemAPI.Security.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
