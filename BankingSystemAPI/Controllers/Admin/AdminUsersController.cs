@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemAPI.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/users")]
+    [Route("api/admin/customers")]
     [Authorize(Policy = "AdminOnly")]
     public class AdminUsersController : ControllerBase
     {
