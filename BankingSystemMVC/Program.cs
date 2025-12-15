@@ -9,12 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// User API client
-builder.Services.AddHttpClient("UserApi", client =>
+// Customer API client
+builder.Services.AddHttpClient("CustomerApi", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7098/");
 })
-.AddHttpMessageHandler<UserJwtHandler>();
+.AddHttpMessageHandler<CustomerJwtHandler>();
 
 // Admin API client
 builder.Services.AddHttpClient("AdminApi", client =>
@@ -24,7 +24,7 @@ builder.Services.AddHttpClient("AdminApi", client =>
 .AddHttpMessageHandler<AdminJwtHandler>();
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<UserJwtHandler>();
+builder.Services.AddTransient<CustomerJwtHandler>();
 builder.Services.AddTransient<AdminJwtHandler>();
 
 // JWT authentication for MVC authorization
@@ -34,7 +34,7 @@ builder.Services.AddAuthorization();
 
 // App services
 builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
-builder.Services.AddScoped<IUserApiClient, UserApiClient>();
+builder.Services.AddScoped<ICustomerApiClient, CustomerApiClient>();
 builder.Services.AddScoped<IAccountApiClient, AccountApiClient>();
 builder.Services.AddScoped<IAdminAuthApiClient, AdminAuthApiClient>();
 builder.Services.AddScoped<IAdminAuditApiClient, AdminAuditApiClient>();

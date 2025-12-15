@@ -2,7 +2,7 @@
 
 namespace BankingSystemAPI.Models.Users
 {
-    public class User
+    public class Customer
     {
         public int Id { get; set; }
 

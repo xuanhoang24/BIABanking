@@ -3,7 +3,7 @@ using BankingSystemAPI.Models.Users.Admin;
 using Microsoft.EntityFrameworkCore;
 using BankingSystemAPI.Security.Interfaces;
 
-namespace BankingSystemAPI.Services.Admin
+namespace BankingSystemAPI.Services.Admin.Implements
 {
     public class AdminUserService
     {

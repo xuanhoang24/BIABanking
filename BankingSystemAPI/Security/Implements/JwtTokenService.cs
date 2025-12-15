@@ -17,13 +17,13 @@ namespace BankingSystemAPI.Security.Implements
             _config = config;
         }
 
-        public string GenerateUserToken(User user)
+        public string GenerateCustomerToken(Customer customer)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("firstname", user.FirstName)
+                new Claim(JwtRegisteredClaimNames.Sub, customer.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, customer.Email),
+                new Claim("firstname", customer.FirstName)
             };
 
             return BuildToken(claims, 15);

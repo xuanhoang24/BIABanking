@@ -1,8 +1,8 @@
 ﻿using BankingSystemAPI.Models.DTOs.Auth;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Security.Interfaces;
-using BankingSystemAPI.Services;
-using BankingSystemAPI.Services.Admin;
+using BankingSystemAPI.Services.Admin.Implements;
+using BankingSystemAPI.Services.Customer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemAPI.Controllers
@@ -11,13 +11,13 @@ namespace BankingSystemAPI.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly ICustomerService _customerService;
         private readonly AuditService _auditService;
         private readonly IJwtTokenService _jwt;
 
-        public AuthController(UserService userService, AuditService auditService, IJwtTokenService jwt)
+        public AuthController(ICustomerService customerService, AuditService auditService, IJwtTokenService jwt)
         {
-            _userService = userService;
+            _customerService = customerService;
             _auditService = auditService;
             _jwt = jwt;
         }
@@ -25,7 +25,7 @@ namespace BankingSystemAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto request)
         {
-            var user = await _userService.RegisterUserAsync(
+            var customer = await _customerService.RegisterCustomerAsync(
                 request.FirstName,
                 request.LastName,
                 request.Email,
@@ -36,28 +36,28 @@ namespace BankingSystemAPI.Controllers
             );
 
             await _auditService.LogAsync(
-                AuditAction.UserRegistration,
-                "User",
-                user.Id,
-                user.Id,
-                $"User registered with email {user.Email}"
+                AuditAction.CustomerRegistration,
+                "Customer",
+                customer.Id,
+                customer.Id,
+                $"Customer registered with email {customer.Email}"
             );
 
-            return Ok(new { user.Id });
+            return Ok(new { customer.Id });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto request)
         {
-            var user = await _userService.AuthenticateUserAsync(
+            var customer = await _customerService.AuthenticateCustomerAsync(
                 request.Email,
                 request.Password
             );
 
-            if (user == null)
+            if (customer == null)
                 return Unauthorized();
 
-            var token = _jwt.GenerateUserToken(user);
+            var token = _jwt.GenerateCustomerToken(customer);
 
             return Ok(new LoginResponseDto
             {

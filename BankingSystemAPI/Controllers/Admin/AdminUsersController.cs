@@ -1,4 +1,4 @@
-using BankingSystemAPI.Services.Admin;
+using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

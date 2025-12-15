@@ -41,7 +41,7 @@ namespace BankingSystemMVC.Controllers
                 return View(model);
             }
 
-            Response.Cookies.Append("user_access_token", result.AccessToken,
+            Response.Cookies.Append("customer_access_token", result.AccessToken,
                 new CookieOptions
                 {
                     HttpOnly = true,
@@ -89,7 +89,7 @@ namespace BankingSystemMVC.Controllers
         [Authorize]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("user_access_token", new CookieOptions
+            Response.Cookies.Delete("customer_access_token", new CookieOptions
             {
                 Path = "/"
             });

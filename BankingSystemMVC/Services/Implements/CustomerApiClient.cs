@@ -1,29 +1,29 @@
-﻿using BankingSystemMVC.Models.Users;
+﻿using BankingSystemMVC.Models.Customers;
 using BankingSystemMVC.Services.Interfaces;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace BankingSystemMVC.Services.Implements
 {
-    public class UserApiClient : IUserApiClient
+    public class CustomerApiClient : ICustomerApiClient
     {
         private readonly HttpClient _client;
 
-        public UserApiClient(IHttpClientFactory factory)
+        public CustomerApiClient(IHttpClientFactory factory)
         {
-            _client = factory.CreateClient("UserApi");
+            _client = factory.CreateClient("CustomerApi");
         }
 
-        public async Task<UserMeViewModel?> GetMeAsync()
+        public async Task<CustomerMeViewModel?> GetMeAsync()
         {
-            var response = await _client.GetAsync("api/users/me");
+            var response = await _client.GetAsync("api/customers/me");
 
             if (!response.IsSuccessStatusCode)
                 return null;
 
             var json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<UserMeViewModel>(
+            return JsonSerializer.Deserialize<CustomerMeViewModel>(
                 json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );

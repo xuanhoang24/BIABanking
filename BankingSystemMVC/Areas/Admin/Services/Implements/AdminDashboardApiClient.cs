@@ -22,7 +22,7 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
         {
             try
             {
-                var response = await _httpClient.GetAsync("api/admin/users/stats");
+                var response = await _httpClient.GetAsync("api/admin/customers/stats");
                 
                 if (!response.IsSuccessStatusCode)
                     return null;

@@ -2,7 +2,7 @@
 {
     public class DashboardStatsViewModel
     {
-        public int TotalUsers { get; set; }
+        public int TotalCustomers { get; set; }
         public int ActiveAccounts { get; set; }
         public int PendingKYC { get; set; }
         public int TodaysTransactions { get; set; }

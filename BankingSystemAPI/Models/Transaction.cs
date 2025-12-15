@@ -43,18 +43,18 @@ namespace BankingSystemAPI.Models
         public string Description { get; set; } = string.Empty;
 
         // Sender Information
-        public int? FromUserId { get; set; }
-        [ForeignKey("FromUserId")]
-        public User? FromUser { get; set; }
+        public int? FromCustomerId { get; set; }
+        [ForeignKey("FromCustomerId")]
+        public Customer? FromCustomer { get; set; }
 
         public int? FromAccountId { get; set; }
         [ForeignKey("FromAccountId")]
         public Account? FromAccount { get; set; }
 
         // Receiver Information
-        public int? ToUserId { get; set; }
-        [ForeignKey("ToUserId")]
-        public User? ToUser { get; set; }
+        public int? ToCustomerId { get; set; }
+        [ForeignKey("ToCustomerId")]
+        public Customer? ToCustomer { get; set; }
 
         public int? ToAccountId { get; set; }
         [ForeignKey("ToAccountId")]

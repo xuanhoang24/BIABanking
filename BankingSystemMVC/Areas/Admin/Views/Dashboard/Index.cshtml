@@ -21,8 +21,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>Total Users</h4>
-                            <h2>@Model.Stats.TotalUsers</h2>
+                            <h4>Total Customers</h4>
+                            <h2>@Model.Stats.TotalCustomers</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-users fa-2x"></i>
@@ -93,7 +93,7 @@
                         <div class="col-md-2">
                             <a href="#" class="btn btn-outline-primary btn-block mb-2">
                                 <i class="fas fa-users"></i><br>
-                                Manage Users
+                                Manage Customers
                             </a>
                         </div>
                         <div class="col-md-2">
@@ -151,7 +151,7 @@
                                     <tr>
                                         <th style="width: 100px;">Action</th>
                                         <th style="width: 150px;">Entity</th>
-                                        <th style="width: 100px;">User ID</th>
+                                        <th style="width: 100px;">Customer ID</th>
                                         <th>Description</th>
                                         <th style="width: 160px;">Date</th>
                                     </tr>
@@ -172,7 +172,7 @@
                                             </td>
                                             <td>
                                                 <small class="text-muted">
-                                                    @log.UserId
+                                                    @log.CustomerId
                                                 </small>
                                             </td>
                                             <td>@log.Description</td>

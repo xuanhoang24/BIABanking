@@ -13,11 +13,11 @@ namespace BankingSystemMVC.Configuration
             services
                 .AddAuthentication(options =>
                 {
-                    // Default is user side
-                    options.DefaultAuthenticateScheme = "UserScheme";
-                    options.DefaultChallengeScheme = "UserScheme";
+                    // Default is customer side
+                    options.DefaultAuthenticateScheme = "CustomerScheme";
+                    options.DefaultChallengeScheme = "CustomerScheme";
                 })
-                .AddJwtBearer("UserScheme", options =>
+                .AddJwtBearer("CustomerScheme", options =>
                 {
                     options.RequireHttpsMetadata = false;
 
@@ -25,7 +25,7 @@ namespace BankingSystemMVC.Configuration
                     {
                         OnMessageReceived = context =>
                         {
-                            var token = context.HttpContext.Request.Cookies["user_access_token"];
+                            var token = context.HttpContext.Request.Cookies["customer_access_token"];
                             if (!string.IsNullOrEmpty(token))
                                 context.Token = token;
 

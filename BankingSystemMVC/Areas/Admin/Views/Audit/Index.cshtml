@@ -15,9 +15,6 @@
                     <button class="btn btn-outline-primary" onclick="exportLogs()">
                         <i class="fas fa-download"></i> Export
                     </button>
-                    <button class="btn btn-outline-secondary" onclick="testModal()">
-                        <i class="fas fa-test"></i> Test Modal
-                    </button>
                 </div>
             </div>
         </div>
@@ -75,8 +72,8 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">User ID</label>
-                                <input type="text" class="form-control" id="userIdFilter" placeholder="Enter User ID">
+                                <label class="form-label">Customer ID</label>
+                                <input type="text" class="form-control" id="customerIdFilter" placeholder="Enter Customer ID">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Date Range</label>
@@ -152,7 +149,7 @@
                                             </td>
                                             <td>
                                                 <span class="badge bg-info">
-                                                    @log.UserId
+                                                    @log.CustomerId
                                                 </span>
                                             </td>
                                             <td>
@@ -170,7 +167,7 @@
                                                         data-log-id="@log.Id"
                                                         data-action="@log.ActionNumber"
                                                         data-entity="@Html.Encode(log.Entity)"
-                                                        data-userid="@log.UserId"
+                                                        data-customerid="@log.CustomerId"
                                                         data-description="@Html.Encode(log.Description)"
                                                         data-date="@log.Date"
                                                         data-ip="@Html.Encode(log.IpAddress ?? "N/A")"
@@ -267,8 +264,8 @@
                                         <td id="modal-entity"></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>User ID:</strong></td>
-                                        <td id="modal-userid"></td>
+                                        <td><strong>Customer ID:</strong></td>
+                                        <td id="modal-customerid"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Date:</strong></td>
@@ -404,17 +401,17 @@
         // TODO: Implement filtering functionality
         const action = document.getElementById('actionFilter').value;
         const entity = document.getElementById('entityFilter').value;
-        const userId = document.getElementById('userIdFilter').value;
+        const customerId = document.getElementById('customerIdFilter').value;
         const date = document.getElementById('dateFilter').value;
         
-        console.log('Applying filters:', { action, entity, userId, date });
+        console.log('Applying filters:', { action, entity, customerId, date });
         alert('Filter functionality will be implemented soon');
     }
     
     function clearFilters() {
         document.getElementById('actionFilter').value = '';
         document.getElementById('entityFilter').value = '';
-        document.getElementById('userIdFilter').value = '';
+        document.getElementById('customerIdFilter').value = '';
         document.getElementById('dateFilter').value = '';
     }
     
@@ -435,7 +432,7 @@
                 Id: button.getAttribute('data-log-id'),
                 ActionNumber: button.getAttribute('data-action'),
                 Entity: button.getAttribute('data-entity'),
-                UserId: button.getAttribute('data-userid'),
+                CustomerId: button.getAttribute('data-customerid'),
                 Description: button.getAttribute('data-description'),
                 Date: button.getAttribute('data-date'),
                 IpAddress: button.getAttribute('data-ip'),
@@ -447,7 +444,7 @@
             document.getElementById('modal-id').textContent = logData.Id || 'N/A';
             document.getElementById('modal-action').innerHTML = `<span class="badge bg-primary">${logData.ActionNumber}</span>`;
             document.getElementById('modal-entity').textContent = logData.Entity || 'N/A';
-            document.getElementById('modal-userid').innerHTML = `<span class="badge bg-info">${logData.UserId}</span>`;
+            document.getElementById('modal-customerid').innerHTML = `<span class="badge bg-info">${logData.CustomerId}</span>`;
             document.getElementById('modal-date').textContent = logData.Date || 'N/A';
             
             // Populate technical details
@@ -500,7 +497,7 @@
             id: document.getElementById('modal-id').textContent,
             action: document.getElementById('modal-action').textContent,
             entity: document.getElementById('modal-entity').textContent,
-            userId: document.getElementById('modal-userid').textContent,
+            customerId: document.getElementById('modal-customerid').textContent,
             date: document.getElementById('modal-date').textContent,
             ipAddress: document.getElementById('modal-ip').textContent,
             userAgent: document.getElementById('modal-useragent').textContent,

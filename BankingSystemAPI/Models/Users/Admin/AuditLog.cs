@@ -4,9 +4,9 @@ namespace BankingSystemAPI.Models.Users.Admin
 {
     public enum AuditAction
     {
-        UserRegistration = 1,
-        UserLogin = 2,
-        UserLogout = 3,
+        CustomerRegistration = 1,
+        CustomerLogin = 2,
+        CustomerLogout = 3,
         AccountCreated = 4,
         AccountFrozen = 5,
         AccountUnfrozen = 6,
@@ -38,7 +38,7 @@ namespace BankingSystemAPI.Models.Users.Admin
         [Required]
         public int EntityId { get; set; }
 
-        public int? UserId { get; set; }
+        public int? CustomerId { get; set; }
 
         [StringLength(500)]
         public string Description { get; set; } = string.Empty;

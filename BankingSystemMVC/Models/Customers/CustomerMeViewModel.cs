@@ -1,6 +1,6 @@
-﻿namespace BankingSystemMVC.Models.Users
+﻿namespace BankingSystemMVC.Models.Customers
 {
-    public class UserMeViewModel
+    public class CustomerMeViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;

@@ -1,6 +1,6 @@
-﻿namespace BankingSystemAPI.Models.DTOs.Users
+﻿namespace BankingSystemAPI.Models.DTOs.Customer
 {
-    public class UserMeDto
+    public class CustomerMeDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;

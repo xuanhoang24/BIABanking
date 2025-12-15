@@ -1,9 +1,10 @@
 using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.Models;
 using BankingSystemAPI.Models.DTOs.Admin;
+using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankingSystemAPI.Services.Admin
+namespace BankingSystemAPI.Services.Admin.Implements
 {
     public class DashboardService : IDashboardService
     {
@@ -16,13 +17,13 @@ namespace BankingSystemAPI.Services.Admin
 
         public async Task<DashboardStatsDto> GetDashboardStatsAsync()
         {
-            var totalUsers = await _context.Users.CountAsync();
+            var totalCustomers = await _context.Customers.CountAsync();
             
             var activeAccounts = await _context.Accounts
                 .Where(a => a.Status == AccountStatus.Active)
                 .CountAsync();
             
-            var pendingKYC = await _context.Users
+            var pendingKYC = await _context.Customers
                 .Where(u => !u.IsKYCVerified)
                 .CountAsync();
             
@@ -32,7 +33,7 @@ namespace BankingSystemAPI.Services.Admin
 
             return new DashboardStatsDto
             {
-                TotalUsers = totalUsers,
+                TotalCustomers = totalCustomers,
                 ActiveAccounts = activeAccounts,
                 PendingKYC = pendingKYC,
                 TodaysTransactions = todaysTransactions

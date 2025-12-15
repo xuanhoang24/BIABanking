@@ -12,7 +12,7 @@ namespace BankingSystemMVC.Services.Implements
 
         public AccountApiClient(IHttpClientFactory factory)
         {
-            _client = factory.CreateClient("UserApi");
+            _client = factory.CreateClient("CustomerApi");
         }
 
         public async Task<List<AccountSummaryViewModel>> GetMyAccountsAsync()

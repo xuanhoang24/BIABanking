@@ -2,21 +2,21 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankingSystemMVC.Controllers.User
+namespace BankingSystemMVC.Controllers.Customer
 {
     [Authorize]
     public class ProfileController : Controller
     {
-        private readonly IUserApiClient _usersApi;
+        private readonly ICustomerApiClient _customersApi;
 
-        public ProfileController(IUserApiClient usersApi)
+        public ProfileController(ICustomerApiClient customersApi)
         {
-            _usersApi = usersApi;
+            _customersApi = customersApi;
         }
 
         public async Task<IActionResult> Index()
         {
-            var me = await _usersApi.GetMeAsync();
+            var me = await _customersApi.GetMeAsync();
             if (me == null)
                 return RedirectToAction("Login", "Auth");
 

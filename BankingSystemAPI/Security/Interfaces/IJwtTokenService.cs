@@ -5,7 +5,7 @@ namespace BankingSystemAPI.Security.Interfaces
 {
     public interface IJwtTokenService
     {
-        string GenerateUserToken(User user);
+        string GenerateCustomerToken(Customer customer);
         string GenerateAdminToken(AdminUser admin);
 
     }

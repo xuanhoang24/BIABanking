@@ -3,7 +3,7 @@ using BankingSystemMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankingSystemMVC.Controllers.User
+namespace BankingSystemMVC.Controllers.Customer
 {
     [Authorize]
     public class AccountsController : Controller

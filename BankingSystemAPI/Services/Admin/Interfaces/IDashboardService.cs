@@ -1,6 +1,6 @@
 using BankingSystemAPI.Models.DTOs.Admin;
 
-namespace BankingSystemAPI.Services.Admin
+namespace BankingSystemAPI.Services.Admin.Interfaces
 {
     public interface IDashboardService
     {

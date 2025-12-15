@@ -1,5 +1,5 @@
 ﻿using BankingSystemAPI.Models.DTOs.Admin;
-using BankingSystemAPI.Services.Admin;
+using BankingSystemAPI.Services.Admin.Implements;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +27,7 @@ namespace BankingSystemAPI.Controllers.Admin
                 Id = l.Id,
                 ActionNumber = (int)l.Action,
                 Entity = $"{l.EntityType} #{l.EntityId}",
-                UserId = l.UserId?.ToString() ?? "System",
+                CustomerId = l.CustomerId?.ToString() ?? "System",
                 Description = l.Description,
                 Date = l.CreatedAt.ToString("MM-dd-yyyy HH:mm:ss"),
                 IpAddress = l.IpAddress,
@@ -54,7 +54,7 @@ namespace BankingSystemAPI.Controllers.Admin
                 Id = l.Id,
                 ActionNumber = (int)l.Action,
                 Entity = $"{l.EntityType} #{l.EntityId}",
-                UserId = l.UserId?.ToString() ?? "System",
+                CustomerId = l.CustomerId?.ToString() ?? "System",
                 Description = l.Description,
                 Date = l.CreatedAt.ToString("MM-dd-yyyy HH:mm:ss"),
                 IpAddress = l.IpAddress,

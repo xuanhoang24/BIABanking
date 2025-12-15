@@ -2,11 +2,11 @@
 
 namespace BankingSystemMVC.Infrastructure.Http
 {
-    public class UserJwtHandler : DelegatingHandler
+    public class CustomerJwtHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserJwtHandler(IHttpContextAccessor httpContextAccessor)
+        public CustomerJwtHandler(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -18,7 +18,7 @@ namespace BankingSystemMVC.Infrastructure.Http
             var token = _httpContextAccessor
                 .HttpContext?
                 .Request
-                .Cookies["user_access_token"];
+                .Cookies["customer_access_token"];
 
             if (!string.IsNullOrEmpty(token))
             {

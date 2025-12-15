@@ -3,8 +3,10 @@ using BankingSystemAPI.DataLayer.Seed;
 using BankingSystemAPI.Models.Security;
 using BankingSystemAPI.Security.Implements;
 using BankingSystemAPI.Security.Interfaces;
-using BankingSystemAPI.Services;
-using BankingSystemAPI.Services.Admin;
+using BankingSystemAPI.Services.Admin.Implements;
+using BankingSystemAPI.Services.Admin.Interfaces;
+using BankingSystemAPI.Services.Customer.Implements;
+using BankingSystemAPI.Services.Customer.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,12 +25,13 @@ builder.Services.Configure<PasswordOptions>(
 );
 
 // Services
-builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<AdminUserService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

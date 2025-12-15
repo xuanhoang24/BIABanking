@@ -24,7 +24,7 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
             int pageSize = 50,
             int? actionFilter = null,
             string? entityFilter = null,
-            string? userIdFilter = null,
+            string? customerIdFilter = null,
             DateTime? dateFilter = null)
         {
             var queryParams = new List<string>
@@ -39,8 +39,8 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
             if (!string.IsNullOrEmpty(entityFilter))
                 queryParams.Add($"entityFilter={entityFilter}");
 
-            if (!string.IsNullOrEmpty(userIdFilter))
-                queryParams.Add($"userIdFilter={userIdFilter}");
+            if (!string.IsNullOrEmpty(customerIdFilter))
+                queryParams.Add($"customerIdFilter={customerIdFilter}");
 
             if (dateFilter.HasValue)
                 queryParams.Add($"dateFilter={dateFilter:yyyy-MM-dd}");

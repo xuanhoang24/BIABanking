@@ -10,7 +10,7 @@ namespace BankingSystemAPI.DataLayer
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // Users & Roles Entities
-        public DbSet<User> Users { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<AdminUser> AdminUsers { get; set; }
 
         // Banking Entities
@@ -24,8 +24,8 @@ namespace BankingSystemAPI.DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // User Configuration
-            modelBuilder.Entity<User>(entity =>
+            // Customer Configuration
+            modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.Property(e => e.Email).IsRequired();
@@ -38,9 +38,9 @@ namespace BankingSystemAPI.DataLayer
                 entity.HasIndex(e => e.AccountNumber).IsUnique();
                 entity.Property(e => e.AccountNumber).IsRequired();
 
-                entity.HasOne(a => a.User)
-                      .WithMany(u => u.Accounts)
-                      .HasForeignKey(a => a.UserId)
+                entity.HasOne(a => a.Customer)
+                      .WithMany(c => c.Accounts)
+                      .HasForeignKey(a => a.CustomerId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -50,14 +50,14 @@ namespace BankingSystemAPI.DataLayer
                 entity.HasIndex(e => e.TransactionReference).IsUnique();
                 entity.Property(e => e.TransactionReference).IsRequired();
 
-                entity.HasOne(t => t.FromUser)
-                      .WithMany(u => u.SentTransactions)
-                      .HasForeignKey(t => t.FromUserId)
+                entity.HasOne(t => t.FromCustomer)
+                      .WithMany(c => c.SentTransactions)
+                      .HasForeignKey(t => t.FromCustomerId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(t => t.ToUser)
-                      .WithMany(u => u.ReceivedTransactions)
-                      .HasForeignKey(t => t.ToUserId)
+                entity.HasOne(t => t.ToCustomer)
+                      .WithMany(c => c.ReceivedTransactions)
+                      .HasForeignKey(t => t.ToCustomerId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(t => t.FromAccount)
@@ -92,15 +92,15 @@ namespace BankingSystemAPI.DataLayer
             {
                 entity.HasIndex(e => new { e.EntityType, e.EntityId });
                 entity.HasIndex(e => e.CreatedAt);
-                entity.HasIndex(e => e.UserId);
+                entity.HasIndex(e => e.CustomerId);
             });
 
             // KYCDocument Configuration
             modelBuilder.Entity<KYCDocument>(entity =>
             {
-                entity.HasOne(k => k.User)
+                entity.HasOne(k => k.Customer)
                       .WithMany()
-                      .HasForeignKey(k => k.UserId)
+                      .HasForeignKey(k => k.CustomerId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(k => k.ReviewedByAdmin)
@@ -108,7 +108,7 @@ namespace BankingSystemAPI.DataLayer
                       .HasForeignKey(k => k.ReviewedByAdminId)
                       .OnDelete(DeleteBehavior.SetNull);
 
-                entity.HasIndex(e => e.UserId);
+                entity.HasIndex(e => e.CustomerId);
                 entity.HasIndex(e => e.Status);
             });
 

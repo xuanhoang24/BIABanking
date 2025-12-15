@@ -25,10 +25,10 @@ namespace BankingSystemAPI.Models
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int CustomerId { get; set; }
 
-        [ForeignKey("UserId")]
-        public User? User { get; set; }
+        [ForeignKey("CustomerId")]
+        public Customer? Customer { get; set; }
 
         [Required, StringLength(20)]
         public string AccountNumber { get; set; } = string.Empty;

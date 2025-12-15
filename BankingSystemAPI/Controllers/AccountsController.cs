@@ -1,8 +1,10 @@
 ﻿using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.Models;
 using BankingSystemAPI.Models.DTOs.Accounts;
+using BankingSystemAPI.Models.Users;
 using BankingSystemAPI.Models.Users.Admin;
-using BankingSystemAPI.Services.Admin;
+using BankingSystemAPI.Services.Admin.Implements;
+using BankingSystemAPI.Services.Customer.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,24 +20,26 @@ namespace BankingSystemAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly AuditService _auditService;
+        private readonly IAccountService _accountService;
 
-        public AccountsController(AppDbContext context, AuditService auditService)
+        public AccountsController(AppDbContext context, AuditService auditService, IAccountService accountService)
         {
             _context = context;
             _auditService = auditService;
+            _accountService = accountService;
         }
 
         // GET: api/accounts
         [HttpGet]
         public async Task<IActionResult> GetMyAccounts()
         {
-            var userId = int.Parse(
+            var customerId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")!
             );
 
             var accounts = await _context.Accounts
-                .Where(a => a.UserId == userId)
+                .Where(a => a.CustomerId == customerId)
                 .Select(a => new AccountSummaryDto
                 {
                     Id = a.Id,
@@ -54,14 +58,14 @@ namespace BankingSystemAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAccount(CreateAccountRequestDto dto)
         {
-            var userId = int.Parse(
+            var customerId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")!
             );
 
             var account = new Account
             {
-                UserId = userId,
+                CustomerId = customerId,
                 AccountName = dto.AccountName,
                 AccountType = dto.AccountType,
                 AccountNumber = await GenerateUniqueAccountNumberAsync(),
@@ -76,7 +80,7 @@ namespace BankingSystemAPI.Controllers
                 AuditAction.AccountCreated,
                 "Account",
                 account.Id,
-                userId,
+                customerId,
                 $"Account created with number {account.AccountNumber}"
             );
 
@@ -87,13 +91,13 @@ namespace BankingSystemAPI.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAccountDetail(int id)
         {
-            var userId = int.Parse(
+            var customerId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")!
             );
 
             var account = await _context.Accounts
-                .Where(a => a.Id == id && a.UserId == userId)
+                .Where(a => a.Id == id && a.CustomerId == customerId)
                 .Select(a => new AccountDetailDto
                 {
                     Id = a.Id,

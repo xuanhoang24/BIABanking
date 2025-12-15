@@ -2,7 +2,7 @@
 using BankingSystemAPI.Models.Users.Admin;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankingSystemAPI.Services.Admin
+namespace BankingSystemAPI.Services.Admin.Implements
 {
     public class AuditService
     {
@@ -19,7 +19,7 @@ namespace BankingSystemAPI.Services.Admin
             AuditAction action,
             string entityType,
             int entityId,
-            int? userId,
+            int? customerId,
             string description,
             string? metadata = null)
         {
@@ -30,7 +30,7 @@ namespace BankingSystemAPI.Services.Admin
                 Action = action,
                 EntityType = entityType,
                 EntityId = entityId,
-                UserId = userId,
+                CustomerId = customerId,
                 Description = description,
                 IpAddress = request?.HttpContext.Connection.RemoteIpAddress?.ToString(),
                 UserAgent = request?.Headers["User-Agent"].ToString(),
@@ -42,13 +42,13 @@ namespace BankingSystemAPI.Services.Admin
             await _context.SaveChangesAsync();
         }
 
-        public async Task LogSuspiciousActivityAsync(int userId, string description)
+        public async Task LogSuspiciousActivityAsync(int customerId, string description)
         {
             await LogAsync(
                 AuditAction.SuspiciousActivity,
-                "User",
-                userId,
-                userId,
+                "Customer",
+                customerId,
+                customerId,
                 description
             );
         }
@@ -67,7 +67,7 @@ namespace BankingSystemAPI.Services.Admin
             int pageSize,
             int? actionFilter = null,
             string? entityFilter = null,
-            string? userIdFilter = null,
+            string? customerIdFilter = null,
             DateTime? dateFilter = null)
         {
             var query = _context.AuditLogs.AsNoTracking();
@@ -83,9 +83,9 @@ namespace BankingSystemAPI.Services.Admin
                 query = query.Where(a => a.EntityType.Contains(entityFilter));
             }
 
-            if (!string.IsNullOrEmpty(userIdFilter) && int.TryParse(userIdFilter, out var userId))
+            if (!string.IsNullOrEmpty(customerIdFilter) && int.TryParse(customerIdFilter, out var customerId))
             {
-                query = query.Where(a => a.UserId == userId);
+                query = query.Where(a => a.CustomerId == customerId);
             }
 
             if (dateFilter.HasValue)

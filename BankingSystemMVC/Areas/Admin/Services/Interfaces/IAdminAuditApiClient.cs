@@ -10,7 +10,7 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces
             int pageSize = 50,
             int? actionFilter = null,
             string? entityFilter = null,
-            string? userIdFilter = null,
+            string? customerIdFilter = null,
             DateTime? dateFilter = null);
     }
 }
