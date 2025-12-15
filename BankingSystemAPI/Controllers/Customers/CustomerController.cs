@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace BankingSystemAPI.Controllers
+namespace BankingSystemAPI.Controllers.Customers
 {
     [ApiController]
     [Route("api/customers")]
