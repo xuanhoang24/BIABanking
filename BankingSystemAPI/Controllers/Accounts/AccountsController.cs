@@ -92,37 +92,43 @@ namespace BankingSystemAPI.Controllers.Accounts
                 ?? User.FindFirstValue("sub")!
             );
 
+            // Load account first
             var account = await _context.Accounts
                 .Where(a => a.Id == id && a.CustomerId == customerId)
                 .Select(a => new AccountDetailDto
                 {
                     Id = a.Id,
-                    AccountNumber = a.AccountNumber,
                     AccountName = a.AccountName,
+                    AccountNumber = a.AccountNumber,
                     AccountType = a.AccountType.ToString(),
-                    Balance = a.Balance,
                     Status = a.Status.ToString(),
-                    RecentDeposits = _context.Transactions
-                        .Where(t =>
-                            t.Type == TransactionType.Deposit &&
-                            t.ToAccountId == a.Id &&
-                            t.Status == TransactionStatus.Completed
-                        )
-                        .OrderByDescending(t => t.CreatedAt)
-                        .Take(5)
-                        .Select(t => new RecentDepositDto
-                        {
-                            TransactionId = t.Id,
-                            Amount = t.Amount,
-                            Description = t.Description,
-                            Date = t.CreatedAt
-                        })
-                        .ToList()
+                    Balance = a.Balance
                 })
                 .FirstOrDefaultAsync();
 
             if (account == null)
                 return NotFound();
+
+            // Load transactions separately
+            account.RecentTransactions = await _context.Transactions
+                .Where(t =>
+                    (t.FromAccountId == account.Id || t.ToAccountId == account.Id) &&
+                    t.Status == TransactionStatus.Completed
+                )
+                .OrderByDescending(t => t.ProcessedAt)
+                .Take(10)
+                .Select(t => new AccountTransactionDto
+                {
+                    Date = t.ProcessedAt,
+                    Type = t.Type.ToString(),
+                    Description = t.Description,
+                    Amount =
+                        t.ToAccountId == account.Id
+                            ? t.Amount
+                            : -t.Amount,
+                    Status = t.Status.ToString()
+                })
+                .ToListAsync();
 
             return Ok(account);
         }
