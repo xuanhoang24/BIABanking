@@ -124,15 +124,23 @@ namespace BankingSystemMVC.Controllers.Accounts
 
             var reference = await _transactionApi.TransferAsync(vm.Transfer);
 
-            var toAccount = accounts
-                .First(a => a.AccountNumber == vm.Transfer.ToAccountNumber);
+            var toAccountNumber = vm.Transfer.ToAccountNumber;
+            
+            if (vm.Transfer.TransferType == "Internal" && vm.Transfer.ToAccountId.HasValue)
+            {
+                var toAccountInternal = accounts.FirstOrDefault(a => a.Id == vm.Transfer.ToAccountId.Value);
+                if (toAccountInternal != null)
+                {
+                    toAccountNumber = toAccountInternal.AccountNumber;
+                }
+            }
 
             return RedirectToAction("Confirm", new TransactionConfirmViewModel
             {
                 Title = "Transfer Confirmation",
                 Type = "Transfer",
                 FromAccountNumber = fromAccount.AccountNumber,
-                ToAccountNumber = toAccount.AccountNumber,
+                ToAccountNumber = toAccountNumber,
                 Amount = vm.Transfer.Amount,
                 Reference = reference
             });
