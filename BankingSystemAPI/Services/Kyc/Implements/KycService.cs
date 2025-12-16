@@ -1,5 +1,7 @@
 ﻿using BankingSystemAPI.DataLayer;
+using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Models.Users.Customers;
+using BankingSystemAPI.Services.Admin.Implements;
 using BankingSystemAPI.Services.Kyc.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +11,13 @@ namespace BankingSystemAPI.Services.Kyc.Implements
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly AuditService _auditService;
 
-        public KycService(AppDbContext context, IWebHostEnvironment env)
+        public KycService(AppDbContext context, IWebHostEnvironment env, AuditService auditService)
         {
             _context = context;
             _env = env;
+            _auditService = auditService;
         }
 
         public async Task<KYCDocument> UploadAsync(int customerId, DocumentType documentType, IFormFile file)
@@ -54,6 +58,14 @@ namespace BankingSystemAPI.Services.Kyc.Implements
 
             _context.KYCDocuments.Add(doc);
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                AuditAction.AccountCreated,
+                "KYCDocument",
+                doc.Id,
+                customerId,
+                $"Customer submitted KYC document: {documentType}"
+            );
 
             return doc;
         }

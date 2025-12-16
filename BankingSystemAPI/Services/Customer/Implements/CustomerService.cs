@@ -54,14 +54,6 @@ namespace BankingSystemAPI.Services.Customer.Implements
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            await _auditService.LogAsync(
-                AuditAction.CustomerRegistration,
-                "Customer",
-                customer.Id,
-                customer.Id,
-                $"Customer registered: {email}"
-            );
-
             await transaction.CommitAsync();
             return customer;
         }

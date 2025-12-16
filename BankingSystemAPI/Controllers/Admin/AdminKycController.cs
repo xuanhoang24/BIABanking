@@ -28,7 +28,10 @@ namespace BankingSystemAPI.Controllers.Admin
                 CustomerName = x.Customer!.FirstName + " " + x.Customer!.LastName,
                 x.DocumentType,
                 x.Status,
-                x.CreatedAt
+                x.CreatedAt,
+                ReviewerName = x.ReviewedByAdminId != null 
+                    ? $"Admin #{x.ReviewedByAdminId}"
+                    : null
             }));
         }
 

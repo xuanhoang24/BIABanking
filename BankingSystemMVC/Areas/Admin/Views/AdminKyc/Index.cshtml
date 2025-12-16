@@ -1,54 +1,161 @@
 ﻿@model List<BankingSystemMVC.Areas.Admin.Models.AdminKycPendingViewModel>
 @using BankingSystemMVC.Models.Kyc
 
-<h2>Pending KYC Reviews</h2>
+@{
+    var pendingList = Model.Where(x => x.Status == KYCStatus.Pending).ToList();
+    var underReviewList = Model.Where(x => x.Status == KYCStatus.UnderReview).ToList();
+}
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        There are no pending KYC submissions.
+<h2>KYC Reviews</h2>
+
+<div class="row">
+    <!-- Left Side: Pending -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-clock"></i> Pending
+                    <span class="badge bg-light text-dark float-end">@pendingList.Count</span>
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                @if (!pendingList.Any())
+                {
+                    <div class="p-3 text-center text-muted">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <p class="mb-0">No pending submissions</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Document</th>
+                                    <th>Submitted</th>
+                                    <th style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in pendingList)
+                                {
+                                    <tr>
+                                        <td>@item.CustomerName</td>
+                                        <td>
+                                            <small>@item.DocumentType</small>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                @item.CreatedAt.ToLocalTime().ToString("MMM dd, HH:mm")
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a asp-area="Admin"
+                                               asp-controller="AdminKyc"
+                                               asp-action="Review"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Review
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-}
-else
-{
-    <table class="table table-bordered table-striped">
-        <thead class="table-light">
-            <tr>
-                <th>Customer</th>
-                <th>Document Type</th>
-                <th>Status</th>
-                <th>Submitted At</th>
-                <th style="width: 150px;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.CustomerName</td>
-                    <td>@item.DocumentType</td>
-                    <td>
-                        @if (item.Status == KYCStatus.Pending)
-                        {
-                            <span class="badge bg-secondary">Pending</span>
-                        }
-                        else if (item.Status == KYCStatus.UnderReview)
-                        {
-                            <span class="badge bg-warning text-dark">Under Review</span>
-                        }
-                    </td>
-                    <td>@item.CreatedAt.ToLocalTime()</td>
-                    <td>
-                        <a asp-area="Admin"
-                           asp-controller="AdminKyc"
-                           asp-action="Review"
-                           asp-route-id="@item.Id"
-                           class="btn btn-sm btn-primary">
-                            Review
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+    <!-- Right Side: Under Review -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-hourglass-half"></i> Under Review
+                    <span class="badge bg-dark float-end">@underReviewList.Count</span>
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                @if (!underReviewList.Any())
+                {
+                    <div class="p-3 text-center text-muted">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p class="mb-0">No submissions under review</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Document</th>
+                                    <th>Submitted</th>
+                                    <th>Review By</th>
+                                    <th style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in underReviewList)
+                                {
+                                    <tr>
+                                        <td>@item.CustomerName</td>
+                                        <td>
+                                            <small>@item.DocumentType</small>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                @item.CreatedAt.ToLocalTime().ToString("MMM dd, HH:mm")
+                                            </small>
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.ReviewerName))
+                                            {
+                                                <small>
+                                                    <i class="fas text-primary"></i> @item.ReviewerName
+                                                </small>
+                                            }
+                                            else
+                                            {
+                                                <small class="text-muted">-</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-area="Admin"
+                                               asp-controller="AdminKyc"
+                                               asp-action="Review"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Review
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        margin-bottom: 1rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .card-header h5 {
+        font-size: 1.1rem;
+    }
+</style>

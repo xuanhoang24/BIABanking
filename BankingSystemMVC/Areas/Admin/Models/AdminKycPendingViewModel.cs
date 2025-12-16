@@ -9,5 +9,6 @@ namespace BankingSystemMVC.Areas.Admin.Models
         public DocumentType DocumentType { get; set; }
         public KYCStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? ReviewerName { get; set; }
     }
 }

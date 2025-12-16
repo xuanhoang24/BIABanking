@@ -29,14 +29,6 @@ namespace BankingSystemAPI.Controllers.Admin
             if (admin == null)
                 return Unauthorized();
 
-            await _auditService.LogAsync(
-                AuditAction.AdminLogin,
-                "AdminUser",
-                admin.Id,
-                null,
-                $"Admin logged in: {admin.Email}"
-            );
-
             var token = _jwt.GenerateAdminToken(admin);
 
             return Ok(new LoginResponseDto

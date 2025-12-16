@@ -1,4 +1,5 @@
 ﻿using BankingSystemAPI.DataLayer;
+using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Models.Users.Customers;
 using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace BankingSystemAPI.Services.Admin.Implements
     public class KycAdminService : IKycAdminService
     {
         private readonly AppDbContext _context;
+        private readonly AuditService _auditService;
 
-        public KycAdminService(AppDbContext context)
+        public KycAdminService(AppDbContext context, AuditService auditService)
         {
             _context = context;
+            _auditService = auditService;
         }
 
         public async Task<KYCDocument?> GetPendingAsync(int kycId)
@@ -28,6 +31,7 @@ namespace BankingSystemAPI.Services.Admin.Implements
         {
             return await _context.KYCDocuments
                 .Include(x => x.Customer)
+                .Include(x => x.ReviewedByAdmin)
                 .Where(x =>
                     x.Status == KYCStatus.Pending ||
                     x.Status == KYCStatus.UnderReview)
@@ -45,6 +49,14 @@ namespace BankingSystemAPI.Services.Admin.Implements
             doc.ReviewedByAdminId = adminId;
 
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                AuditAction.AdminActionPerformed,
+                "KYCDocument",
+                kycId,
+                doc.CustomerId,
+                $"KYC marked under review by ID: {adminId}"
+            );
         }
 
         public async Task ApproveAsync(int kycId, int adminId)
@@ -60,6 +72,14 @@ namespace BankingSystemAPI.Services.Admin.Implements
             doc.Customer!.IsKYCVerified = true;
 
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                AuditAction.AdminActionPerformed,
+                "KYCDocument",
+                kycId,
+                doc.CustomerId,
+                $"KYC approved by ID: {adminId}"
+            );
         }
 
         public async Task RejectAsync(int kycId, int adminId, string reviewNotes)
@@ -76,6 +96,14 @@ namespace BankingSystemAPI.Services.Admin.Implements
             doc.Customer!.IsKYCVerified = false;
 
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                AuditAction.AdminActionPerformed,
+                "KYCDocument",
+                kycId,
+                doc.CustomerId,
+                $"KYC rejected by ID: {adminId} - Reason: {reviewNotes}"
+            );
         }
     }
 }
