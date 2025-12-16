@@ -5,7 +5,7 @@ namespace BankingSystemMVC.Services.Interfaces
     public interface IAccountApiClient
     {
         Task<List<AccountSummaryViewModel>> GetMyAccountsAsync();
-        Task<bool> CreateAccountAsync(CreateAccountViewModel model);
+        Task<(bool Success, string? ErrorMessage)> CreateAccountAsync(CreateAccountViewModel model);
         Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId);
     }
 }

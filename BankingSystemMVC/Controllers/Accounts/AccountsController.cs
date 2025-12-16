@@ -11,11 +11,13 @@ namespace BankingSystemMVC.Controllers.Accounts
     {
         private readonly IAccountApiClient _accountApi;
         private readonly IAccountViewService _accountViewService;
+        private readonly ICustomerApiClient _customerApi;
 
-        public AccountsController(IAccountApiClient accountApi, IAccountViewService accountViewService)
+        public AccountsController(IAccountApiClient accountApi, IAccountViewService accountViewService, ICustomerApiClient customerApi)
         {
             _accountApi = accountApi;
             _accountViewService = accountViewService;
+            _customerApi = customerApi;
         }
 
         // LIST ACCOUNTS
@@ -29,8 +31,17 @@ namespace BankingSystemMVC.Controllers.Accounts
         // CREATE ACCOUNT
         // GET: /Accounts/Create
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var customer = await _customerApi.GetMeAsync();
+            
+            if (customer == null || !customer.IsKYCVerified)
+            {
+                TempData["ErrorMessage"] = "You must complete KYC verification before creating an account.";
+                TempData["ShowKycLink"] = true;
+                return RedirectToAction(nameof(Index));
+            }
+
             return View();
         }
 
@@ -38,14 +49,24 @@ namespace BankingSystemMVC.Controllers.Accounts
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateAccountViewModel model)
         {
+            // Double-check KYC verification
+            var customer = await _customerApi.GetMeAsync();
+            
+            if (customer == null || !customer.IsKYCVerified)
+            {
+                TempData["ErrorMessage"] = "You must complete KYC verification before creating an account.";
+                TempData["ShowKycLink"] = true;
+                return RedirectToAction(nameof(Index));
+            }
+
             if (!ModelState.IsValid)
                 return View(model);
 
-            var success = await _accountApi.CreateAccountAsync(model);
+            var (success, errorMessage) = await _accountApi.CreateAccountAsync(model);
 
             if (!success)
             {
-                ModelState.AddModelError(string.Empty, "Failed to create account");
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Failed to create account");
                 return View(model);
             }
 

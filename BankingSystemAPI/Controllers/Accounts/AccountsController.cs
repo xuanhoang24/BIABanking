@@ -59,6 +59,20 @@ namespace BankingSystemAPI.Controllers.Accounts
                 ?? User.FindFirstValue("sub")!
             );
 
+            // Check if customer has verified KYC
+            var customer = await _context.Customers.FindAsync(customerId);
+            if (customer == null)
+                return NotFound("Customer not found");
+
+            if (!customer.IsKYCVerified)
+            {
+                return BadRequest(new 
+                { 
+                    error = "KYC verification required",
+                    message = "You must complete KYC verification before creating an account. Please upload your identity documents."
+                });
+            }
+
             var account = new Account
             {
                 CustomerId = customerId,
