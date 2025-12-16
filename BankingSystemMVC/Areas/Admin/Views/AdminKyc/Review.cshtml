@@ -38,6 +38,23 @@
 
 <hr />
 
+@if (Model.Status == KYCStatus.Pending)
+{
+    <form asp-area="Admin"
+          asp-controller="AdminKyc"
+          asp-action="MarkUnderReview"
+          method="post"
+          class="d-inline">
+
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <button type="submit" class="btn btn-warning">
+            <i class="fas fa-clock"></i> Mark Under Review
+        </button>
+    </form>
+}
+
 <form asp-area="Admin"
       asp-controller="AdminKyc"
       asp-action="Approve"
@@ -48,14 +65,14 @@
     <input type="hidden" name="id" value="@Model.Id" />
 
     <button type="submit" class="btn btn-success">
-        Approve
+        <i class="fas fa-check"></i> Approve
     </button>
 </form>
 
 <button class="btn btn-danger ms-2"
         data-bs-toggle="collapse"
         data-bs-target="#rejectForm">
-    Reject
+    <i class="fas fa-times"></i> Reject
 </button>
 
 <div id="rejectForm" class="collapse mt-3">

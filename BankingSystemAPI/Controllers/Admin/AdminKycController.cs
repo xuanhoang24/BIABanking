@@ -27,6 +27,7 @@ namespace BankingSystemAPI.Controllers.Admin
                 x.Id,
                 CustomerName = x.Customer!.FirstName + " " + x.Customer!.LastName,
                 x.DocumentType,
+                x.Status,
                 x.CreatedAt
             }));
         }
@@ -59,6 +60,18 @@ namespace BankingSystemAPI.Controllers.Admin
                 return NotFound();
 
             return File(kyc.FileData, kyc.ContentType, kyc.OriginalFileName);
+        }
+
+        [HttpPost("{id}/under-review")]
+        public async Task<IActionResult> MarkUnderReview(int id)
+        {
+            var adminId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!
+            );
+
+            await _kycAdminService.MarkUnderReviewAsync(id, adminId);
+            return Ok();
         }
 
         [HttpPost("{id}/approve")]

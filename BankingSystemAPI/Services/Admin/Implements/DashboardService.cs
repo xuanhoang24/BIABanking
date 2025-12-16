@@ -1,6 +1,7 @@
 using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.Models.Accounts;
 using BankingSystemAPI.Models.DTOs.Admin;
+using BankingSystemAPI.Models.Users.Customers;
 using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +24,8 @@ namespace BankingSystemAPI.Services.Admin.Implements
                 .Where(a => a.Status == AccountStatus.Active)
                 .CountAsync();
 
-            var pendingKYC = await _context.Customers
-                .Where(u => !u.IsKYCVerified)
+            var pendingKYC = await _context.KYCDocuments
+                .Where(k => k.Status == KYCStatus.Pending || k.Status == KYCStatus.UnderReview)
                 .CountAsync();
 
             var todaysTransactions = await _context.Transactions

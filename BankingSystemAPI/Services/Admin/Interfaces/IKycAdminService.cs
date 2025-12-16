@@ -6,6 +6,7 @@ namespace BankingSystemAPI.Services.Admin.Interfaces
     {
         Task<KYCDocument?> GetPendingAsync(int kycId);
         Task<List<KYCDocument>> GetPendingListAsync();
+        Task MarkUnderReviewAsync(int kycId, int adminId);
         Task ApproveAsync(int kycId, int adminId);
         Task RejectAsync(int kycId, int adminId, string reviewNotes);
     }

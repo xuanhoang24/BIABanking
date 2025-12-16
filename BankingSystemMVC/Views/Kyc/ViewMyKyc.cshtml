@@ -13,7 +13,7 @@
         }
         else if (Model.Status == KYCStatus.Pending || Model.Status == KYCStatus.UnderReview)
         {
-            <span class="badge bg-warning text-dark">Under Review</span>
+            <span class="badge bg-warning text-dark">Pending</span>
         }
         else if (Model.Status == KYCStatus.Rejected)
         {
@@ -57,7 +57,7 @@
 @if (Model.Status == KYCStatus.Pending || Model.Status == KYCStatus.UnderReview)
 {
     <div class="alert alert-info">
-        Your KYC submission is currently under review.
+        Your KYC submission is pending review.
         You cannot upload a new document at this time.
     </div>
 }

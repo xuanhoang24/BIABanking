@@ -43,7 +43,7 @@ namespace BankingSystemMVC.Controllers.Customer
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    "Your KYC is currently under review. You cannot upload a new document."
+                    "Your KYC is currently pending review. You cannot upload a new document."
                 );
                 return View(model);
             }

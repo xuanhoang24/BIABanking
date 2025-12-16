@@ -59,6 +59,11 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
             };
         }
 
+        public async Task MarkUnderReviewAsync(int id)
+        {
+            await _client.PostAsync($"api/admin/kyc/{id}/under-review", null);
+        }
+
         public async Task ApproveAsync(int id)
         {
             await _client.PostAsync($"api/admin/kyc/{id}/approve", null);

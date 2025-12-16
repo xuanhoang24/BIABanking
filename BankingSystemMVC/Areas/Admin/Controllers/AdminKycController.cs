@@ -44,6 +44,14 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkUnderReview(int id)
+        {
+            await _api.MarkUnderReviewAsync(id);
+            return RedirectToAction(nameof(Review), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(int id)
         {
             await _api.ApproveAsync(id);

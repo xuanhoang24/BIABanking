@@ -35,6 +35,18 @@ namespace BankingSystemAPI.Services.Admin.Implements
                 .ToListAsync();
         }
 
+        public async Task MarkUnderReviewAsync(int kycId, int adminId)
+        {
+            var doc = await GetPendingAsync(kycId);
+            if (doc == null)
+                throw new InvalidOperationException("KYC not found or already processed");
+
+            doc.Status = KYCStatus.UnderReview;
+            doc.ReviewedByAdminId = adminId;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task ApproveAsync(int kycId, int adminId)
         {
             var doc = await GetPendingAsync(kycId);
