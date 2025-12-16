@@ -1,0 +1,56 @@
+﻿@model List<BankingSystemMVC.Models.Kyc.KycSubmissionViewModel>
+@using BankingSystemMVC.Models.Kyc
+
+<h2>KYC Submissions</h2>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">
+        You have not submitted any KYC documents yet.
+    </p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Document Type</th>
+                <th>Status</th>
+                <th>Submitted At</th>
+                <th>Review Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var doc in Model)
+            {
+                <tr>
+                    <td>@doc.DocumentType</td>
+                    <td>
+                        @if (doc.Status == KYCStatus.Approved)
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else if (doc.Status == KYCStatus.Rejected)
+                        {
+                            <span class="badge bg-danger">Rejected</span>
+                        }
+                        else if (doc.Status == KYCStatus.RequiresAdditionalInfo)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Additional info required
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+                        }
+                    </td>
+                    <td>@doc.CreatedAt.ToLocalTime()</td>
+                    <td>@doc.ReviewNotes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

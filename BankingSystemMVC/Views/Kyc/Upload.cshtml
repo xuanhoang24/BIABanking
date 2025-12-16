@@ -1,0 +1,39 @@
+﻿@model BankingSystemMVC.Models.Kyc.UploadKycViewModel
+@using BankingSystemMVC.Models.Kyc
+
+<h2>Upload KYC Document</h2>
+
+<form asp-action="Upload"
+      method="post"
+      enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">Document Type</label>
+        <select asp-for="DocumentType" class="form-control">
+            <option value="">-- Select document type --</option>
+            @foreach (var type in Enum.GetValues(typeof(DocumentType)))
+            {
+                <option value="@((int)type)">@type</option>
+            }
+        </select>
+        <span asp-validation-for="DocumentType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Upload File</label>
+        <input asp-for="File" type="file" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Upload
+    </button>
+
+    <a asp-controller="Profile"
+       asp-action="Index"
+       class="btn btn-secondary ms-2">
+        Cancel
+    </a>
+</form>

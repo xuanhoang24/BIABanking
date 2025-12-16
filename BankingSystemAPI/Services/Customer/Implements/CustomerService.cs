@@ -82,18 +82,39 @@ namespace BankingSystemAPI.Services.Customer.Implements
 
         public async Task<CustomerMeDto?> GetMeAsync(int customerId)
         {
-            return await _context.Customers
+            var customer = await _context.Customers
                 .AsNoTracking()
                 .Where(c => c.Id == customerId)
-                .Select(c => new CustomerMeDto
+                .Select(c => new
                 {
-                    Id = c.Id,
-                    FirstName = c.FirstName,
-                    LastName = c.LastName,
-                    Email = c.Email,
-                    IsKYCVerified = c.IsKYCVerified
+                    c.Id,
+                    c.FirstName,
+                    c.LastName,
+                    c.Email,
+                    c.IsKYCVerified
                 })
                 .FirstOrDefaultAsync();
+
+            if (customer == null)
+                return null;
+
+            var latestKyc = await _context.KYCDocuments
+                .AsNoTracking()
+                .Where(k => k.CustomerId == customerId)
+                .OrderByDescending(k => k.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            return new CustomerMeDto
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                IsKYCVerified = customer.IsKYCVerified,
+
+                HasKycSubmission = latestKyc != null,
+                CurrentKycStatus = latestKyc?.Status
+            };
         }
     }
 }

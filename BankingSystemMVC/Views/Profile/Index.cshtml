@@ -5,3 +5,37 @@
 <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
 <p><strong>Email:</strong> @Model.Email</p>
 <p><strong>KYC Verified:</strong> @Model.IsKYCVerified</p>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Identity Verification</h5>
+
+        @if (!Model.HasKycSubmission)
+        {
+            <p class="text-muted">
+                Please upload your KYC documents to verify your account.
+            </p>
+
+            <a asp-controller="Kyc"
+               asp-action="Upload"
+               class="btn btn-primary">
+                Upload KYC Documents
+            </a>
+        }
+        else
+        {
+            <p class="fw-bold">
+                KYC Status:
+                <span class="text-warning">
+                    @Model.CurrentKycStatus
+                </span>
+            </p>
+
+            <a asp-controller="Kyc"
+               asp-action="Submissions"
+               class="btn btn-outline-secondary">
+                View Submission
+            </a>
+        }
+    </div>
+</div>

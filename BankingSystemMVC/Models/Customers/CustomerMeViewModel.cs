@@ -1,4 +1,6 @@
-﻿namespace BankingSystemMVC.Models.Customers
+﻿using BankingSystemMVC.Models.Kyc;
+
+namespace BankingSystemMVC.Models.Customers
 {
     public class CustomerMeViewModel
     {
@@ -7,5 +9,7 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public bool IsKYCVerified { get; set; }
+        public KYCStatus? CurrentKycStatus { get; set; }
+        public bool HasKycSubmission { get; set; }
     }
 }
