@@ -1,4 +1,5 @@
-﻿using BankingSystemMVC.Models.Customers;
+﻿using BankingSystemMVC.Models.Common;
+using BankingSystemMVC.Models.Customers;
 using BankingSystemMVC.Models.Kyc;
 
 namespace BankingSystemMVC.Services.Interfaces
@@ -6,7 +7,8 @@ namespace BankingSystemMVC.Services.Interfaces
     public interface ICustomerApiClient
     {
         Task<CustomerMeViewModel?> GetMeAsync();
-        Task<bool> UploadKycAsync(UploadKycViewModel model);
-        Task<List<KycSubmissionViewModel>> GetMyKycSubmissionsAsync();
+        Task<(bool Success, string? Error)> UploadKycAsync(UploadKycViewModel model);
+        Task<KycSubmissionViewModel?> GetMyKycAsync();
+        Task<ApiFileResult?> GetMyKycFileAsync();
     }
 }

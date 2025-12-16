@@ -6,6 +6,6 @@ namespace BankingSystemAPI.Services.Kyc.Interfaces
     {
         Task<KYCDocument> UploadAsync(int customerId, DocumentType documentType, IFormFile file);
 
-        Task<List<KYCDocument>> GetMyDocumentsAsync(int customerId);
+        Task<KYCDocument?> GetCurrentCustomerDocumentAsync(int customerId);
     }
 }

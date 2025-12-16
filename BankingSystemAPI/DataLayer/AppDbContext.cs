@@ -108,7 +108,9 @@ namespace BankingSystemAPI.DataLayer
                       .HasForeignKey(k => k.ReviewedByAdminId)
                       .OnDelete(DeleteBehavior.SetNull);
 
-                entity.HasIndex(e => e.CustomerId);
+                entity.HasIndex(e => e.CustomerId)
+                      .IsUnique();
+
                 entity.HasIndex(e => e.Status);
             });
 

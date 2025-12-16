@@ -21,49 +21,75 @@ namespace BankingSystemAPI.Controllers.Customers
             _kycService = kycService;
         }
 
+        // POST: api/kyc/upload
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadDocument([FromForm] UploadKycDocumentRequestDto dto)
+        public async Task<IActionResult> Upload([FromForm] UploadKycDocumentRequestDto dto)
         {
             var customerId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")!
             );
 
-            if (dto.File == null || dto.File.Length == 0)
-                return BadRequest("File is required");
+            try
+            {
+                var doc = await _kycService.UploadAsync(
+                    customerId,
+                    dto.DocumentType,
+                    dto.File
+                );
 
-            var doc = await _kycService.UploadAsync(
-                customerId,
-                dto.DocumentType,
-                dto.File
+                return Ok(new
+                {
+                    doc.Id,
+                    doc.DocumentType,
+                    doc.Status
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // GET: api/kyc/my-document
+        [HttpGet("my-document")]
+        public async Task<IActionResult> MyDocument()
+        {
+            var customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? User.FindFirstValue("sub")!
             );
+
+            var doc = await _kycService.GetCurrentCustomerDocumentAsync(customerId);
+            if (doc == null)
+                return NotFound();
 
             return Ok(new
             {
                 doc.Id,
                 doc.DocumentType,
-                doc.Status
+                doc.Status,
+                doc.OriginalFileName,
+                doc.ReviewNotes,
+                doc.CreatedAt,
+                FileUrl = "/api/kyc/my-document/file"
             });
         }
 
-        [HttpGet("my-documents")]
-        public async Task<IActionResult> MyDocuments()
+        // GET: api/kyc/my-document/file
+        [HttpGet("my-document/file")]
+        public async Task<IActionResult> GetMyDocumentFile()
         {
             var customerId = int.Parse(
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? User.FindFirstValue("sub")!
             );
 
-            var docs = await _kycService.GetMyDocumentsAsync(customerId);
+            var doc = await _kycService.GetCurrentCustomerDocumentAsync(customerId);
+            if (doc == null)
+                return NotFound();
 
-            return Ok(docs.Select(x => new
-            {
-                x.Id,
-                x.DocumentType,
-                x.Status,
-                x.ReviewNotes,
-                x.CreatedAt
-            }));
+            return File(doc.FileData, doc.ContentType, doc.OriginalFileName);
         }
     }
 }

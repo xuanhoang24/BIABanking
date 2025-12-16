@@ -36,10 +36,13 @@ namespace BankingSystemAPI.Models.Users.Customers
         [Required]
         public DocumentType DocumentType { get; set; }
 
-        [Required, StringLength(500)]
-        public string FilePath { get; set; } = string.Empty;
+        [Required]
+        public byte[] FileData { get; set; } = Array.Empty<byte>();
 
         [Required, StringLength(100)]
+        public string ContentType { get; set; } = string.Empty;
+
+        [Required, StringLength(255)]
         public string OriginalFileName { get; set; } = string.Empty;
 
         [Required]
@@ -52,9 +55,7 @@ namespace BankingSystemAPI.Models.Users.Customers
 
         [ForeignKey("ReviewedByAdminId")]
         public AdminUser? ReviewedByAdmin { get; set; }
-
         public DateTime? ReviewedAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -15,14 +15,21 @@ namespace BankingSystemMVC.Controllers.Customer
             _customerApi = customerApi;
         }
 
-        // GET: /Kyc/Upload
         [HttpGet]
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
+            var kyc = await _customerApi.GetMyKycAsync();
+
+            if (kyc != null &&
+                (kyc.Status == KYCStatus.Pending || kyc.Status == KYCStatus.UnderReview))
+            {
+                return RedirectToAction(nameof(ViewMyKyc));
+            }
+
             return View();
         }
 
-        // POST: /Kyc/Upload
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(UploadKycViewModel model)
@@ -30,23 +37,38 @@ namespace BankingSystemMVC.Controllers.Customer
             if (!ModelState.IsValid)
                 return View(model);
 
-            var success = await _customerApi.UploadKycAsync(model);
+            var result = await _customerApi.UploadKycAsync(model);
 
-            if (!success)
+            if (!result.Success)
             {
-                ModelState.AddModelError(string.Empty, "Failed to upload KYC document");
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Your KYC is currently under review. You cannot upload a new document."
+                );
                 return View(model);
             }
 
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction(nameof(ViewMyKyc));
         }
 
-        // GET: /Kyc/Submissions
         [HttpGet]
-        public async Task<IActionResult> Submissions()
+        public async Task<IActionResult> ViewMyKyc()
         {
-            var submissions = await _customerApi.GetMyKycSubmissionsAsync();
-            return View(submissions);
+            var kyc = await _customerApi.GetMyKycAsync();
+            if (kyc == null)
+                return RedirectToAction(nameof(Upload));
+
+            return View(kyc);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewFile()
+        {
+            var file = await _customerApi.GetMyKycFileAsync();
+            if (file == null)
+                return NotFound();
+
+            return File(file.Content, file.ContentType);
         }
     }
 }

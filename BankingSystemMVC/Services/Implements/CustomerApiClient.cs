@@ -1,4 +1,5 @@
-﻿using BankingSystemMVC.Models.Customers;
+﻿using BankingSystemMVC.Models.Common;
+using BankingSystemMVC.Models.Customers;
 using BankingSystemMVC.Models.Kyc;
 using BankingSystemMVC.Services.Interfaces;
 using System.Net.Http.Headers;
@@ -30,7 +31,7 @@ namespace BankingSystemMVC.Services.Implements
             );
         }
 
-        public async Task<bool> UploadKycAsync(UploadKycViewModel model)
+        public async Task<(bool Success, string? Error)> UploadKycAsync(UploadKycViewModel model)
         {
             using var form = new MultipartFormDataContent();
 
@@ -40,28 +41,48 @@ namespace BankingSystemMVC.Services.Implements
             );
 
             var fileContent = new StreamContent(model.File.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(model.File.ContentType);
+            fileContent.Headers.ContentType =
+                new MediaTypeHeaderValue(model.File.ContentType);
 
             form.Add(fileContent, "File", model.File.FileName);
 
             var response = await _client.PostAsync("api/kyc/upload", form);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+
+            var json = await response.Content.ReadAsStringAsync();
+            return (false, json);
         }
 
-        public async Task<List<KycSubmissionViewModel>> GetMyKycSubmissionsAsync()
+        public async Task<KycSubmissionViewModel?> GetMyKycAsync()
         {
-            var response = await _client.GetAsync("api/kyc/my-documents");
-
+            var response = await _client.GetAsync("api/kyc/my-document");
             if (!response.IsSuccessStatusCode)
-                return new List<KycSubmissionViewModel>();
+                return null;
 
             var json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<List<KycSubmissionViewModel>>(
+            return JsonSerializer.Deserialize<KycSubmissionViewModel>(
                 json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            ) ?? new List<KycSubmissionViewModel>();
+            );
+        }
+        public async Task<ApiFileResult?> GetMyKycFileAsync()
+        {
+            var response = await _client.GetAsync("api/kyc/my-document/file");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var content = await response.Content.ReadAsByteArrayAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString()
+                              ?? "application/octet-stream";
+
+            return new ApiFileResult
+            {
+                Content = content,
+                ContentType = contentType
+            };
         }
     }
 }

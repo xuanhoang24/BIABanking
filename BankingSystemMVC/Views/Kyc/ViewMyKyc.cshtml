@@ -1,0 +1,88 @@
+﻿@model BankingSystemMVC.Models.Kyc.KycSubmissionViewModel
+@using BankingSystemMVC.Models.Kyc
+
+<h2>My KYC Submission</h2>
+
+<div class="mb-3">
+    <p><strong>Document Type:</strong> @Model.DocumentType</p>
+    <p>
+        <strong>Status:</strong>
+        @if (Model.Status == KYCStatus.Approved)
+        {
+            <span class="badge bg-success">Approved</span>
+        }
+        else if (Model.Status == KYCStatus.Pending || Model.Status == KYCStatus.UnderReview)
+        {
+            <span class="badge bg-warning text-dark">Under Review</span>
+        }
+        else if (Model.Status == KYCStatus.Rejected)
+        {
+            <span class="badge bg-danger">Rejected</span>
+        }
+    </p>
+    <p><strong>Submitted At:</strong> @Model.CreatedAt.ToLocalTime()</p>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.ReviewNotes))
+{
+    <div class="alert alert-warning">
+        <strong>Admin Review Note</strong><br />
+        @Model.ReviewNotes
+    </div>
+}
+
+<hr />
+
+<h5>Uploaded Document</h5>
+
+<div class="mb-4">
+    @if (Model.OriginalFileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+    {
+        <iframe src="@Url.Action("ViewFile", "Kyc")"
+                width="100%"
+                height="600"
+                style="border:1px solid #ccc">
+        </iframe>
+    }
+    else
+    {
+        <img src="@Url.Action("ViewFile", "Kyc")"
+             class="img-fluid border"
+             alt="KYC Document" />
+    }
+</div>
+
+<hr />
+
+@if (Model.Status == KYCStatus.Pending || Model.Status == KYCStatus.UnderReview)
+{
+    <div class="alert alert-info">
+        Your KYC submission is currently under review.
+        You cannot upload a new document at this time.
+    </div>
+}
+else if (Model.Status == KYCStatus.Rejected)
+{
+    <div class="alert alert-danger">
+        Your KYC submission was rejected.
+        Please upload a new document.
+    </div>
+
+    <a asp-controller="Kyc"
+       asp-action="Upload"
+       class="btn btn-primary">
+        Upload New KYC
+    </a>
+}
+else if (Model.Status == KYCStatus.Approved)
+{
+    <div class="alert alert-success">
+        Your identity has been verified successfully.
+    </div>
+}
+
+<a asp-controller="Profile"
+   asp-action="Index"
+   class="btn btn-secondary mt-3">
+    Back to Profile
+</a>

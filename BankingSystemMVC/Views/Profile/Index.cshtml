@@ -10,31 +10,34 @@
     <div class="card-body">
         <h5 class="card-title">Identity Verification</h5>
 
-        @if (!Model.HasKycSubmission)
+        @if (Model.IsKYCVerified)
+        {
+            <span class="badge bg-success">KYC Verified</span>
+
+            <div class="mt-3">
+                <a asp-controller="Kyc"
+                   asp-action="ViewMyKyc"
+                   class="btn btn-outline-secondary">
+                    View KYC
+                </a>
+            </div>
+        }
+        else
         {
             <p class="text-muted">
-                Please upload your KYC documents to verify your account.
+                Your identity has not been verified yet.
             </p>
 
             <a asp-controller="Kyc"
                asp-action="Upload"
                class="btn btn-primary">
-                Upload KYC Documents
+                Upload KYC
             </a>
-        }
-        else
-        {
-            <p class="fw-bold">
-                KYC Status:
-                <span class="text-warning">
-                    @Model.CurrentKycStatus
-                </span>
-            </p>
 
             <a asp-controller="Kyc"
-               asp-action="Submissions"
-               class="btn btn-outline-secondary">
-                View Submission
+               asp-action="ViewMyKyc"
+               class="btn btn-outline-secondary ms-2">
+                Check KYC Status
             </a>
         }
     </div>

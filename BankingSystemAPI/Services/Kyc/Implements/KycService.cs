@@ -18,46 +18,51 @@ namespace BankingSystemAPI.Services.Kyc.Implements
 
         public async Task<KYCDocument> UploadAsync(int customerId, DocumentType documentType, IFormFile file)
         {
-            var uploadsRoot = Path.Combine(
-                _env.ContentRootPath,
-                "Uploads",
-                "KYC",
-                customerId.ToString()
-            );
+            var existing = await _context.KYCDocuments
+                .FirstOrDefaultAsync(x => x.CustomerId == customerId);
 
-            Directory.CreateDirectory(uploadsRoot);
-
-            var storedFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var storedFilePath = Path.Combine(uploadsRoot, storedFileName);
-
-            using (var stream = new FileStream(storedFilePath, FileMode.Create))
+            if (existing != null)
             {
-                await file.CopyToAsync(stream);
+                if (existing.Status == KYCStatus.Pending ||
+                    existing.Status == KYCStatus.UnderReview)
+                {
+                    throw new InvalidOperationException(
+                        "KYC is currently under review. You cannot upload a new document."
+                    );
+                }
+
+                _context.KYCDocuments.Remove(existing);
+                await _context.SaveChangesAsync();
             }
 
-            var kycDocument = new KYCDocument
+            if (file.Length > 5 * 1024 * 1024)
+                throw new InvalidOperationException("File too large");
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            var doc = new KYCDocument
             {
                 CustomerId = customerId,
                 DocumentType = documentType,
-                FilePath = storedFilePath,
+                FileData = ms.ToArray(),
+                ContentType = file.ContentType,
                 OriginalFileName = file.FileName,
                 Status = KYCStatus.Pending,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
-            _context.KYCDocuments.Add(kycDocument);
+            _context.KYCDocuments.Add(doc);
             await _context.SaveChangesAsync();
 
-            return kycDocument;
+            return doc;
         }
 
-        public async Task<List<KYCDocument>> GetMyDocumentsAsync(int customerId)
+        public async Task<KYCDocument?> GetCurrentCustomerDocumentAsync(int customerId)
         {
             return await _context.KYCDocuments
-                .Where(x => x.CustomerId == customerId)
-                .OrderByDescending(x => x.CreatedAt)
-                .ToListAsync();
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CustomerId == customerId);
         }
     }
 }
