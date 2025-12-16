@@ -1,0 +1,42 @@
+﻿@model List<BankingSystemMVC.Areas.Admin.Models.AdminKycPendingViewModel>
+
+<h2>Pending KYC Reviews</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no pending KYC submissions.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Customer</th>
+                <th>Document Type</th>
+                <th>Submitted At</th>
+                <th style="width: 150px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CustomerName</td>
+                    <td>@item.DocumentType</td>
+                    <td>@item.CreatedAt.ToLocalTime()</td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="AdminKyc"
+                           asp-action="Review"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-primary">
+                            Review
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

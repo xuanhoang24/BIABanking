@@ -1,0 +1,61 @@
+﻿using BankingSystemMVC.Areas.Admin.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BankingSystemMVC.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    [Authorize(Policy = "AdminOnly")]
+    public class AdminKycController : Controller
+    {
+        private readonly IAdminKycApiClient _api;
+
+        public AdminKycController(IAdminKycApiClient api)
+        {
+            _api = api;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var pending = await _api.GetPendingAsync();
+            return View(pending);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Review(int id)
+        {
+            var kyc = await _api.GetForReviewAsync(id);
+            if (kyc == null)
+                return NotFound();
+
+            return View(kyc);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewFile(int id)
+        {
+            var file = await _api.GetFileAsync(id);
+            if (file == null)
+                return NotFound();
+
+            return File(file.Bytes, file.ContentType, file.FileName);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int id)
+        {
+            await _api.ApproveAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id, string reviewNotes)
+        {
+            await _api.RejectAsync(id, reviewNotes);
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}

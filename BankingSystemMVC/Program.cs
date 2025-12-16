@@ -40,6 +40,7 @@ builder.Services.AddScoped<IAdminAuthApiClient, AdminAuthApiClient>();
 builder.Services.AddScoped<IAdminAuditApiClient, AdminAuditApiClient>();
 builder.Services.AddScoped<IAccountViewService, AccountViewService>();
 builder.Services.AddScoped<ITransactionApiClient, TransactionApiClient>();
+builder.Services.AddScoped<IAdminKycApiClient, AdminKycApiClient>();
 
 builder.Services.AddScoped<IAdminDashboardApiClient>(provider =>
 {

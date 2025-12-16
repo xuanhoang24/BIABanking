@@ -1,0 +1,89 @@
+﻿@model BankingSystemMVC.Areas.Admin.Models.AdminKycReviewViewModel
+@using BankingSystemMVC.Models.Kyc
+
+<h2>KYC Review</h2>
+
+<div class="mb-3">
+    <p><strong>Customer:</strong> @Model.CustomerName</p>
+    <p><strong>Document Type:</strong> @Model.DocumentType</p>
+    <p>
+        <strong>Status:</strong>
+        <span class="badge bg-warning text-dark">
+            @Model.Status
+        </span>
+    </p>
+    <p><strong>Submitted At:</strong> @Model.CreatedAt.ToLocalTime()</p>
+</div>
+
+<hr />
+
+<h5>Uploaded Document</h5>
+
+<div class="mb-4">
+    @if (Model.OriginalFileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+    {
+        <iframe src="@Url.Action("ViewFile", "AdminKyc", new { area = "Admin", id = Model.Id })"
+                width="100%"
+                height="600"
+                style="border:1px solid #ccc">
+        </iframe>
+    }
+    else
+    {
+        <img src="@Url.Action("ViewFile", "AdminKyc", new { area = "Admin", id = Model.Id })"
+             class="img-fluid border"
+             alt="KYC Document" />
+    }
+</div>
+
+<hr />
+
+<form asp-area="Admin"
+      asp-controller="AdminKyc"
+      asp-action="Approve"
+      method="post"
+      class="d-inline">
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <button type="submit" class="btn btn-success">
+        Approve
+    </button>
+</form>
+
+<button class="btn btn-danger ms-2"
+        data-bs-toggle="collapse"
+        data-bs-target="#rejectForm">
+    Reject
+</button>
+
+<div id="rejectForm" class="collapse mt-3">
+    <form asp-area="Admin"
+          asp-controller="AdminKyc"
+          asp-action="Reject"
+          method="post">
+
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="mb-2">
+            <label class="form-label">Rejection Reason</label>
+            <textarea name="reviewNotes"
+                      class="form-control"
+                      rows="3"
+                      required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-danger">
+            Confirm Reject
+        </button>
+    </form>
+</div>
+
+<a asp-area="Admin"
+   asp-controller="AdminKyc"
+   asp-action="Index"
+   class="btn btn-secondary mt-4">
+    Back to List
+</a>

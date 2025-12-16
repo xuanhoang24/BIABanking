@@ -30,6 +30,7 @@ builder.Services.Configure<PasswordOptions>(
 builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<AdminUserService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IKycAdminService, KycAdminService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -66,7 +67,6 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("is_admin", "true"));
 });
 
-builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
