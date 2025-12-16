@@ -31,6 +31,7 @@ builder.Services.AddScoped<AuditService>();
 builder.Services.AddScoped<AdminUserService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IKycAdminService, KycAdminService>();
+builder.Services.AddScoped<ICustomerAdminService, CustomerAdminService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();

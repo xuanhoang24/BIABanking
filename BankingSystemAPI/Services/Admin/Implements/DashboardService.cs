@@ -28,16 +28,16 @@ namespace BankingSystemAPI.Services.Admin.Implements
                 .Where(k => k.Status == KYCStatus.Pending || k.Status == KYCStatus.UnderReview)
                 .CountAsync();
 
-            var todaysTransactions = await _context.Transactions
-                .Where(t => t.CreatedAt.Date == DateTime.Today)
-                .CountAsync();
+            var todayVolume = await _context.Transactions
+                .Where(t => t.CreatedAt.Date == DateTime.Today && t.Status == TransactionStatus.Completed)
+                .SumAsync(t => (decimal?)t.AmountInCents / 100) ?? 0;
 
             return new DashboardStatsDto
             {
                 TotalCustomers = totalCustomers,
                 ActiveAccounts = activeAccounts,
                 PendingKYC = pendingKYC,
-                TodaysTransactions = todaysTransactions
+                TodayVolume = todayVolume
             };
         }
     }

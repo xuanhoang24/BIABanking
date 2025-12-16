@@ -3,6 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystemAPI.Models.Users.Customers
 {
+    public enum CustomerStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        Suspended = 3,
+        Closed = 4
+    }
+
     public class Customer
     {
         public int Id { get; set; }
@@ -31,6 +39,8 @@ namespace BankingSystemAPI.Models.Users.Customers
         public string Address { get; set; } = string.Empty;
 
         public bool IsKYCVerified { get; set; } = false;
+
+        public CustomerStatus Status { get; set; } = CustomerStatus.Active;
 
         public int FailedLoginAttempts { get; set; } = 0;
         public DateTime? LockedUntil { get; set; }

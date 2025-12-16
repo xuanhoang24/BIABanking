@@ -49,6 +49,13 @@ builder.Services.AddScoped<IAdminDashboardApiClient>(provider =>
     return new AdminDashboardApiClient(httpClient);
 });
 
+builder.Services.AddScoped<IAdminCustomerApiClient>(provider =>
+{
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient("AdminApi");
+    return new AdminCustomerApiClient(httpClient);
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

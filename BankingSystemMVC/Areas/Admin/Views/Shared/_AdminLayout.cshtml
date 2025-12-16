@@ -10,14 +10,16 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystemMVC.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="admin-body">
 
-    <div class="d-flex">
+    <div class="d-flex admin-container">
 
         <!-- Sidebar -->
         <nav class="sidebar bg-dark text-white p-3" style="width:250px; min-height:100vh;">
             <div class="sidebar-header mb-4">
-                <h4><i class="fas fa-shield-alt"></i> Admin Panel</h4>
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-decoration-none text-white">
+                    <h4><i class="fas fa-shield-alt"></i> Admin Panel</h4>
+                </a>
                 <hr class="text-white">
             </div>
 
@@ -28,10 +30,26 @@
                     </a>
                 </li>
 
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-users"></i> User Management</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-credit-card"></i> Account Management</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-file-alt"></i> KYC Review</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Customers" asp-action="Index">
+                        <i class="fas fa-users"></i> Customer Management
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Accounts" asp-action="Index">
+                        <i class="fas fa-credit-card"></i> Account Management
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminKyc" asp-action="Index">
+                        <i class="fas fa-file-alt"></i> KYC Review
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Transactions" asp-action="Index">
+                        <i class="fas fa-exchange-alt"></i> Transactions
+                    </a>
+                </li>
                 <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
 
                 <li class="nav-item mb-2">
@@ -116,8 +134,19 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .navbar-brand {
             font-weight: 600;
         }

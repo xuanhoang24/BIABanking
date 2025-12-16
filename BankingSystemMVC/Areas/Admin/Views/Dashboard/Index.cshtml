@@ -69,8 +69,8 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>Today's Transactions</h4>
-                            <h2>@Model.Stats.TodaysTransactions</h2>
+                            <h4>Today Volume</h4>
+                            <h2>$@Model.Stats.TodayVolume.ToString("N2")</h2>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-exchange-alt fa-2x"></i>
@@ -91,13 +91,19 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <a href="#" class="btn btn-outline-primary btn-block mb-2">
+                            <a asp-area="Admin"
+                               asp-controller="Customers"
+                               asp-action="Index"
+                               class="btn btn-outline-primary btn-block mb-2">
                                 <i class="fas fa-users"></i><br>
                                 Manage Customers
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="btn btn-outline-success btn-block mb-2">
+                            <a asp-area="Admin"
+                               asp-controller="Accounts"
+                               asp-action="Index"
+                               class="btn btn-outline-success btn-block mb-2">
                                 <i class="fas fa-credit-card"></i><br>
                                 View Accounts
                             </a>
@@ -112,7 +118,10 @@
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="btn btn-outline-info btn-block mb-2">
+                            <a asp-area="Admin"
+                               asp-controller="Transactions"
+                               asp-action="Index"
+                               class="btn btn-outline-info btn-block mb-2">
                                 <i class="fas fa-exchange-alt"></i><br>
                                 Transactions
                             </a>

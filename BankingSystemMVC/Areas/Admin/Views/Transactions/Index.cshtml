@@ -1,0 +1,199 @@
+@model List<BankingSystemMVC.Areas.Admin.Models.TransactionListViewModel>
+@{
+    ViewData["Title"] = "All Transactions";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1><i class="fas fa-exchange-alt"></i> All Transactions</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Transactions</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h6>Total Transactions</h6>
+                    <h3>@Model.Count</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h6>Completed</h6>
+                    <h3>@Model.Count(t => t.Status == "Completed")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h6>Today Volume</h6>
+                    <h3>$@Model.Where(t => t.CreatedAt.Date == DateTime.Today && t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6>Total Volume</h6>
+                    <h3>$@Model.Where(t => t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-list"></i> Transaction History</h5>
+            <span class="badge bg-light text-dark">Showing: @Model.Count</span>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="transactionsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reference</th>
+                                <th>Type</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <small class="font-monospace">@transaction.TransactionReference</small>
+                                    </td>
+                                    <td>
+                                        @switch (transaction.Type)
+                                        {
+                                            case "Transfer":
+                                                <span class="badge bg-primary"><i class="fas fa-exchange-alt"></i> Transfer</span>
+                                                break;
+                                            case "Deposit":
+                                                <span class="badge bg-success"><i class="fas fa-arrow-up"></i> Deposit</span>
+                                                break;
+                                            case "Withdrawal":
+                                                <span class="badge bg-warning"><i class="fas fa-arrow-down"></i> Withdrawal</span>
+                                                break;
+                                            case "Fee":
+                                                <span class="badge bg-danger"><i class="fas fa-dollar-sign"></i> Fee</span>
+                                                break;
+                                            case "Interest":
+                                                <span class="badge bg-info"><i class="fas fa-percent"></i> Interest</span>
+                                                break;
+                                            case "Refund":
+                                                <span class="badge bg-secondary"><i class="fas fa-undo"></i> Refund</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@transaction.Type</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(transaction.FromCustomerName))
+                                        {
+                                            <div>
+                                                <strong>@transaction.FromCustomerName</strong>
+                                            </div>
+                                            <small class="font-monospace text-muted">@transaction.FromAccountNumber</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(transaction.ToCustomerName))
+                                        {
+                                            <div>
+                                                <strong>@transaction.ToCustomerName</strong>
+                                            </div>
+                                            <small class="font-monospace text-muted">@transaction.ToAccountNumber</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <strong class="@(transaction.Amount >= 0 ? "text-success" : "text-danger")">
+                                            $@transaction.Amount.ToString("N2")
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        @switch (transaction.Status)
+                                        {
+                                            case "Completed":
+                                                <span class="badge bg-success">Completed</span>
+                                                break;
+                                            case "Pending":
+                                                <span class="badge bg-warning">Pending</span>
+                                                break;
+                                            case "Processing":
+                                                <span class="badge bg-info">Processing</span>
+                                                break;
+                                            case "Failed":
+                                                <span class="badge bg-danger">Failed</span>
+                                                break;
+                                            case "Cancelled":
+                                                <span class="badge bg-secondary">Cancelled</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@transaction.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        <small>@transaction.Description</small>
+                                    </td>
+                                    <td>
+                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</small>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-exchange-alt fa-3x mb-3 opacity-50"></i>
+                    <h5>No Transactions Found</h5>
+                    <p>There are no transactions in the system yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#transactionsTable').DataTable({
+                "pageLength": 25,
+                "order": [[7, "desc"]],
+                "language": {
+                    "search": "Search transactions:"
+                }
+            });
+        });
+    </script>
+}
