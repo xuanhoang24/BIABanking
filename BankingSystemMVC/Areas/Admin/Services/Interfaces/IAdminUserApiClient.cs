@@ -1,0 +1,10 @@
+﻿using BankingSystemMVC.Areas.Admin.Models;
+
+namespace BankingSystemMVC.Areas.Admin.Services.Interfaces
+{
+    public interface IAdminUserApiClient
+    {
+        Task<List<AdminRoleViewModel>?> GetRolesAsync();
+        Task<bool> CreateAdminUserAsync(AdminUserCreateViewModel model);
+    }
+}
