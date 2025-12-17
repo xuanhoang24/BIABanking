@@ -1,3 +1,4 @@
+using BankingSystemAPI.Models.Users.Roles;
 using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ namespace BankingSystemAPI.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/customers")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.CustomerRead)]
     public class AdminCustomersController : ControllerBase
     {
         private readonly ICustomerAdminService _customerService;
@@ -19,6 +20,7 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpGet("stats")]
+        [Authorize(Policy = PermissionCodes.DashboardView)]
         public async Task<IActionResult> GetDashboardStats()
         {
             var stats = await _dashboardService.GetDashboardStatsAsync();
@@ -33,6 +35,7 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
         public async Task<IActionResult> GetCustomerById(int id)
         {
             var customer = await _customerService.GetCustomerByIdAsync(id);

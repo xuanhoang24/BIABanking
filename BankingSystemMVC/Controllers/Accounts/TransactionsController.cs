@@ -1,11 +1,12 @@
 ﻿using BankingSystemMVC.Models.Accounts.Transactions;
+using BankingSystemMVC.Models.Auth;
 using BankingSystemMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Controllers.Accounts
 {
-    [Authorize]
+    [Authorize(Policy = CustomerPolicies.Authenticated)]
     public class TransactionsController : Controller
     {
         private readonly ITransactionApiClient _transactionApi;

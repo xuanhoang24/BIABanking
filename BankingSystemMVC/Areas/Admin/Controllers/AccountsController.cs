@@ -1,3 +1,4 @@
+using BankingSystemMVC.Areas.Admin.Models;
 using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.CustomerRead)]
     public class AccountsController : Controller
     {
         private readonly IAdminCustomerApiClient _customerApi;
@@ -18,7 +19,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var accounts = await _customerApi.GetAllAccountsAsync();
-            return View(accounts ?? new List<Models.AccountListViewModel>());
+            return View(accounts ?? new List<AccountListViewModel>());
         }
     }
 }

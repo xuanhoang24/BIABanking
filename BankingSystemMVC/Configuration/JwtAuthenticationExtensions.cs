@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace BankingSystemMVC.Configuration
@@ -13,7 +12,6 @@ namespace BankingSystemMVC.Configuration
             services
                 .AddAuthentication(options =>
                 {
-                    // Default is customer side
                     options.DefaultAuthenticateScheme = "CustomerScheme";
                     options.DefaultChallengeScheme = "CustomerScheme";
                 })
@@ -25,17 +23,13 @@ namespace BankingSystemMVC.Configuration
                     {
                         OnMessageReceived = context =>
                         {
-                            var token = context.HttpContext.Request.Cookies["customer_access_token"];
-                            if (!string.IsNullOrEmpty(token))
-                                context.Token = token;
-
+                            context.Token =
+                                context.HttpContext.Request.Cookies["customer_access_token"];
                             return Task.CompletedTask;
                         },
                         OnChallenge = context =>
                         {
-                            // Only redirect if not in admin area and not already on login page
-                            if (!context.Request.Path.StartsWithSegments("/Admin") && 
-                                !context.Request.Path.StartsWithSegments("/Auth/Login"))
+                            if (!context.Request.Path.StartsWithSegments("/Admin"))
                             {
                                 context.HandleResponse();
                                 context.Response.Redirect("/Auth/Login");
@@ -44,7 +38,8 @@ namespace BankingSystemMVC.Configuration
                         }
                     };
 
-                    options.TokenValidationParameters = BuildTokenValidationParams(configuration);
+                    options.TokenValidationParameters =
+                        BuildTokenValidationParams(configuration);
                 })
                 .AddJwtBearer("AdminScheme", options =>
                 {
@@ -54,45 +49,30 @@ namespace BankingSystemMVC.Configuration
                     {
                         OnMessageReceived = context =>
                         {
-                            var token = context.HttpContext.Request.Cookies["admin_access_token"];
-                            if (!string.IsNullOrEmpty(token))
-                                context.Token = token;
-
+                            context.Token =
+                                context.HttpContext.Request.Cookies["admin_access_token"];
                             return Task.CompletedTask;
                         },
                         OnChallenge = context =>
                         {
-                            // Only redirect if in admin area and not already on login page
-                            if (context.Request.Path.StartsWithSegments("/Admin") && 
-                                !context.Request.Path.StartsWithSegments("/Admin/AdminAuth/Login"))
+                            if (context.Request.Path.StartsWithSegments("/Admin"))
                             {
                                 context.HandleResponse();
-                                context.Response.Redirect("/Admin/AdminAuth/Login");
+                                context.Response.Redirect("/Admin/Auth/Login");
                             }
                             return Task.CompletedTask;
                         }
                     };
 
-                    options.TokenValidationParameters = BuildTokenValidationParams(configuration, isAdmin: true);
+                    options.TokenValidationParameters =
+                        BuildTokenValidationParams(configuration);
                 });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminOnly", policy =>
-                {
-                    policy.AuthenticationSchemes.Add("AdminScheme");
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("is_admin", "true");
-                });
-                
-                // Default policy allows anonymous access
-                options.FallbackPolicy = null;
-            });
 
             return services;
         }
 
-        private static TokenValidationParameters BuildTokenValidationParams(IConfiguration configuration, bool isAdmin = false)
+        private static TokenValidationParameters BuildTokenValidationParams(
+            IConfiguration configuration)
         {
             return new TokenValidationParameters
             {
@@ -103,12 +83,12 @@ namespace BankingSystemMVC.Configuration
 
                 ValidIssuer = configuration["Jwt:Issuer"],
                 ValidAudience = configuration["Jwt:Audience"],
+
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)
                 ),
 
-                NameClaimType = JwtRegisteredClaimNames.Sub,
-                RoleClaimType = isAdmin ? ClaimTypes.Role : ClaimTypes.Role
+                NameClaimType = JwtRegisteredClaimNames.Sub
             };
         }
     }

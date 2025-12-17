@@ -29,7 +29,7 @@ namespace BankingSystemAPI.Controllers.Admin
             if (admin == null)
                 return Unauthorized();
 
-            var token = _jwt.GenerateAdminToken(admin);
+            var token = await _jwt.GenerateAdminTokenAsync(admin);
 
             return Ok(new LoginResponseDto
             {

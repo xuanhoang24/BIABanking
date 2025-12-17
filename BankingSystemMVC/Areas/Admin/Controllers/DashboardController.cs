@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.DashboardView)]
     public class DashboardController : Controller
     {
         private readonly IAdminAuditApiClient _auditApi;

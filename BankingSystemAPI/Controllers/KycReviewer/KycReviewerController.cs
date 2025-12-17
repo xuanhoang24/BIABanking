@@ -1,23 +1,25 @@
-﻿using BankingSystemAPI.Services.Admin.Interfaces;
+﻿using BankingSystemAPI.Models.Users.Roles;
+using BankingSystemAPI.Security;
+using BankingSystemAPI.Services.Admin.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BankingSystemAPI.Controllers.Admin
+namespace BankingSystemAPI.Controllers.KycReviewer
 {
     [ApiController]
     [Route("api/admin/kyc")]
-    [Authorize(Policy = "AdminOnly")]
-    public class AdminKycController : ControllerBase
+    public class KycReviewerController : ControllerBase
     {
         private readonly IKycAdminService _kycAdminService;
 
-        public AdminKycController(IKycAdminService kycAdminService)
+        public KycReviewerController(IKycAdminService kycAdminService)
         {
             _kycAdminService = kycAdminService;
         }
 
         [HttpGet("pending")]
+        [Authorize(Policy = PermissionCodes.KycRead)]
         public async Task<IActionResult> Pending()
         {
             var list = await _kycAdminService.GetPendingListAsync();
@@ -29,13 +31,14 @@ namespace BankingSystemAPI.Controllers.Admin
                 x.DocumentType,
                 x.Status,
                 x.CreatedAt,
-                ReviewerName = x.ReviewedByAdminId != null 
+                ReviewerName = x.ReviewedByAdminId != null
                     ? $"Admin #{x.ReviewedByAdminId}"
                     : null
             }));
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = PermissionCodes.KycRead)]
         public async Task<IActionResult> GetById(int id)
         {
             var kyc = await _kycAdminService.GetPendingAsync(id);
@@ -56,6 +59,7 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpGet("{id}/file")]
+        [Authorize(Policy = PermissionCodes.KycRead)]
         public async Task<IActionResult> GetFile(int id)
         {
             var kyc = await _kycAdminService.GetPendingAsync(id);
@@ -66,11 +70,11 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpPost("{id}/under-review")]
+        [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> MarkUnderReview(int id)
         {
             var adminId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
             );
 
             await _kycAdminService.MarkUnderReviewAsync(id, adminId);
@@ -78,11 +82,11 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpPost("{id}/approve")]
+        [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> Approve(int id)
         {
             var adminId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
             );
 
             await _kycAdminService.ApproveAsync(id, adminId);
@@ -90,11 +94,13 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpPost("{id}/reject")]
-        public async Task<IActionResult> Reject(int id, [FromBody] RejectKycRequest request)
+        [Authorize(Policy = PermissionCodes.KycReview)]
+        public async Task<IActionResult> Reject(
+            int id,
+            [FromBody] RejectKycRequest request)
         {
             var adminId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
             );
 
             await _kycAdminService.RejectAsync(id, adminId, request.ReviewNotes);

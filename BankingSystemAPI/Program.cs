@@ -1,6 +1,7 @@
 using BankingSystemAPI.DataLayer;
 using BankingSystemAPI.DataLayer.Seed;
 using BankingSystemAPI.Models.Security;
+using BankingSystemAPI.Security;
 using BankingSystemAPI.Security.Implements;
 using BankingSystemAPI.Security.Interfaces;
 using BankingSystemAPI.Services.Admin.Implements;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IKycService, KycService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -62,12 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireClaim("is_admin", "true"));
-});
-
+builder.Services.AddPermissionAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
@@ -84,6 +81,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await AdminSeeder.SeedAsync(app.Services);
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    await RoleSeeder.SeedAsync(db);
+    await PermissionSeeder.SeedAsync(db);
+    await AdminSeeder.SeedAsync(scope.ServiceProvider);
+}
 app.Run();

@@ -11,10 +11,12 @@ namespace BankingSystemAPI.Security.Implements
     public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _config;
+        private readonly IPermissionService _permissionService;
 
-        public JwtTokenService(IConfiguration config)
+        public JwtTokenService(IConfiguration config, IPermissionService permissionService)
         {
             _config = config;
+            _permissionService = permissionService;
         }
 
         public string GenerateCustomerToken(Customer customer)
@@ -22,24 +24,29 @@ namespace BankingSystemAPI.Security.Implements
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, customer.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, customer.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, customer.Email),
-                new Claim("firstname", customer.FirstName)
+                new Claim("firstname", customer.FirstName),
+                new Claim("kyc_verified", customer.IsKYCVerified ? "true" : "false")
             };
 
             return BuildToken(claims, 15);
         }
 
-        public string GenerateAdminToken(AdminUser admin)
+        public async Task<string> GenerateAdminTokenAsync(AdminUser admin)
         {
-            var claims = new[]
+            var permissions = await _permissionService.GetPermissionsAsync(admin.Id);
+
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, admin.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, admin.Email),
-                new Claim("is_admin", "true"),
-                new Claim(ClaimTypes.Role, admin.Role.ToString())
+                new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, admin.Email)
             };
 
-            return BuildToken(claims, 30);
+            claims.AddRange(permissions.Select(p => new Claim("perm", p)));
+
+            return BuildToken(claims.ToArray(), 30);
         }
 
         private string BuildToken(Claim[] claims, int minutes)

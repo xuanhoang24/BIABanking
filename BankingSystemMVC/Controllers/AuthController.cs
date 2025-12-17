@@ -91,7 +91,9 @@ namespace BankingSystemMVC.Controllers
         {
             Response.Cookies.Delete("customer_access_token", new CookieOptions
             {
-                Path = "/"
+                Path = "/",
+                SameSite = SameSiteMode.Lax,
+                Secure = false
             });
 
             return RedirectToAction("Login");

@@ -1,11 +1,12 @@
-﻿using BankingSystemMVC.Areas.Admin.Services.Interfaces;
+﻿using BankingSystemMVC.Areas.Admin.Models;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.KycRead)]
     public class AdminKycController : Controller
     {
         private readonly IAdminKycApiClient _api;
@@ -44,6 +45,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> MarkUnderReview(int id)
         {
             await _api.MarkUnderReviewAsync(id);
@@ -52,6 +54,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> Approve(int id)
         {
             await _api.ApproveAsync(id);
@@ -60,6 +63,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> Reject(int id, string reviewNotes)
         {
             await _api.RejectAsync(id, reviewNotes);

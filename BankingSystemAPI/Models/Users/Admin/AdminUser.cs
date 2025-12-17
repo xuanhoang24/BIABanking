@@ -1,17 +1,9 @@
 ﻿using BankingSystemAPI.Models.Users.Customers;
+using BankingSystemAPI.Models.Users.Roles;
 using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystemAPI.Models.Users.Admin
 {
-    public enum AdminRole
-    {
-        SuperAdmin = 1,
-        KYCReviewer = 2,
-        TransactionMonitor = 3,
-        CustomerSupport = 4,
-        Auditor = 5
-    }
-
     public class AdminUser
     {
         public int Id { get; set; }
@@ -32,7 +24,7 @@ namespace BankingSystemAPI.Models.Users.Admin
         public string PasswordSalt { get; set; } = string.Empty;
 
         [Required]
-        public AdminRole Role { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
         public bool IsActive { get; set; } = true;
         public DateTime? LastLoginAt { get; set; }

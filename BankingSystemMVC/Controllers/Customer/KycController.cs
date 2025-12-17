@@ -1,11 +1,12 @@
-﻿using BankingSystemMVC.Models.Kyc;
+﻿using BankingSystemMVC.Models.Auth;
+using BankingSystemMVC.Models.Kyc;
 using BankingSystemMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Controllers.Customer
 {
-    [Authorize]
+    [Authorize(Policy = CustomerPolicies.Authenticated)]
     public class KycController : Controller
     {
         private readonly ICustomerApiClient _customerApi;

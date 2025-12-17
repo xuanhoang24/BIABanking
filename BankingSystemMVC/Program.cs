@@ -29,8 +29,7 @@ builder.Services.AddTransient<AdminJwtHandler>();
 
 // JWT authentication for MVC authorization
 builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddAuthorization();
-
+builder.Services.AddPermissionAuthorization();
 
 // App services
 builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();

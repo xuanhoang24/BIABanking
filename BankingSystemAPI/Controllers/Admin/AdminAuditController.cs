@@ -1,4 +1,5 @@
 ﻿using BankingSystemAPI.Models.DTOs.Admin;
+using BankingSystemAPI.Models.Users.Roles;
 using BankingSystemAPI.Services.Admin.Implements;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace BankingSystemAPI.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/audit")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.DashboardView)]
     public class AdminAuditController : ControllerBase
     {
         private readonly AuditService _audit;

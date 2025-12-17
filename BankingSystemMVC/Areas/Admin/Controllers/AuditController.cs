@@ -1,3 +1,4 @@
+using BankingSystemMVC.Areas.Admin.Models;
 using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.DashboardView)]
     public class AuditController : Controller
     {
         private readonly IAdminAuditApiClient _auditApi;

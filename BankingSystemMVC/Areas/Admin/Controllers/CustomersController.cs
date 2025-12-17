@@ -1,3 +1,4 @@
+using BankingSystemMVC.Areas.Admin.Models;
 using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = PermissionCodes.CustomerRead)]
     public class CustomersController : Controller
     {
         private readonly IAdminCustomerApiClient _customerApi;
@@ -62,6 +63,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
             var result = await _customerApi.UpdateCustomerStatusAsync(id, status);
