@@ -21,6 +21,8 @@ namespace BankingSystemAPI.Services.Admin.Implements
             email = email.ToLowerInvariant();
 
             var admin = await _context.AdminUsers
+                .Include(a => a.UserRoles)
+                    .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(a => a.Email == email && a.IsActive);
 
             if (admin == null)

@@ -2,6 +2,8 @@
 using BankingSystemMVC.Areas.Admin.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
@@ -49,6 +51,11 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
                     Expires = result.ExpiresAt
                 }
             );
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(result.AccessToken);
+            var hasReviewerRole = token.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "KycReviewer");
+
+            if (hasReviewerRole)
+                return RedirectToAction("Index", "AdminKyc", new { area = "Admin" });
 
             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         }

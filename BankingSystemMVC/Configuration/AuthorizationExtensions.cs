@@ -1,7 +1,6 @@
 ﻿using BankingSystemMVC.Areas.Admin.Models;
 using BankingSystemMVC.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BankingSystemMVC.Configuration
 {

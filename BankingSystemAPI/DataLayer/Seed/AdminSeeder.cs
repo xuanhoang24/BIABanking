@@ -24,7 +24,7 @@ namespace BankingSystemAPI.DataLayer.Seed
             var reviewerRole = await context.Roles.SingleAsync(r => r.Name == "KycReviewer");
 
             passwordHasher.CreateHash(
-                "Admin@123",
+                "123",
                 out var hash,
                 out var salt
             );

@@ -36,6 +36,12 @@ namespace BankingSystemAPI.Security.Implements
         public async Task<string> GenerateAdminTokenAsync(AdminUser admin)
         {
             var permissions = await _permissionService.GetPermissionsAsync(admin.Id);
+            var roles = admin.UserRoles
+                .Select(ur => ur.Role)
+                .Where(r => r != null)
+                .Select(r => r!.Name)
+                .Distinct()
+                .ToList();
 
             var claims = new List<Claim>
             {
@@ -45,6 +51,7 @@ namespace BankingSystemAPI.Security.Implements
             };
 
             claims.AddRange(permissions.Select(p => new Claim("perm", p)));
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
             return BuildToken(claims.ToArray(), 30);
         }
