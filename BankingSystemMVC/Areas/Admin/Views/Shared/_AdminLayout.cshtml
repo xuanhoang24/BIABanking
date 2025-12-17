@@ -45,11 +45,14 @@
                         <i class="fas fa-file-alt"></i> KYC Review
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Transactions" asp-action="Index">
-                        <i class="fas fa-exchange-alt"></i> Transactions
-                    </a>
-                </li>
+                @if (User.HasClaim("perm", "transaction.read"))
+                {
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" asp-area="Admin" asp-controller="Transactions" asp-action="Index">
+                            <i class="fas fa-exchange-alt"></i> Transactions
+                        </a>
+                    </li>
+                }
                 <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
 
                 <li class="nav-item mb-2">

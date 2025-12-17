@@ -53,6 +53,7 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpGet("{id}/transactions")]
+        [Authorize(Policy = PermissionCodes.TransactionRead)]
         public async Task<IActionResult> GetCustomerTransactions(int id, [FromQuery] int limit = 50)
         {
             var transactions = await _customerService.GetCustomerTransactionsAsync(id, limit);
@@ -77,6 +78,7 @@ namespace BankingSystemAPI.Controllers.Admin
         }
 
         [HttpGet("all-transactions")]
+        [Authorize(Policy = PermissionCodes.TransactionRead)]
         public async Task<IActionResult> GetAllTransactions([FromQuery] int limit = 100)
         {
             var transactions = await _customerService.GetAllTransactionsAsync(limit);

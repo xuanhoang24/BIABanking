@@ -69,9 +69,12 @@
                         <a asp-action="Accounts" asp-route-id="@Model.Id" class="btn btn-success">
                             <i class="fas fa-credit-card"></i> View Accounts
                         </a>
-                        <a asp-action="Transactions" asp-route-id="@Model.Id" class="btn btn-info">
-                            <i class="fas fa-exchange-alt"></i> View Transactions
-                        </a>
+                        @if (User.HasClaim("perm", "transaction.read"))
+                        {
+                            <a asp-action="Transactions" asp-route-id="@Model.Id" class="btn btn-info">
+                                <i class="fas fa-exchange-alt"></i> View Transactions
+                            </a>
+                        }
                         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#statusModal">
                             <i class="fas fa-edit"></i> Change Status
                         </button>

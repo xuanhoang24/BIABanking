@@ -16,7 +16,8 @@ namespace BankingSystemAPI.DataLayer.Seed
                 new Permission { Code = PermissionCodes.CustomerRead, Description = "Read customers" },
                 new Permission { Code = PermissionCodes.CustomerManage, Description = "Manage customers" },
                 new Permission { Code = PermissionCodes.KycRead, Description = "View KYC" },
-                new Permission { Code = PermissionCodes.KycReview, Description = "Review KYC" }
+                new Permission { Code = PermissionCodes.KycReview, Description = "Review KYC" },
+                new Permission { Code = PermissionCodes.TransactionRead, Description = "View transactions" }
             };
 
             context.Permissions.AddRange(permissions);
@@ -41,7 +42,8 @@ namespace BankingSystemAPI.DataLayer.Seed
                 PermissionCodes.CustomerRead,
                 PermissionCodes.CustomerManage,
                 PermissionCodes.KycRead,
-                PermissionCodes.KycReview
+                PermissionCodes.KycReview,
+                PermissionCodes.TransactionRead
             );
 
             grant("Manager",
@@ -54,7 +56,8 @@ namespace BankingSystemAPI.DataLayer.Seed
 
             grant("KycReviewer",
                 PermissionCodes.KycRead,
-                PermissionCodes.KycReview
+                PermissionCodes.KycReview,
+                PermissionCodes.TransactionRead
             );
 
             await context.SaveChangesAsync();

@@ -48,6 +48,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
             return View(accounts ?? new List<Models.AccountSummaryViewModel>());
         }
 
+        [Authorize(Policy = PermissionCodes.TransactionRead)]
         public async Task<IActionResult> Transactions(int id)
         {
             var customer = await _customerApi.GetCustomerByIdAsync(id);

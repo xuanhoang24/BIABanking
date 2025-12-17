@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystemMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = PermissionCodes.CustomerRead)]
+    [Authorize(Policy = PermissionCodes.TransactionRead)]
     public class TransactionsController : Controller
     {
         private readonly IAdminCustomerApiClient _customerApi;

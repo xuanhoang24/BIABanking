@@ -104,9 +104,12 @@
                                             <a asp-action="Accounts" asp-route-id="@customer.Id" class="btn btn-outline-success" title="View Accounts">
                                                 <i class="fas fa-credit-card"></i>
                                             </a>
-                                            <a asp-action="Transactions" asp-route-id="@customer.Id" class="btn btn-outline-info" title="View Transactions">
-                                                <i class="fas fa-exchange-alt"></i>
-                                            </a>
+                                            @if (User.HasClaim("perm", "transaction.read"))
+                                            {
+                                                <a asp-action="Transactions" asp-route-id="@customer.Id" class="btn btn-outline-info" title="View Transactions">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                </a>
+                                            }
                                         </div>
                                     </td>
                                 </tr>

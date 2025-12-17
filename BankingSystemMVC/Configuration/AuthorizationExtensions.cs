@@ -18,6 +18,7 @@ namespace BankingSystemMVC.Configuration
                 AddAdminPermissionPolicy(options, PermissionCodes.CustomerManage);
                 AddAdminPermissionPolicy(options, PermissionCodes.KycRead);
                 AddAdminPermissionPolicy(options, PermissionCodes.KycReview);
+                AddAdminPermissionPolicy(options, PermissionCodes.TransactionRead);
 
                 // CUSTOMER ACCESS
                 options.AddPolicy(CustomerPolicies.Authenticated, policy =>

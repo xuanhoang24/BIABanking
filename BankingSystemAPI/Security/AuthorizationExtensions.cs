@@ -33,6 +33,11 @@ namespace BankingSystemAPI.Security
                     PermissionCodes.KycReview,
                     policy => policy.RequireClaim("perm", PermissionCodes.KycReview)
                 );
+
+                options.AddPolicy(
+                    PermissionCodes.TransactionRead,
+                    policy => policy.RequireClaim("perm", PermissionCodes.TransactionRead)
+                );
             });
 
             return services;

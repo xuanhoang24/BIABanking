@@ -9,5 +9,7 @@
 
         public const string KycRead = "kyc.read";
         public const string KycReview = "kyc.review";
+
+        public const string TransactionRead = "transaction.read";
     }
 }
