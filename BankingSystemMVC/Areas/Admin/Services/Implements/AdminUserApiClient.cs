@@ -36,6 +36,23 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
                 return null;
             }
         }
+        public async Task<List<AdminUserListViewModel>?> GetAdminUsersAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("api/admin/users");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<AdminUserListViewModel>>(json, _jsonOptions);
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         public async Task<bool> CreateAdminUserAsync(AdminUserCreateViewModel model)
         {

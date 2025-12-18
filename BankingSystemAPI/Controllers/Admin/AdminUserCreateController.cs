@@ -17,6 +17,13 @@ namespace BankingSystemAPI.Controllers.Admin
             _adminService = adminService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAdminUsers()
+        {
+            var admins = await _adminService.GetAllAdminUsersAsync();
+            return Ok(admins);
+        }
+
         [HttpGet("roles")]
         public async Task<ActionResult<IEnumerable<AdminRoleDto>>> GetRoles()
         {

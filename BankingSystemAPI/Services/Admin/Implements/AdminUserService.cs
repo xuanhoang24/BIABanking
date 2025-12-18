@@ -1,4 +1,5 @@
 ﻿using BankingSystemAPI.DataLayer;
+using BankingSystemAPI.Models.DTOs.Admin;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Models.Users.Roles;
 using BankingSystemAPI.Security.Interfaces;
@@ -45,6 +46,27 @@ namespace BankingSystemAPI.Services.Admin.Implements
                 .AsNoTracking()
                 .OrderBy(r => r.Name)
                 .ToListAsync();
+        }
+        public async Task<List<AdminUserListDto>> GetAllAdminUsersAsync()
+        {
+            var adminUsers = await _context.AdminUsers
+                .Include(a => a.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new AdminUserListDto
+                {
+                    Id = a.Id,
+                    FirstName = a.FirstName,
+                    LastName = a.LastName,
+                    Email = a.Email,
+                    Roles = a.UserRoles.Select(ur => ur.Role.Name).ToList(),
+                    IsActive = a.IsActive,
+                    LastLoginAt = a.LastLoginAt,
+                    CreatedAt = a.CreatedAt
+                })
+                .ToListAsync();
+
+            return adminUsers;
         }
 
         public async Task<AdminUser?> CreateAdminUserAsync(string firstName, string lastName, string email, string password, int roleId)

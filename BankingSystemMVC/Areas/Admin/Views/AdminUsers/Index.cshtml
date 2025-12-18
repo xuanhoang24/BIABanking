@@ -1,0 +1,86 @@
+﻿@using System.Linq
+@model List<BankingSystemMVC.Areas.Admin.Models.AdminUserListViewModel>
+@{
+    ViewData["Title"] = "Admin Users";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Employee Accounts</h2>
+            <p class="text-muted mb-0">View and manage all admin and manager accounts.</p>
+        </div>
+        <div>
+            <a asp-area="Admin" asp-controller="AdminUsers" asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Add Employee
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            foreach (var admin in Model)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@admin.FullName</td>
+                                    <td>@admin.Email</td>
+                                    <td>
+                                        @if (admin.Roles.Any())
+                                        {
+                                            <span class="badge bg-secondary">@string.Join(", ", admin.Roles)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No role assigned</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (admin.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>@(admin.LastLoginAt?.ToString("yyyy-MM-dd HH:mm") ?? "—")</td>
+                                    <td>@admin.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No employee accounts found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

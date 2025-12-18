@@ -17,6 +17,13 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var adminUsers = await _adminUserApiClient.GetAdminUsersAsync();
+            return View(adminUsers ?? new List<AdminUserListViewModel>());
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var model = new AdminUserCreateViewModel();
@@ -45,7 +52,7 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
             }
 
             TempData["SuccessMessage"] = "Admin user created successfully.";
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Index));
         }
     }
 }
