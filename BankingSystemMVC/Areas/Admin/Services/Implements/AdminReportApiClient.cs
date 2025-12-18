@@ -54,5 +54,31 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implements
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> AddMessageAsync(int reportId, string message)
+        {
+            var payload = new { Message = message };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"api/admin/reports/{reportId}/messages", content);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<AdminReportMessageViewModel>> GetMessagesAsync(int reportId)
+        {
+            var response = await _client.GetAsync($"api/admin/reports/{reportId}/messages");
+
+            if (!response.IsSuccessStatusCode)
+                return new List<AdminReportMessageViewModel>();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<List<AdminReportMessageViewModel>>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            ) ?? new List<AdminReportMessageViewModel>();
+        }
     }
 }

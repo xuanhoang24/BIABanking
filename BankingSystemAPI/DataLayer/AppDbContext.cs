@@ -30,6 +30,7 @@ namespace BankingSystemAPI.DataLayer
 
         // Report Entities
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ReportMessage> ReportMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -161,6 +162,28 @@ namespace BankingSystemAPI.DataLayer
 
                 entity.HasIndex(e => e.CustomerId);
                 entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.CreatedAt);
+            });
+
+            // ReportMessage Configuration
+            modelBuilder.Entity<ReportMessage>(entity =>
+            {
+                entity.HasOne(rm => rm.Report)
+                      .WithMany()
+                      .HasForeignKey(rm => rm.ReportId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(rm => rm.Customer)
+                      .WithMany()
+                      .HasForeignKey(rm => rm.CustomerId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(rm => rm.AdminUser)
+                      .WithMany()
+                      .HasForeignKey(rm => rm.AdminUserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => e.ReportId);
                 entity.HasIndex(e => e.CreatedAt);
             });
         }

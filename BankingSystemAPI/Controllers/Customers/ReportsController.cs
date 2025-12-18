@@ -1,4 +1,5 @@
 using BankingSystemAPI.Models.DTOs.Reports;
+using BankingSystemAPI.Models.Reports;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Services.Admin.Implements;
 using BankingSystemAPI.Services.Report.Interfaces;
@@ -113,6 +114,75 @@ namespace BankingSystemAPI.Controllers.Customers
             };
 
             return Ok(reportDto);
+        }
+
+        [HttpPost("{id}/messages")]
+        public async Task<IActionResult> AddMessage(int id, [FromBody] CreateReportMessageDto request)
+        {
+            var customerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(customerIdClaim) || !int.TryParse(customerIdClaim, out int customerId))
+                return Unauthorized();
+
+            var report = await _reportService.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            if (report.CustomerId != customerId)
+                return Forbid();
+
+            if (report.Status == ReportStatus.Resolved || report.Status == ReportStatus.Closed)
+                return BadRequest(new { error = "Cannot send messages on a resolved or closed report" });
+
+            var message = await _reportService.AddMessageAsync(
+                id,
+                request.Message,
+                MessageSenderType.Customer,
+                customerId,
+                null
+            );
+
+            var messageDto = new ReportMessageDto
+            {
+                Id = message.Id,
+                ReportId = message.ReportId,
+                Message = message.Message,
+                SenderType = message.SenderType,
+                SenderName = message.Customer?.FirstName ?? "Customer",
+                CreatedAt = message.CreatedAt
+            };
+
+            return Ok(messageDto);
+        }
+
+        [HttpGet("{id}/messages")]
+        public async Task<IActionResult> GetMessages(int id)
+        {
+            var customerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(customerIdClaim) || !int.TryParse(customerIdClaim, out int customerId))
+                return Unauthorized();
+
+            var report = await _reportService.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            if (report.CustomerId != customerId)
+                return Forbid();
+
+            var messages = await _reportService.GetReportMessagesAsync(id);
+
+            var messageDtos = messages.Select(m => new ReportMessageDto
+            {
+                Id = m.Id,
+                ReportId = m.ReportId,
+                Message = m.Message,
+                SenderType = m.SenderType,
+                SenderName = m.SenderType == MessageSenderType.Customer
+                    ? (m.Customer?.FirstName ?? "Customer")
+                    : "Admin",
+                CreatedAt = m.CreatedAt
+            }).ToList();
+
+            return Ok(messageDtos);
         }
     }
 }

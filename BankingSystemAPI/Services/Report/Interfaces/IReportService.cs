@@ -9,5 +9,7 @@ namespace BankingSystemAPI.Services.Report.Interfaces
         Task<List<Models.Reports.Report>> GetAllReportsAsync();
         Task<Models.Reports.Report?> GetReportByIdAsync(int reportId);
         Task<Models.Reports.Report?> UpdateReportStatusAsync(int reportId, ReportStatus status);
+        Task<ReportMessage> AddMessageAsync(int reportId, string message, MessageSenderType senderType, int? customerId, int? adminUserId);
+        Task<List<ReportMessage>> GetReportMessagesAsync(int reportId);
     }
 }

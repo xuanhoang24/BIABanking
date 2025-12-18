@@ -69,5 +69,33 @@ namespace BankingSystemAPI.Services.Report.Implements
             await _context.SaveChangesAsync();
             return report;
         }
+
+        public async Task<ReportMessage> AddMessageAsync(int reportId, string message, MessageSenderType senderType, int? customerId, int? adminUserId)
+        {
+            var reportMessage = new ReportMessage
+            {
+                ReportId = reportId,
+                Message = message,
+                SenderType = senderType,
+                CustomerId = customerId,
+                AdminUserId = adminUserId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ReportMessages.Add(reportMessage);
+            await _context.SaveChangesAsync();
+
+            return reportMessage;
+        }
+
+        public async Task<List<ReportMessage>> GetReportMessagesAsync(int reportId)
+        {
+            return await _context.ReportMessages
+                .Where(rm => rm.ReportId == reportId)
+                .Include(rm => rm.Customer)
+                .Include(rm => rm.AdminUser)
+                .OrderBy(rm => rm.CreatedAt)
+                .ToListAsync();
+        }
     }
 }

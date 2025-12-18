@@ -31,6 +31,9 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var messages = await _reportApi.GetMessagesAsync(id);
+            ViewBag.Messages = messages;
+
             return View(report);
         }
 
@@ -47,6 +50,20 @@ namespace BankingSystemMVC.Areas.Admin.Controllers
             {
                 TempData["Error"] = "Failed to update report status";
             }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendMessage(int id, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            await _reportApi.AddMessageAsync(id, message);
 
             return RedirectToAction(nameof(Details), new { id });
         }

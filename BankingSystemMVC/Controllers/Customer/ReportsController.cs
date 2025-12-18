@@ -56,7 +56,33 @@ namespace BankingSystemMVC.Controllers.Customer
             if (report == null)
                 return NotFound();
 
+            var messages = await _reportApi.GetMessagesAsync(id);
+            ViewBag.Messages = messages;
+
             return View(report);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendMessage(int id, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var report = await _reportApi.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            if (report.Status == ReportStatus.Resolved || report.Status == ReportStatus.Closed)
+            {
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            await _reportApi.AddMessageAsync(id, message);
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

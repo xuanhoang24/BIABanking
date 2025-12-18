@@ -5,6 +5,7 @@ using BankingSystemAPI.Services.Admin.Implements;
 using BankingSystemAPI.Services.Report.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BankingSystemAPI.Controllers.Admin
 {
@@ -51,14 +52,6 @@ namespace BankingSystemAPI.Controllers.Admin
             if (report == null)
                 return NotFound();
 
-            await _auditService.LogAsync(
-                AuditAction.ReportViewed,
-                "Report",
-                report.Id,
-                report.CustomerId,
-                $"Admin viewed report #{report.Id} from customer {report.Customer?.Email}"
-            );
-
             var reportDto = new ReportDto
             {
                 Id = report.Id,
@@ -104,6 +97,62 @@ namespace BankingSystemAPI.Controllers.Admin
             };
 
             return Ok(reportDto);
+        }
+
+        [HttpPost("{id}/messages")]
+        public async Task<IActionResult> AddMessage(int id, [FromBody] CreateReportMessageDto request)
+        {
+            var adminIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(adminIdClaim) || !int.TryParse(adminIdClaim, out int adminId))
+                return Unauthorized();
+
+            var report = await _reportService.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            var message = await _reportService.AddMessageAsync(
+                id,
+                request.Message,
+                MessageSenderType.Admin,
+                null,
+                adminId
+            );
+
+            var messageDto = new ReportMessageDto
+            {
+                Id = message.Id,
+                ReportId = message.ReportId,
+                Message = message.Message,
+                SenderType = message.SenderType,
+                SenderName = "Admin",
+                CreatedAt = message.CreatedAt
+            };
+
+            return Ok(messageDto);
+        }
+
+        [HttpGet("{id}/messages")]
+        public async Task<IActionResult> GetMessages(int id)
+        {
+            var report = await _reportService.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            var messages = await _reportService.GetReportMessagesAsync(id);
+
+            var messageDtos = messages.Select(m => new ReportMessageDto
+            {
+                Id = m.Id,
+                ReportId = m.ReportId,
+                Message = m.Message,
+                SenderType = m.SenderType,
+                SenderName = m.SenderType == MessageSenderType.Customer
+                    ? (m.Customer?.FirstName ?? "Customer")
+                    : "Admin",
+                CreatedAt = m.CreatedAt
+            }).ToList();
+
+            return Ok(messageDtos);
         }
     }
 }

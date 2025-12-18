@@ -24,8 +24,7 @@ namespace BankingSystemAPI.Models.Users.Admin
         KYCRejected = 18,
         KYCDocumentUploaded = 19,
         ReportCreated = 20,
-        ReportStatusUpdated = 21,
-        ReportViewed = 22
+        ReportStatusUpdated = 21
     }
 
     public class AuditLog

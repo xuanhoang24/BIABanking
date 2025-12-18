@@ -57,5 +57,35 @@ namespace BankingSystemMVC.Services.Implements
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );
         }
+
+        public async Task<(bool Success, string? Error)> AddMessageAsync(int reportId, string message)
+        {
+            var payload = new { Message = message };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"api/customer/reports/{reportId}/messages", content);
+
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+
+            var error = await response.Content.ReadAsStringAsync();
+            return (false, error);
+        }
+
+        public async Task<List<ReportMessageViewModel>> GetMessagesAsync(int reportId)
+        {
+            var response = await _client.GetAsync($"api/customer/reports/{reportId}/messages");
+
+            if (!response.IsSuccessStatusCode)
+                return new List<ReportMessageViewModel>();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<List<ReportMessageViewModel>>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            ) ?? new List<ReportMessageViewModel>();
+        }
     }
 }
