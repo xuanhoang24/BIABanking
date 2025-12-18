@@ -42,3 +42,22 @@
         }
     </div>
 </div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Support</h5>
+        <p class="text-muted">
+            Need help or have an issue? Submit a report to our support team.
+        </p>
+        <a asp-controller="Reports"
+           asp-action="Index"
+           class="btn btn-outline-primary">
+            <i class="bi bi-flag"></i> View My Reports
+        </a>
+        <a asp-controller="Reports"
+           asp-action="Create"
+           class="btn btn-primary ms-2">
+            <i class="bi bi-plus-circle"></i> Submit New Report
+        </a>
+    </div>
+</div>

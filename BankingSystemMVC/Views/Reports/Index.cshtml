@@ -1,0 +1,75 @@
+@model List<BankingSystemMVC.Models.Reports.ReportViewModel>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Reports</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create New Report
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> You haven't submitted any reports yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var report in Model)
+                    {
+                        <tr>
+                            <td>@report.Id</td>
+                            <td>@report.Title</td>
+                            <td>@report.Name</td>
+                            <td>
+                                @switch (report.Status)
+                                {
+                                    case BankingSystemMVC.Models.Reports.ReportStatus.Pending:
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        break;
+                                    case BankingSystemMVC.Models.Reports.ReportStatus.UnderReview:
+                                        <span class="badge bg-info">Under Review</span>
+                                        break;
+                                    case BankingSystemMVC.Models.Reports.ReportStatus.Resolved:
+                                        <span class="badge bg-success">Resolved</span>
+                                        break;
+                                    case BankingSystemMVC.Models.Reports.ReportStatus.Closed:
+                                        <span class="badge bg-secondary">Closed</span>
+                                        break;
+                                }
+                            </td>
+                            <td>@report.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

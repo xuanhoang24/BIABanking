@@ -10,6 +10,8 @@ using BankingSystemAPI.Services.Customer.Implements;
 using BankingSystemAPI.Services.Customer.Interfaces;
 using BankingSystemAPI.Services.Kyc.Implements;
 using BankingSystemAPI.Services.Kyc.Interfaces;
+using BankingSystemAPI.Services.Report.Implements;
+using BankingSystemAPI.Services.Report.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,6 +41,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IKycService, KycService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

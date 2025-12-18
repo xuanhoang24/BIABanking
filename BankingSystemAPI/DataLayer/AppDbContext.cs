@@ -1,4 +1,5 @@
 ﻿using BankingSystemAPI.Models.Accounts;
+using BankingSystemAPI.Models.Reports;
 using BankingSystemAPI.Models.Users.Admin;
 using BankingSystemAPI.Models.Users.Customers;
 using BankingSystemAPI.Models.Users.Roles;
@@ -26,6 +27,9 @@ namespace BankingSystemAPI.DataLayer
 
         // KYC Entities
         public DbSet<KYCDocument> KYCDocuments { get; set; }
+
+        // Report Entities
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -147,7 +151,18 @@ namespace BankingSystemAPI.DataLayer
                 entity.HasIndex(e => e.Status);
             });
 
+            // Report Configuration
+            modelBuilder.Entity<Report>(entity =>
+            {
+                entity.HasOne(r => r.Customer)
+                      .WithMany()
+                      .HasForeignKey(r => r.CustomerId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
+                entity.HasIndex(e => e.CustomerId);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.CreatedAt);
+            });
         }
     }
 }

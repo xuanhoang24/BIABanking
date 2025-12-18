@@ -1,5 +1,59 @@
-﻿<h1>Welcome to Banking System</h1>
+﻿@{
+    ViewData["Title"] = "Home";
+}
 
-<p>
-    Please login or register to access your account.
-</p>
+<div class="text-center">
+    <h1 class="display-4">Welcome to Banking System</h1>
+    <p class="lead">Secure, reliable, and easy-to-use banking services</p>
+</div>
+
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div class="row mt-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-credit-card fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Accounts</h5>
+                    <p class="card-text">Manage your bank accounts and view balances</p>
+                    <a asp-controller="Accounts" asp-action="Index" class="btn btn-primary">View Accounts</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-circle fs-1 text-success"></i>
+                    <h5 class="card-title mt-3">Profile</h5>
+                    <p class="card-text">View and manage your profile information</p>
+                    <a asp-controller="Profile" asp-action="Index" class="btn btn-success">View Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-flag fs-1 text-warning"></i>
+                    <h5 class="card-title mt-3">Reports</h5>
+                    <p class="card-text">Submit issues or view your support reports</p>
+                    <a asp-controller="Reports" asp-action="Index" class="btn btn-warning">My Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Get Started</h5>
+                    <p class="card-text">Please login or register to access your account.</p>
+                    <a asp-controller="Auth" asp-action="Login" class="btn btn-primary me-2">Login</a>
+                    <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-primary">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

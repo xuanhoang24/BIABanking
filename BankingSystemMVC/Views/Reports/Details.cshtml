@@ -1,0 +1,65 @@
+@model BankingSystemMVC.Models.Reports.ReportViewModel
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Report Details</h2>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Reports
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Report #@Model.Id</h5>
+                @switch (Model.Status)
+                {
+                    case BankingSystemMVC.Models.Reports.ReportStatus.Pending:
+                        <span class="badge bg-warning text-dark">Pending</span>
+                        break;
+                    case BankingSystemMVC.Models.Reports.ReportStatus.UnderReview:
+                        <span class="badge bg-info">Under Review</span>
+                        break;
+                    case BankingSystemMVC.Models.Reports.ReportStatus.Resolved:
+                        <span class="badge bg-success">Resolved</span>
+                        break;
+                    case BankingSystemMVC.Models.Reports.ReportStatus.Closed:
+                        <span class="badge bg-secondary">Closed</span>
+                        break;
+                }
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Name:</strong>
+                    <p>@Model.Name</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Title:</strong>
+                    <p>@Model.Title</p>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <strong>Description:</strong>
+                <p class="mt-2">@Model.Description</p>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        <strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' hh:mm tt")
+                    </small>
+                </div>
+                <div class="col-md-6">
+                    <small class="text-muted">
+                        <strong>Last Updated:</strong> @Model.UpdatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' hh:mm tt")
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

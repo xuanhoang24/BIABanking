@@ -41,6 +41,7 @@ builder.Services.AddScoped<IAccountViewService, AccountViewService>();
 builder.Services.AddScoped<ITransactionApiClient, TransactionApiClient>();
 builder.Services.AddScoped<IAdminKycApiClient, AdminKycApiClient>();
 builder.Services.AddScoped<IAdminUserApiClient, AdminUserApiClient>();
+builder.Services.AddScoped<IReportApiClient, ReportApiClient>();
 
 builder.Services.AddScoped<IAdminDashboardApiClient>(provider =>
 {
@@ -61,6 +62,13 @@ builder.Services.AddScoped<IAdminUserApiClient>(provider =>
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
     var httpClient = httpClientFactory.CreateClient("AdminApi");
     return new AdminUserApiClient(httpClient);
+});
+
+builder.Services.AddScoped<IAdminReportApiClient>(provider =>
+{
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient("AdminApi");
+    return new AdminReportApiClient(httpClient);
 });
 
 var app = builder.Build();
