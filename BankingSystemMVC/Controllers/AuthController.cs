@@ -1,5 +1,5 @@
-﻿using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Services.Interfaces;
+﻿using BankingSystemMVC.Models.ViewModels.Auth;
+using BankingSystemMVC.Services.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +8,12 @@ namespace BankingSystemMVC.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthApiClient _authApi;
-        public AuthController(IAuthApiClient authApi)
+        private readonly ILogger<AuthController> _logger;
+        
+        public AuthController(IAuthApiClient authApi, ILogger<AuthController> logger)
         {
             _authApi = authApi;
+            _logger = logger;
         }
 
         // LOGIN
@@ -33,26 +36,38 @@ namespace BankingSystemMVC.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var result = await _authApi.LoginAsync(model);
-
-            if (result == null)
+            try
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                var result = await _authApi.LoginAsync(model);
+
+                if (result == null)
+                {
+                    _logger.LogWarning("Login failed for email: {Email}", model.Email);
+                    ModelState.AddModelError(string.Empty, "Invalid email or password");
+                    return View(model);
+                }
+
+                _logger.LogInformation("Login successful for email: {Email}", model.Email);
+
+                Response.Cookies.Append("customer_access_token", result.AccessToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = false, // localhost only
+                        SameSite = SameSiteMode.Lax,
+                        Path = "/",
+                        Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+                    }
+                );
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during login for email: {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, "An error occurred during login. Please try again.");
                 return View(model);
             }
-
-            Response.Cookies.Append("customer_access_token", result.AccessToken,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false, // localhost only
-                    SameSite = SameSiteMode.Lax,
-                    Path = "/",
-                    Expires = result.ExpiresAt
-                }
-            );
-
-            return RedirectToAction("Index", "Home");
         }
 
         // REGISTER

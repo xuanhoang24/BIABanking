@@ -1,4 +1,5 @@
-@model BankingSystemMVC.Areas.Admin.Models.DashboardViewModel
+@using BankingSystemMVC.Areas.Admin.Models.ViewModels.Dashboard
+@model DashboardViewModel
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -110,7 +111,7 @@
                         </div>
                         <div class="col-md-2">
                             <a asp-area="Admin"
-                               asp-controller="AdminKyc"
+                               asp-controller="Kyc"
                                asp-action="Index"
                                class="btn btn-outline-warning btn-block mb-2">
                                 <i class="fas fa-file-alt"></i><br>

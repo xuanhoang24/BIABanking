@@ -1,3 +1,4 @@
+@using BankingSystemMVC.Areas.Admin.Models.Constants
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +42,7 @@
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminKyc" asp-action="Index">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Kyc" asp-action="Index">
                         <i class="fas fa-file-alt"></i> KYC Review
                     </a>
                 </li>
@@ -53,7 +54,7 @@
                 @if (User.HasClaim("perm", PermissionCodes.CustomerManage))
                 {
                     <li class="nav-item mb-2">
-                        <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminUsers" asp-action="Index">
+                        <a class="nav-link text-white" asp-area="Admin" asp-controller="Users" asp-action="Index">
                             <i class="fas fa-user-shield"></i> Employees
                         </a>
                     </li>
@@ -78,7 +79,7 @@
                 <hr class="text-white mt-4">
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="AdminAuth" asp-action="Logout">
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </li>
@@ -128,7 +129,7 @@
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="AdminAuth" asp-action="Logout">
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
                                         <i class="fas fa-sign-out-alt"></i> Logout
                                     </a>
                                 </li>

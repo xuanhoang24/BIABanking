@@ -1,0 +1,85 @@
+﻿@using BankingSystemMVC.Areas.Admin.Models
+@model AdminLoginViewModel
+
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h2>Admin Login</h2>
+                    <p class="text-muted">Access the Banking System Admin Panel</p>
+                </div>
+
+                <form method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter admin email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-sign-in-alt"></i> Login to Admin Panel
+                    </button>
+                </form>
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        Demo Credentials:<br>
+                        Admin: admin@bank.com / 123<br>
+                        Manager: manager@bank.com / 123<br>
+                        KycRevier: kyc@bank.com / 123
+                    </small>
+                </div>
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <a asp-controller="Home" asp-action="Index" asp-area="">
+                            <i class="fas fa-arrow-left"></i> Back to Main Site
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.card-body {
+    border-radius: 15px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px 15px;
+}
+
+.btn-lg {
+    border-radius: 10px;
+    padding: 12px 20px;
+}
+
+.fa-shield-alt {
+    color: #0d6efd;
+}
+</style>

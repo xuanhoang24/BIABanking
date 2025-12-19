@@ -1,7 +1,7 @@
-﻿using BankingSystemMVC.Models.Accounts;
-using BankingSystemMVC.Models.Accounts.Transactions;
-using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Services.Interfaces;
+﻿using BankingSystemMVC.Models.Constants.Auth;
+using BankingSystemMVC.Models.ViewModels.Accounts;
+using BankingSystemMVC.Services.Interfaces.Accounts;
+using BankingSystemMVC.Services.Interfaces.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

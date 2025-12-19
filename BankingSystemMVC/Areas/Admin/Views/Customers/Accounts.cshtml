@@ -1,7 +1,8 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.AccountSummaryViewModel>
+@using BankingSystemMVC.Areas.Admin.Models
+@model List<AccountSummaryViewModel>
 @{
     ViewData["Title"] = "Customer Accounts";
-    var customer = ViewBag.Customer as BankingSystemMVC.Areas.Admin.Models.CustomerDetailViewModel;
+    var customer = (ViewBag.Customer as CustomerDetailViewModel);
 }
 
 <div class="container-fluid">
@@ -117,7 +118,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <small>@account.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                        <small>@account.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small>
                                     </td>
                                 </tr>
                             }

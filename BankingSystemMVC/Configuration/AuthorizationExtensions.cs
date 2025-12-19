@@ -1,5 +1,5 @@
-﻿using BankingSystemMVC.Areas.Admin.Models;
-using BankingSystemMVC.Models.Auth;
+﻿using BankingSystemMVC.Areas.Admin.Models.Constants;
+using BankingSystemMVC.Models.Constants.Auth;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BankingSystemMVC.Configuration

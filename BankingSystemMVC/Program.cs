@@ -1,9 +1,27 @@
-using BankingSystemMVC.Areas.Admin.Services.Implements;
-using BankingSystemMVC.Areas.Admin.Services.Interfaces;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Audit;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Auth;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Customers;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Dashboard;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Kyc;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Reports;
+using BankingSystemMVC.Areas.Admin.Services.Implementations.Users;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Audit;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Auth;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Customers;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Dashboard;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Kyc;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Reports;
+using BankingSystemMVC.Areas.Admin.Services.Interfaces.Users;
 using BankingSystemMVC.Configuration;
 using BankingSystemMVC.Infrastructure.Http;
-using BankingSystemMVC.Services.Implements;
-using BankingSystemMVC.Services.Interfaces;
+using BankingSystemMVC.Services.Implementations.Accounts;
+using BankingSystemMVC.Services.Implementations.Auth;
+using BankingSystemMVC.Services.Implementations.Customers;
+using BankingSystemMVC.Services.Implementations.Reports;
+using BankingSystemMVC.Services.Interfaces.Accounts;
+using BankingSystemMVC.Services.Interfaces.Auth;
+using BankingSystemMVC.Services.Interfaces.Customers;
+using BankingSystemMVC.Services.Interfaces.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,34 +60,9 @@ builder.Services.AddScoped<ITransactionApiClient, TransactionApiClient>();
 builder.Services.AddScoped<IAdminKycApiClient, AdminKycApiClient>();
 builder.Services.AddScoped<IAdminUserApiClient, AdminUserApiClient>();
 builder.Services.AddScoped<IReportApiClient, ReportApiClient>();
-
-builder.Services.AddScoped<IAdminDashboardApiClient>(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var httpClient = httpClientFactory.CreateClient("AdminApi");
-    return new AdminDashboardApiClient(httpClient);
-});
-
-builder.Services.AddScoped<IAdminCustomerApiClient>(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var httpClient = httpClientFactory.CreateClient("AdminApi");
-    return new AdminCustomerApiClient(httpClient);
-});
-
-builder.Services.AddScoped<IAdminUserApiClient>(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var httpClient = httpClientFactory.CreateClient("AdminApi");
-    return new AdminUserApiClient(httpClient);
-});
-
-builder.Services.AddScoped<IAdminReportApiClient>(provider =>
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var httpClient = httpClientFactory.CreateClient("AdminApi");
-    return new AdminReportApiClient(httpClient);
-});
+builder.Services.AddScoped<IAdminDashboardApiClient, AdminDashboardApiClient>();
+builder.Services.AddScoped<IAdminCustomerApiClient, AdminCustomerApiClient>();
+builder.Services.AddScoped<IAdminReportApiClient, AdminReportApiClient>();
 
 var app = builder.Build();
 

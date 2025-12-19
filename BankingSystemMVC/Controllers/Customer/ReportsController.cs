@@ -1,6 +1,6 @@
-using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Models.Reports;
-using BankingSystemMVC.Services.Interfaces;
+using BankingSystemMVC.Models.Constants.Auth;
+using BankingSystemMVC.Models.ViewModels.Reports;
+using BankingSystemMVC.Services.Interfaces.Reports;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

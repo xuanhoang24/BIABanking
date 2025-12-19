@@ -1,5 +1,5 @@
-﻿using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Services.Interfaces;
+﻿using BankingSystemMVC.Models.Constants.Auth;
+using BankingSystemMVC.Services.Interfaces.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

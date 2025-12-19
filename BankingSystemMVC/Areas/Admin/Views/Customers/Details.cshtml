@@ -1,4 +1,5 @@
-@model BankingSystemMVC.Areas.Admin.Models.CustomerDetailViewModel
+@using BankingSystemMVC.Areas.Admin.Models
+@model CustomerDetailViewModel
 @{
     ViewData["Title"] = "Customer Details";
 }
@@ -138,7 +139,7 @@
                             <p class="mb-0">
                                 @if (Model.LockedUntil.HasValue && Model.LockedUntil > DateTime.UtcNow)
                                 {
-                                    <span class="badge bg-danger">Until @Model.LockedUntil.Value.ToString("MMM dd, yyyy hh:mm tt")</span>
+                                    <span class="badge bg-danger">Until @Model.LockedUntil.Value.ToString("MMM dd, yyyy HH:mm") UTC</span>
                                 }
                                 else
                                 {
@@ -148,11 +149,11 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-muted small">Member Since</label>
-                            <p class="mb-0">@Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                            <p class="mb-0">@Model.CreatedAt.ToString("MMMM dd, yyyy HH:mm") UTC</p>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-muted small">Last Updated</label>
-                            <p class="mb-0">@Model.UpdatedAt.ToString("MMMM dd, yyyy")</p>
+                            <p class="mb-0">@Model.UpdatedAt.ToString("MMMM dd, yyyy HH:mm") UTC</p>
                         </div>
                     </div>
                 </div>

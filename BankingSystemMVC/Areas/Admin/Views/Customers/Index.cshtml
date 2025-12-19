@@ -1,4 +1,5 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.CustomerListViewModel>
+@using BankingSystemMVC.Areas.Admin.Models
+@model List<CustomerListViewModel>
 @{
     ViewData["Title"] = "Manage Customers";
 }
@@ -95,7 +96,7 @@
                                     <td>
                                         <span class="badge bg-info">@customer.AccountCount</span>
                                     </td>
-                                    <td><small>@customer.CreatedAt.ToString("MMM dd, yyyy")</small></td>
+                                    <td><small>@customer.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small></td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-outline-primary" title="View Details">

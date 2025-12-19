@@ -1,6 +1,6 @@
-﻿using BankingSystemMVC.Models.Auth;
-using BankingSystemMVC.Models.Kyc;
-using BankingSystemMVC.Services.Interfaces;
+﻿using BankingSystemMVC.Models.Constants.Auth;
+using BankingSystemMVC.Models.ViewModels.Kyc;
+using BankingSystemMVC.Services.Interfaces.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

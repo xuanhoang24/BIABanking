@@ -1,4 +1,5 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.TransactionListViewModel>
+@using BankingSystemMVC.Areas.Admin.Models
+@model List<TransactionListViewModel>
 @{
     ViewData["Title"] = "All Transactions";
 }
@@ -164,7 +165,7 @@
                                         <small>@transaction.Description</small>
                                     </td>
                                     <td>
-                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")</small>
+                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small>
                                     </td>
                                 </tr>
                             }

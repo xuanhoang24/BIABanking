@@ -1,4 +1,4 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.AccountListViewModel>
+@model List<AccountListViewModel>
 @{
     ViewData["Title"] = "All Accounts";
 }
@@ -125,7 +125,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <small>@account.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                        <small>@account.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small>
                                     </td>
                                     <td>
                                         <a asp-area="Admin" asp-controller="Customers" asp-action="Details" asp-route-id="@account.CustomerId" 

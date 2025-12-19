@@ -1,4 +1,5 @@
-@model List<BankingSystemMVC.Areas.Admin.Models.AdminReportViewModel>
+@using BankingSystemMVC.Areas.Admin.Models.ViewModels.Reports
+@model List<AdminReportViewModel>
 
 @{
     ViewData["Title"] = "Customer Reports";
@@ -62,21 +63,21 @@ else
                                 <td>
                                     @switch (report.Status)
                                     {
-                                        case BankingSystemMVC.Areas.Admin.Models.AdminReportStatus.Pending:
+                                        case AdminReportStatus.Pending:
                                             <span class="badge bg-warning text-dark">Pending</span>
                                             break;
-                                        case BankingSystemMVC.Areas.Admin.Models.AdminReportStatus.UnderReview:
+                                        case AdminReportStatus.UnderReview:
                                             <span class="badge bg-info">Under Review</span>
                                             break;
-                                        case BankingSystemMVC.Areas.Admin.Models.AdminReportStatus.Resolved:
+                                        case AdminReportStatus.Resolved:
                                             <span class="badge bg-success">Resolved</span>
                                             break;
-                                        case BankingSystemMVC.Areas.Admin.Models.AdminReportStatus.Closed:
+                                        case AdminReportStatus.Closed:
                                             <span class="badge bg-secondary">Closed</span>
                                             break;
                                     }
                                 </td>
-                                <td>@report.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                                <td>@report.CreatedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</td>
                                 <td>
                                     <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary">
                                         View Details
