@@ -1,8 +1,8 @@
-using BankingSystemAPI.Models.DTOs.Reports;
-using BankingSystemAPI.Models.Reports;
-using BankingSystemAPI.Models.Users.Admin;
-using BankingSystemAPI.Services.Admin.Implements;
-using BankingSystemAPI.Services.Report.Interfaces;
+using BankingSystemAPI.Application.Dtos.Reports;
+using BankingSystemAPI.Application.Services.Implementations.Admin;
+using BankingSystemAPI.Application.Services.Interfaces.Report;
+using BankingSystemAPI.Domain.Entities.Reports;
+using BankingSystemAPI.Domain.Entities.Users.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

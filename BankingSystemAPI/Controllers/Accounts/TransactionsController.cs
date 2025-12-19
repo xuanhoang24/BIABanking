@@ -1,5 +1,6 @@
-﻿using BankingSystemAPI.Models.DTOs.Accounts.Transactions;
-using BankingSystemAPI.Services.Customer.Interfaces;
+using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Application.Dtos.Transactions;
+using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,20 +19,12 @@ namespace BankingSystemAPI.Controllers.Accounts
             _transactionService = transactionService;
         }
 
-        private int GetCustomerId()
-        {
-            return int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
-        }
-
         // DEPOSIT
         [HttpPost("deposit")]
         public async Task<IActionResult> Deposit(DepositRequestDto dto)
         {
             var reference = await _transactionService.DepositAsync(
-                GetCustomerId(),
+                User.GetRequiredUserId(),
                 dto.AccountId,
                 dto.Amount,
                 dto.Description
@@ -45,7 +38,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         public async Task<IActionResult> Withdraw(WithdrawRequestDto dto)
         {
             var reference = await _transactionService.WithdrawAsync(
-                GetCustomerId(),
+                User.GetRequiredUserId(), 
                 dto.AccountId,
                 dto.Amount,
                 dto.Description
@@ -59,7 +52,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         public async Task<IActionResult> Transfer(TransferRequestDto dto)
         {
             var reference = await _transactionService.TransferAsync(
-                GetCustomerId(),
+                User.GetRequiredUserId(), 
                 dto.FromAccountId,
                 dto.ToAccountNumber,
                 dto.Amount,
@@ -74,7 +67,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         public async Task<IActionResult> Payment(PaymentRequestDto dto)
         {
             var reference = await _transactionService.PaymentAsync(
-                GetCustomerId(),
+                User.GetRequiredUserId(), 
                 dto.AccountId,
                 dto.Amount,
                 dto.Merchant

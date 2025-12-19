@@ -1,7 +1,7 @@
-﻿using BankingSystemAPI.Models.DTOs.Auth;
-using BankingSystemAPI.Models.Users.Admin;
-using BankingSystemAPI.Security.Interfaces;
-using BankingSystemAPI.Services.Admin.Implements;
+using BankingSystemAPI.Application.Dtos.Auth;
+using BankingSystemAPI.Application.Services.Implementations.Admin;
+using BankingSystemAPI.Infrastructure.Security.Interfaces;
+using BankingSystemAPI.Domain.Entities.Users.Admin;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemAPI.Controllers.Admin

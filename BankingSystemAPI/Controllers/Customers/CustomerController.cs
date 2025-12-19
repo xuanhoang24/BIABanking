@@ -1,6 +1,6 @@
-﻿using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models.DTOs.Customer;
-using BankingSystemAPI.Services.Customer.Interfaces;
+using BankingSystemAPI.Application.Services.Interfaces.Customer;
+using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Application.Dtos.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

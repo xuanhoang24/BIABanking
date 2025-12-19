@@ -1,5 +1,6 @@
-using BankingSystemAPI.Models.Users.Roles;
-using BankingSystemAPI.Services.Admin.Interfaces;
+using BankingSystemAPI.Application.Dtos.Admin;
+using BankingSystemAPI.Application.Services.Interfaces.Admin;
+using BankingSystemAPI.Domain.Entities.Users.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,10 +85,5 @@ namespace BankingSystemAPI.Controllers.Admin
             var transactions = await _customerService.GetAllTransactionsAsync(limit);
             return Ok(transactions);
         }
-    }
-
-    public class UpdateStatusRequest
-    {
-        public string Status { get; set; } = string.Empty;
     }
 }

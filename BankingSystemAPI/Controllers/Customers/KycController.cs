@@ -1,7 +1,8 @@
-﻿using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models.DTOs.Customer;
-using BankingSystemAPI.Models.Users.Customers;
-using BankingSystemAPI.Services.Kyc.Interfaces;
+using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Application.Dtos.Customers;
+using BankingSystemAPI.Domain.Entities.Users.Customers;
+using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Application.Services.Interfaces.Kyc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,10 +26,7 @@ namespace BankingSystemAPI.Controllers.Customers
         [HttpPost("upload")]
         public async Task<IActionResult> Upload([FromForm] UploadKycDocumentRequestDto dto)
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             try
             {
@@ -55,10 +53,7 @@ namespace BankingSystemAPI.Controllers.Customers
         [HttpGet("my-document")]
         public async Task<IActionResult> MyDocument()
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             var doc = await _kycService.GetCurrentCustomerDocumentAsync(customerId);
             if (doc == null)
@@ -80,10 +75,7 @@ namespace BankingSystemAPI.Controllers.Customers
         [HttpGet("my-document/file")]
         public async Task<IActionResult> GetMyDocumentFile()
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             var doc = await _kycService.GetCurrentCustomerDocumentAsync(customerId);
             if (doc == null)

@@ -1,8 +1,10 @@
-﻿using BankingSystemAPI.DataLayer;
-using BankingSystemAPI.Models.Accounts;
-using BankingSystemAPI.Models.DTOs.Accounts;
-using BankingSystemAPI.Models.Users.Admin;
-using BankingSystemAPI.Services.Admin.Implements;
+using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Domain.Entities.Accounts;
+using BankingSystemAPI.Application.Dtos.Accounts;
+using BankingSystemAPI.Domain.Entities.Users.Admin;
+using BankingSystemAPI.Application.Services.Implementations.Admin;
+using BankingSystemAPI.Application.Services.Interfaces.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,10 +31,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         [HttpGet]
         public async Task<IActionResult> GetMyAccounts()
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             var accounts = await _context.Accounts
                 .Where(a => a.CustomerId == customerId)
@@ -54,10 +53,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         [HttpPost]
         public async Task<IActionResult> CreateAccount(CreateAccountRequestDto dto)
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             // Check if customer has verified KYC
             var customer = await _context.Customers.FindAsync(customerId);
@@ -101,10 +97,7 @@ namespace BankingSystemAPI.Controllers.Accounts
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAccountDetail(int id)
         {
-            var customerId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue("sub")!
-            );
+            var customerId = User.GetRequiredUserId();
 
             var account = await _context.Accounts
                 .Where(a => a.Id == id && a.CustomerId == customerId)
