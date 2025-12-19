@@ -1,52 +1,64 @@
 ﻿@using BankingSystemMVC.Models.ViewModels.Auth
 @model RegisterViewModel
 
-<h2>Register</h2>
+<div class="form-page">
+    <h2>Create Account</h2>
 
-<form asp-action="Register" method="post">
-    <div>
-        <label>First Name</label><br />
-        <input asp-for="FirstName" />
+    <form asp-action="Register" method="post">
+        <div class="form-group">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName" class="form-label">Last Name</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Address" class="form-label">Address</label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Account</button>
+    </form>
+
+    <div class="text-center mt-4">
+        <p class="text-muted">Already have an account? <a asp-action="Login">Sign In</a></p>
     </div>
 
-    <div>
-        <label>Last Name</label><br />
-        <input asp-for="LastName" />
-    </div>
-
-    <div>
-        <label>Email</label><br />
-        <input asp-for="Email" />
-    </div>
-
-    <div>
-        <label>Password</label><br />
-        <input asp-for="Password" type="password" />
-    </div>
-
-    <div>
-        <label>Confirm Password</label><br />
-        <input asp-for="ConfirmPassword" type="password" />
-    </div>
-
-    <div>
-        <label>Phone Number</label><br />
-        <input asp-for="PhoneNumber" />
-    </div>
-
-    <div>
-        <label>Date of Birth</label><br />
-        <input asp-for="DateOfBirth" type="date" />
-    </div>
-
-    <div>
-        <label>Address</label><br />
-        <input asp-for="Address" />
-    </div>
-
-
-
-    <button type="submit">Register</button>
-</form>
-
-<div asp-validation-summary="All"></div>
+    <div asp-validation-summary="All" class="text-danger mt-3"></div>
+</div>

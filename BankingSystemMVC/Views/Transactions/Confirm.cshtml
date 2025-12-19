@@ -1,41 +1,42 @@
 ﻿@using BankingSystemMVC.Models.ViewModels.Accounts.Transactions
 @model TransactionConfirmViewModel
 
-<h2>@Model.Title</h2>
-
-<div class="card">
-    <div class="card-body">
-
-        <p class="fw-bold text-success">
-            @Model.Type successful
-        </p>
-
-        @if (!string.IsNullOrEmpty(Model.FromAccountNumber))
-        {
-            <p>
-                <strong>From account:</strong> @Model.FromAccountNumber
-            </p>
-        }
-
-        @if (!string.IsNullOrEmpty(Model.ToAccountNumber))
-        {
-            <p>
-                <strong>To account:</strong> @Model.ToAccountNumber
-            </p>
-        }
-
-        <p>
-            <strong>Amount:</strong> @Model.Amount.ToString("C")
-        </p>
-
-        <p>
-            <strong>Reference:</strong> @Model.Reference
-        </p>
+<div class="page-container">
+    <div class="page-header">
+        <h1>@Model.Title</h1>
     </div>
-</div>
 
-<a asp-controller="Accounts"
-   asp-action="Index"
-   class="btn btn-primary mt-3">
-    Go back
-</a>
+    <div class="card">
+        <div class="card-body">
+            <p class="fw-bold text-success mb-4">@Model.Type successful</p>
+
+            @if (!string.IsNullOrEmpty(Model.FromAccountNumber))
+            {
+                <div class="mb-3">
+                    <label class="text-muted">From Account</label>
+                    <p class="fw-semibold">@Model.FromAccountNumber</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ToAccountNumber))
+            {
+                <div class="mb-3">
+                    <label class="text-muted">To Account</label>
+                    <p class="fw-semibold">@Model.ToAccountNumber</p>
+                </div>
+            }
+
+            <div class="mb-3">
+                <label class="text-muted">Amount</label>
+                <p class="fw-semibold fs-4">@Model.Amount.ToString("C")</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="text-muted">Reference</label>
+                <p class="fw-semibold">@Model.Reference</p>
+            </div>
+        </div>
+    </div>
+
+    <a asp-controller="Accounts" asp-action="Index" class="btn btn-primary mt-4">Back to Accounts</a>
+</div>

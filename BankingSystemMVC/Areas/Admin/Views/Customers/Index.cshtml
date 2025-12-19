@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1><i class="fas fa-users"></i> Manage Customers</h1>
+            <h1><i class="bi bi-people"></i> Manage Customers</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
@@ -20,7 +20,7 @@
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show">
-            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -28,15 +28,15 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show">
-            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <i class="bi bi-exclamation-circle"></i> @TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
     <div class="card">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-list"></i> Customer List</h5>
-            <span class="badge bg-light text-dark">Total: @Model.Count</span>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list"></i> Customer List</h5>
+            <span class="badge bg-secondary">Total: @Model.Count</span>
         </div>
         <div class="card-body p-0">
             @if (Model.Any())
@@ -69,11 +69,11 @@
                                     <td>
                                         @if (customer.IsKYCVerified)
                                         {
-                                            <span class="badge bg-success"><i class="fas fa-check"></i> Verified</span>
+                                            <span class="badge bg-success"><i class="bi bi-check"></i> Verified</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning"><i class="fas fa-clock"></i> Pending</span>
+                                            <span class="badge bg-warning"><i class="bi bi-clock"></i> Pending</span>
                                         }
                                     </td>
                                     <td>
@@ -89,26 +89,26 @@
                                                 <span class="badge bg-danger">Suspended</span>
                                                 break;
                                             case "Closed":
-                                                <span class="badge bg-dark">Closed</span>
+                                                <span class="badge bg-secondary">Closed</span>
                                                 break;
                                         }
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">@customer.AccountCount</span>
+                                        <span class="badge bg-secondary">@customer.AccountCount</span>
                                     </td>
                                     <td><small>@customer.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small></td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-outline-primary" title="View Details">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="bi bi-eye"></i>
                                             </a>
-                                            <a asp-action="Accounts" asp-route-id="@customer.Id" class="btn btn-outline-success" title="View Accounts">
-                                                <i class="fas fa-credit-card"></i>
+                                            <a asp-action="Accounts" asp-route-id="@customer.Id" class="btn btn-outline-primary" title="View Accounts">
+                                                <i class="bi bi-wallet2"></i>
                                             </a>
                                             @if (User.HasClaim("perm", "transaction.read"))
                                             {
-                                                <a asp-action="Transactions" asp-route-id="@customer.Id" class="btn btn-outline-info" title="View Transactions">
-                                                    <i class="fas fa-exchange-alt"></i>
+                                                <a asp-action="Transactions" asp-route-id="@customer.Id" class="btn btn-outline-primary" title="View Transactions">
+                                                    <i class="bi bi-arrow-left-right"></i>
                                                 </a>
                                             }
                                         </div>
@@ -122,7 +122,7 @@
             else
             {
                 <div class="text-center py-5 text-muted">
-                    <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                    <i class="bi bi-people display-3 mb-3 opacity-50"></i>
                     <h5>No Customers Found</h5>
                     <p>There are no customers in the system yet.</p>
                 </div>
@@ -131,15 +131,7 @@
     </div>
 </div>
 
-<style>
-    .table td {
-        vertical-align: middle;
-    }
 
-    .btn-group-sm .btn {
-        padding: 0.25rem 0.5rem;
-    }
-</style>
 
 @section Scripts {
     <script>

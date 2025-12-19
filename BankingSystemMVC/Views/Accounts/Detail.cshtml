@@ -5,117 +5,109 @@
     ViewData["Title"] = "Account Detail";
 }
 
-<h2>Account Detail</h2>
-
-<table class="table">
-    <tr>
-        <th>Account Name</th>
-        <td>@Model.AccountName</td>
-    </tr>
-    <tr>
-        <th>Account Number</th>
-        <td>@Model.AccountNumber</td>
-    </tr>
-    <tr>
-        <th>Type</th>
-        <td>@Model.AccountType</td>
-    </tr>
-    <tr>
-        <th>Status</th>
-        <td>@Model.Status</td>
-    </tr>
-    <tr>
-        <th>Balance</th>
-        <td>@Model.Balance.ToString("C")</td>
-    </tr>
-</table>
-<div class="mb-3">
-    <a asp-controller="Transactions"
-       asp-action="Deposit"
-       asp-route-accountId="@Model.Id"
-       class="btn btn-success me-2">
-        Deposit
-    </a>
-
-    <a asp-controller="Transactions"
-       asp-action="Withdraw"
-       asp-route-accountId="@Model.Id"
-       class="btn btn-danger me-2">
-        Withdraw
-    </a>
-
-    <a asp-controller="Transactions"
-       asp-action="Transfer"
-       asp-route-fromAccountId="@Model.Id"
-       class="btn btn-primary me-2">
-        Transfer
-    </a>
-
-    <a asp-controller="Transactions"
-       asp-action="Payment"
-       asp-route-accountId="@Model.Id"
-       class="btn btn-warning">
-        Payment
-    </a>
-</div>
-
-<div class="card mt-4">
-    <div class="card-header">
-        <h5>Recent Transactions</h5>
+<div class="page-container">
+    <div class="page-header">
+        <h1>Account Detail</h1>
+        <p>@Model.AccountName</p>
     </div>
 
-    <div class="card-body p-0">
-        @if (Model.RecentTransactions.Any())
-        {
-            <table class="table table-borderless mb-0 align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Date</th>
-                        <th>Transactions</th>
-                        <th class="text-end">Amount</th>
-                        <th class="text-end">Balance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var tx in Model.RecentTransactions)
-                    {
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">
-                                    @tx.Date.ToString("MMM dd")
-                                </div>
-                                <div class="text-muted small">
-                                    @tx.Date.ToString("HH:mm")
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fw-semibold">
-                                    @tx.Type
-                                </div>
-                                <div class="text-muted small">
-                                    @tx.Reference
-                                </div>
-                            </td>
-                            <td class="text-end fw-semibold @(tx.Amount >= 0 ? "text-success" : "text-danger")">
-                                @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
-                            </td>
-                            <td class="text-end fw-semibold">
-                                @tx.PostBalance.ToString("C")
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="text-center text-muted py-4">
-                No recent transactions
+    <div class="row mb-4">
+        <div class="col-md-8 mb-4 mb-md-0">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Account Number</label>
+                            <p class="fw-semibold mb-0">@Model.AccountNumber</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Type</label>
+                            <p class="fw-semibold mb-0">@Model.AccountType</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Status</label>
+                            <p class="fw-semibold mb-0">@Model.Status</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Balance</label>
+                            <p class="fw-semibold fs-4 mb-0">@Model.Balance.ToString("C")</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        }
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0">Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Transactions" asp-action="Deposit" asp-route-accountId="@Model.Id" class="btn btn-outline-primary text-start">
+                            <i class="bi bi-cash-coin me-2"></i> Deposit
+                        </a>
+                        <a asp-controller="Transactions" asp-action="Withdraw" asp-route-accountId="@Model.Id" class="btn btn-outline-primary text-start">
+                            <i class="bi bi-cash-stack me-2"></i> Withdraw
+                        </a>
+                        <a asp-controller="Transactions" asp-action="Transfer" asp-route-fromAccountId="@Model.Id" class="btn btn-outline-primary text-start">
+                            <i class="bi bi-arrow-left-right me-2"></i> Transfer
+                        </a>
+                        <a asp-controller="Transactions" asp-action="Payment" asp-route-accountId="@Model.Id" class="btn btn-outline-primary text-start">
+                            <i class="bi bi-credit-card me-2"></i> Payment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Recent Transactions</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.RecentTransactions.Any())
+            {
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Transaction</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-end">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tx in Model.RecentTransactions)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@tx.Date.ToString("MMM dd")</div>
+                                    <div class="text-muted small">@tx.Date.ToString("HH:mm")</div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@tx.Type</div>
+                                    <div class="text-muted small">@tx.Reference</div>
+                                </td>
+                                <td class="text-end fw-semibold">
+                                    @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
+                                </td>
+                                <td class="text-end fw-semibold">
+                                    @tx.PostBalance.ToString("C")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center text-muted py-4">
+                    No recent transactions
+                </div>
+            }
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-4">Back to Accounts</a>
 </div>
-
-
-
-<a asp-action="Index" class="btn btn-secondary">Back</a>

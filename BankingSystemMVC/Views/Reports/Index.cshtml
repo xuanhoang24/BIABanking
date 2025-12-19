@@ -1,14 +1,7 @@
 @using BankingSystemMVC.Models.ViewModels.Reports
 @model List<ReportViewModel>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>My Reports</h2>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Create New Report
-        </a>
-    </div>
-
+<div class="page-container">
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -17,60 +10,65 @@
         </div>
     }
 
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Reports</h1>
+            <p>View and manage your support tickets</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">Create Report</a>
+    </div>
+
     @if (Model.Count == 0)
     {
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> You haven't submitted any reports yet.
+        <div class="card text-center p-5">
+            <p class="text-muted mb-3">You haven't submitted any reports yet.</p>
+            <a asp-action="Create" class="btn btn-primary">Create Your First Report</a>
         </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in Model)
+                {
                     <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Actions</th>
+                        <td>@report.Id</td>
+                        <td>@report.Title</td>
+                        <td>@report.Name</td>
+                        <td>
+                            @switch (report.Status)
+                            {
+                                case ReportStatus.Pending:
+                                    <span class="badge bg-warning">Pending</span>
+                                    break;
+                                case ReportStatus.UnderReview:
+                                    <span class="badge bg-secondary">Under Review</span>
+                                    break;
+                                case ReportStatus.Resolved:
+                                    <span class="badge bg-success">Resolved</span>
+                                    break;
+                                case ReportStatus.Closed:
+                                    <span class="badge bg-secondary">Closed</span>
+                                    break;
+                            }
+                        </td>
+                        <td>@report.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-primary">View</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var report in Model)
-                    {
-                        <tr>
-                            <td>@report.Id</td>
-                            <td>@report.Title</td>
-                            <td>@report.Name</td>
-                            <td>
-                                @switch (report.Status)
-                                {
-                                    case ReportStatus.Pending:
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                        break;
-                                    case ReportStatus.UnderReview:
-                                        <span class="badge bg-info">Under Review</span>
-                                        break;
-                                    case ReportStatus.Resolved:
-                                        <span class="badge bg-success">Resolved</span>
-                                        break;
-                                    case ReportStatus.Closed:
-                                        <span class="badge bg-secondary">Closed</span>
-                                        break;
-                                }
-                            </td>
-                            <td>@report.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary">
-                                    View Details
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     }
 </div>

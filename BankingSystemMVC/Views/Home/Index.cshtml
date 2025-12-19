@@ -2,58 +2,160 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Banking System</h1>
-    <p class="lead">Secure, reliable, and easy-to-use banking services</p>
+<div class="hero-section">
+    <div class="container">
+        <h1>SecureBank</h1>
+        <p>Modern banking, simplified</p>
+        @if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            <div class="mt-4">
+                <a asp-controller="Auth" asp-action="Register" class="btn btn-primary btn-lg me-3">Get Started</a>
+                <a asp-controller="Auth" asp-action="Login" class="btn btn-light btn-lg">Sign In</a>
+            </div>
+        }
+        else
+        {
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Dashboard" class="btn btn-primary btn-lg">Go to Dashboard</a>
+            </div>
+        }
+    </div>
 </div>
 
-@if (User.Identity != null && User.Identity.IsAuthenticated)
-{
-    <div class="row mt-5">
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-credit-card fs-1 text-primary"></i>
-                    <h5 class="card-title mt-3">Accounts</h5>
-                    <p class="card-text">Manage your bank accounts and view balances</p>
-                    <a asp-controller="Accounts" asp-action="Index" class="btn btn-primary">View Accounts</a>
-                </div>
-            </div>
+<div class="container section">
+    <div class="section-title">
+        <h2>About Us</h2>
+        <p>Banking built for the modern world</p>
+    </div>
+    <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+            <p>SecureBank combines cutting-edge technology with personalized service to deliver exceptional banking experiences. Our commitment to security, innovation, and customer satisfaction has made us a trusted financial partner.</p>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-person-circle fs-1 text-success"></i>
-                    <h5 class="card-title mt-3">Profile</h5>
-                    <p class="card-text">View and manage your profile information</p>
-                    <a asp-controller="Profile" asp-action="Index" class="btn btn-success">View Profile</a>
+        <div class="col-md-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">500K+</span>
+                        <span class="stat-label">Customers</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-flag fs-1 text-warning"></i>
-                    <h5 class="card-title mt-3">Reports</h5>
-                    <p class="card-text">Submit issues or view your support reports</p>
-                    <a asp-controller="Reports" asp-action="Index" class="btn btn-warning">My Reports</a>
+                <div class="col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">$5B+</span>
+                        <span class="stat-label">Assets</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-card">
+                        <span class="stat-number">150+</span>
+                        <span class="stat-label">Branches</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="row mt-5">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Get Started</h5>
-                    <p class="card-text">Please login or register to access your account.</p>
-                    <a asp-controller="Auth" asp-action="Login" class="btn btn-primary me-2">Login</a>
-                    <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-primary">Register</a>
+</div>
+
+<div class="bg-subtle">
+    <div class="container section">
+        <div class="section-title">
+            <h2>Services</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-bank display-4 mb-3"></i>
+                    <h5>Personal Banking</h5>
+                    <p>Savings, checking, and investment accounts</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-briefcase display-4 mb-3"></i>
+                    <h5>Business Banking</h5>
+                    <p>Tools to help your business grow</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-shield-lock display-4 mb-3"></i>
+                    <h5>Security</h5>
+                    <p>Bank-grade encryption and protection</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-phone display-4 mb-3"></i>
+                    <h5>Mobile Banking</h5>
+                    <p>Access anywhere, anytime</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-cash-stack display-4 mb-3"></i>
+                    <h5>Loans & Credit</h5>
+                    <p>Competitive rates and flexible terms</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <i class="bi bi-graph-up-arrow display-4 mb-3"></i>
+                    <h5>Investments</h5>
+                    <p>Plan for your financial future</p>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="container section">
+    <div class="section-title">
+        <h2>Why Choose SecureBank?</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="feature-card text-center">
+                <i class="bi bi-shield-check display-4 mb-3"></i>
+                <h6>Bank-Level Security</h6>
+                <p>Industry-leading encryption</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="feature-card text-center">
+                <i class="bi bi-lightning-charge display-4 mb-3"></i>
+                <h6>Instant Transfers</h6>
+                <p>Real-time transactions</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="feature-card text-center">
+                <i class="bi bi-headset display-4 mb-3"></i>
+                <h6>24/7 Support</h6>
+                <p>Always here to help</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="feature-card text-center">
+                <i class="bi bi-check-circle display-4 mb-3"></i>
+                <h6>No Hidden Fees</h6>
+                <p>Transparent pricing</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.Identity == null || !User.Identity.IsAuthenticated)
+{
+    <div class="container section text-center">
+        <h2>Ready to get started?</h2>
+        <p class="mb-4">Join thousands of satisfied customers</p>
+        <a asp-controller="Auth" asp-action="Register" class="btn btn-primary btn-lg me-3">Open Account</a>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-secondary btn-lg">Sign In</a>
     </div>
 }

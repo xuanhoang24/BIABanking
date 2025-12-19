@@ -2,72 +2,61 @@
 @model List<AccountSummaryViewModel>
 
 @{
-    ViewData["Title"] = "My Accounts";
+    ViewData["Title"] = "Accounts";
 }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-triangle"></i>
-        <strong>@TempData["ErrorMessage"]</strong>
-        @if (TempData["ShowKycLink"] != null && (bool)TempData["ShowKycLink"])
-        {
-            <br />
-            <a asp-controller="Kyc" asp-action="Upload" class="alert-link">
-                <i class="fas fa-upload"></i> Upload KYC Documents Now
-            </a>
-        }
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="page-container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            @if (TempData["ShowKycLink"] != null && (bool)TempData["ShowKycLink"])
+            {
+                <br />
+                <a asp-controller="Kyc" asp-action="Upload">Upload KYC Documents</a>
+            }
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Accounts</h1>
+            <p>Manage your bank accounts</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Transactions" asp-action="Transfer" class="btn btn-secondary">Transfer</a>
+            <a asp-controller="Accounts" asp-action="Create" class="btn btn-primary">Create Account</a>
+        </div>
     </div>
-}
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>My Accounts</h2>
-
-    <div class="d-flex gap-2">
-        <a asp-controller="Transactions"
-           asp-action="Transfer"
-           class="btn btn-outline-primary">
-            Transfer
-        </a>
-
-        <a asp-controller="Accounts"
-           asp-action="Create"
-           class="btn btn-primary">
-            + Create Account
-        </a>
-    </div>
-</div>
-
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Account</th>
-            <th>Account Number</th>
-            <th>Type</th>
-            <th>Balance</th>
-            <th>Status</th>
-            <th class="text-end">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var a in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@a.AccountName</td>
-                <td>@a.AccountNumber</td>
-                <td>@a.AccountType</td>
-                <td>@a.Balance.ToString("C")</td>
-                <td>@a.Status</td>
-                <td class="text-end">
-                    <a asp-controller="Accounts"
-                       asp-action="Detail"
-                       asp-route-id="@a.Id"
-                       class="btn btn-sm btn-outline-primary">
-                        Details
-                    </a>
-                </td>
+                <th>Account</th>
+                <th>Number</th>
+                <th>Type</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th class="text-end">Action</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>@a.AccountName</td>
+                    <td>@a.AccountNumber</td>
+                    <td>@a.AccountType</td>
+                    <td>@a.Balance.ToString("C")</td>
+                    <td>@a.Status</td>
+                    <td class="text-end">
+                        <a asp-controller="Accounts" asp-action="Detail" asp-route-id="@a.Id" class="btn btn-sm btn-primary">
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

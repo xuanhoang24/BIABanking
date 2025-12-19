@@ -3,108 +3,73 @@
 @model TransferPageViewModel
 
 @{
-    ViewData["Title"] = "Transfer Funds";
+    ViewData["Title"] = "Transfer";
     var accounts = Model.Accounts ?? new List<AccountSummaryViewModel>();
 }
 
-<h2 class="mb-4">Transfer Funds</h2>
+<div class="form-page">
+    <h2>Transfer Funds</h2>
 
-<form asp-action="Transfer" method="post">
-    @Html.AntiForgeryToken()
+    <form asp-action="Transfer" method="post">
+        @Html.AntiForgeryToken()
 
-    <!-- TRANSFER TYPE -->
-    <div class="mb-3">
-        <label class="form-label">Transfer Type</label>
-        <select asp-for="Transfer.TransferType"
-                class="form-select"
-                id="transferType">
-            <option value="Internal">Between my accounts</option>
-            <option value="External">To another user</option>
-        </select>
-    </div>
+        <div class="form-group">
+            <label class="form-label">Transfer Type</label>
+            <select asp-for="Transfer.TransferType" class="form-select" id="transferType">
+                <option value="Internal">Between my accounts</option>
+                <option value="External">To another user</option>
+            </select>
+        </div>
 
-    <!-- FROM ACCOUNT -->
-    <div class="mb-3">
-        <label class="form-label">From Account</label>
-        <select asp-for="Transfer.FromAccountId"
-                class="form-select"
-                id="fromAccountSelect">
-            <option value="">Select account</option>
+        <div class="form-group">
+            <label class="form-label">From Account</label>
+            <select asp-for="Transfer.FromAccountId" class="form-select" id="fromAccountSelect">
+                <option value="">Select account</option>
+                @foreach (var a in accounts)
+                {
+                    <option value="@a.Id">
+                        @a.AccountName (@a.AccountNumber) | @a.Balance.ToString("C")
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Transfer.FromAccountId" class="text-danger"></span>
+        </div>
 
-            @foreach (var a in accounts)
-            {
-                <option value="@a.Id">
-                    @a.AccountName (@a.AccountNumber)
-                    | Balance: @a.Balance.ToString("C")
-                </option>
-            }
-        </select>
+        <div id="internalTransferSection" class="form-group">
+            <label class="form-label">To Account</label>
+            <select asp-for="Transfer.ToAccountId" class="form-select" id="toAccountSelect">
+                <option value="">Select destination account</option>
+                @foreach (var a in accounts)
+                {
+                    <option value="@a.Id">
+                        @a.AccountName (@a.AccountNumber) | @a.Balance.ToString("C")
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Transfer.ToAccountId" class="text-danger"></span>
+        </div>
 
-        <span asp-validation-for="Transfer.FromAccountId"
-              class="text-danger"></span>
-    </div>
+        <div id="externalTransferSection" class="form-group" style="display:none;">
+            <label class="form-label">Destination Account Number</label>
+            <input asp-for="Transfer.ToAccountNumber" class="form-control" />
+            <span asp-validation-for="Transfer.ToAccountNumber" class="text-danger"></span>
+        </div>
 
-    <!-- INTERNAL TRANSFER -->
-    <div id="internalTransferSection" class="mb-3">
-        <label class="form-label">To Account (Internal)</label>
+        <div class="form-group">
+            <label class="form-label">Amount</label>
+            <input asp-for="Transfer.Amount" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="Transfer.Amount" class="text-danger"></span>
+        </div>
 
-        <select asp-for="Transfer.ToAccountId"
-                class="form-select"
-                id="toAccountSelect">
-            <option value="">Select destination account</option>
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea asp-for="Transfer.Description" class="form-control" rows="3"></textarea>
+        </div>
 
-            @foreach (var a in accounts)
-            {
-                <option value="@a.Id">
-                    @a.AccountName (@a.AccountNumber)
-                    | Balance: @a.Balance.ToString("C")
-                </option>
-            }
-        </select>
-
-        <span asp-validation-for="Transfer.ToAccountId"
-              class="text-danger"></span>
-    </div>
-
-    <!-- EXTERNAL TRANSFER -->
-    <div id="externalTransferSection"
-         class="mb-3"
-         style="display:none;">
-        <label class="form-label">Destination Account Number</label>
-        <input asp-for="Transfer.ToAccountNumber"
-               class="form-control" />
-
-        <span asp-validation-for="Transfer.ToAccountNumber"
-              class="text-danger"></span>
-    </div>
-
-    <!-- AMOUNT -->
-    <div class="mb-3">
-        <label class="form-label">Amount</label>
-        <input asp-for="Transfer.Amount"
-               class="form-control" />
-
-        <span asp-validation-for="Transfer.Amount"
-              class="text-danger"></span>
-    </div>
-
-    <!-- DESCRIPTION -->
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea asp-for="Transfer.Description"
-                  class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-        Transfer
-    </button>
-
-    <a asp-controller="Accounts"
-       asp-action="Index"
-       class="btn btn-secondary ms-2">
-        Cancel
-    </a>
-</form>
+        <button type="submit" class="btn btn-primary">Transfer</button>
+        <a asp-controller="Accounts" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
@@ -128,7 +93,6 @@
 
         function updateInternalOptions() {
             const fromValue = fromSelect.value;
-
             Array.from(toSelect.options).forEach(opt => {
                 if (!opt.value) return;
                 opt.hidden = opt.value === fromValue;

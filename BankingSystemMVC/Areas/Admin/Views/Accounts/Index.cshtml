@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1><i class="fas fa-credit-card"></i> All Bank Accounts</h1>
+            <h1><i class="bi bi-wallet2"></i> All Bank Accounts</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
@@ -18,25 +18,25 @@
 
     <div class="row mb-3">
         <div class="col-md-4">
-            <div class="card bg-primary text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Total Accounts</h6>
+                    <h6 class="text-muted">Total Accounts</h6>
                     <h3>@Model.Count</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-success text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Active Accounts</h6>
+                    <h6 class="text-muted">Active Accounts</h6>
                     <h3>@Model.Count(a => a.Status == "Active")</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-warning text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Total Balance</h6>
+                    <h6 class="text-muted">Total Balance</h6>
                     <h3>$@Model.Sum(a => a.Balance).ToString("N2")</h3>
                 </div>
             </div>
@@ -44,9 +44,9 @@
     </div>
 
     <div class="card">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-list"></i> Account List</h5>
-            <span class="badge bg-light text-dark">Total: @Model.Count</span>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list"></i> Account List</h5>
+            <span class="badge bg-secondary">Total: @Model.Count</span>
         </div>
         <div class="card-body p-0">
             @if (Model.Any())
@@ -77,16 +77,16 @@
                                         @switch (account.AccountType)
                                         {
                                             case "Checking":
-                                                <span class="badge bg-primary"><i class="fas fa-money-check"></i> Checking</span>
+                                                <span class="badge bg-primary"><i class="bi bi-wallet2"></i> Checking</span>
                                                 break;
                                             case "Savings":
-                                                <span class="badge bg-success"><i class="fas fa-piggy-bank"></i> Savings</span>
+                                                <span class="badge bg-success"><i class="bi bi-piggy-bank"></i> Savings</span>
                                                 break;
                                             case "BusinessChecking":
-                                                <span class="badge bg-info"><i class="fas fa-briefcase"></i> Business</span>
+                                                <span class="badge bg-secondary"><i class="bi bi-briefcase"></i> Business</span>
                                                 break;
                                             case "CryptoMarket":
-                                                <span class="badge bg-warning"><i class="fab fa-bitcoin"></i> Crypto</span>
+                                                <span class="badge bg-secondary"><i class="bi bi-currency-bitcoin"></i> Crypto</span>
                                                 break;
                                             default:
                                                 <span class="badge bg-secondary">@account.AccountType</span>
@@ -130,7 +130,7 @@
                                     <td>
                                         <a asp-area="Admin" asp-controller="Customers" asp-action="Details" asp-route-id="@account.CustomerId" 
                                            class="btn btn-sm btn-outline-primary" title="View Customer">
-                                            <i class="fas fa-user"></i>
+                                            <i class="bi bi-person"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -142,7 +142,7 @@
             else
             {
                 <div class="text-center py-5 text-muted">
-                    <i class="fas fa-credit-card fa-3x mb-3 opacity-50"></i>
+                    <i class="bi bi-wallet2 display-3 mb-3 opacity-50"></i>
                     <h5>No Accounts Found</h5>
                     <p>There are no bank accounts in the system yet.</p>
                 </div>

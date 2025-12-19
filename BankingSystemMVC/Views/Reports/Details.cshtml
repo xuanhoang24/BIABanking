@@ -1,76 +1,70 @@
 @using BankingSystemMVC.Models.ViewModels.Reports
 @model ReportViewModel
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Report Details</h2>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back to Reports
-        </a>
+<div class="page-container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Report #@Model.Id</h1>
+            <p>@Model.Title</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Report #@Model.Id</h5>
-                @switch (Model.Status)
-                {
-                    case ReportStatus.Pending:
-                        <span class="badge bg-warning text-dark">Pending</span>
-                        break;
-                    case ReportStatus.UnderReview:
-                        <span class="badge bg-info">Under Review</span>
-                        break;
-                    case ReportStatus.Resolved:
-                        <span class="badge bg-success">Resolved</span>
-                        break;
-                    case ReportStatus.Closed:
-                        <span class="badge bg-secondary">Closed</span>
-                        break;
-                }
-            </div>
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Details</h5>
+            @switch (Model.Status)
+            {
+                case ReportStatus.Pending:
+                    <span class="badge bg-warning">Pending</span>
+                    break;
+                case ReportStatus.UnderReview:
+                    <span class="badge bg-secondary">Under Review</span>
+                    break;
+                case ReportStatus.Resolved:
+                    <span class="badge bg-success">Resolved</span>
+                    break;
+                case ReportStatus.Closed:
+                    <span class="badge bg-secondary">Closed</span>
+                    break;
+            }
         </div>
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <strong>Name:</strong>
-                    <p>@Model.Name</p>
+                    <label class="text-muted">Name</label>
+                    <p class="fw-semibold">@Model.Name</p>
                 </div>
                 <div class="col-md-6">
-                    <strong>Title:</strong>
-                    <p>@Model.Title</p>
+                    <label class="text-muted">Title</label>
+                    <p class="fw-semibold">@Model.Title</p>
                 </div>
             </div>
 
             <div class="mb-3">
-                <strong>Description:</strong>
-                <p class="mt-2">@Model.Description</p>
+                <label class="text-muted">Description</label>
+                <p>@Model.Description</p>
             </div>
 
-            <hr />
+            <div class="divider"></div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <small class="text-muted">
-                        <strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' hh:mm tt")
-                    </small>
+                    <small class="text-muted">Created: @Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small>
                 </div>
                 <div class="col-md-6">
-                    <small class="text-muted">
-                        <strong>Last Updated:</strong> @Model.UpdatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' hh:mm tt")
-                    </small>
+                    <small class="text-muted">Updated: @Model.UpdatedAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Chat Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Messages</h5>
+    <div class="card">
+        <div class="card-header">
+            <h5>Messages</h5>
         </div>
         <div class="card-body">
-            <div class="chat-messages mb-3" style="max-height: 400px; overflow-y: auto;">
+            <div class="mb-4" style="max-height: 400px; overflow-y: auto;">
                 @{
                     var messages = (ViewBag.Messages as List<ReportMessageViewModel>);
                 }
@@ -80,12 +74,12 @@
                     {
                         var isCustomer = msg.SenderType == MessageSenderType.Customer;
                         
-                        <div class="message mb-3 @(isCustomer ? "text-end" : "")">
-                            <div class="d-inline-block @(isCustomer ? "bg-primary text-white" : "bg-light") p-3 rounded" style="max-width: 70%;">
+                        <div class="mb-3 @(isCustomer ? "text-end" : "")">
+                            <div class="d-inline-block @(isCustomer ? "bg-subtle" : "bg-subtle") p-3 rounded" style="max-width: 70%; border: 1px solid var(--border);">
                                 <div class="mb-1">
                                     <strong>@msg.SenderName</strong>
-                                    <small class="@(isCustomer ? "text-white-50" : "text-muted")">
-                                        - @msg.CreatedAt.ToLocalTime().ToString("MMM dd") - @msg.CreatedAt.ToLocalTime().ToString("hh:mm tt")
+                                    <small class="text-muted">
+                                        - @msg.CreatedAt.ToLocalTime().ToString("MMM dd, hh:mm tt")
                                     </small>
                                 </div>
                                 <div>@msg.Message</div>
@@ -95,15 +89,14 @@
                 }
                 else
                 {
-                    <p class="text-muted text-center">No messages yet. Start the conversation!</p>
+                    <p class="text-muted text-center">No messages yet</p>
                 }
             </div>
 
-            @if (Model.Status == ReportStatus.Resolved || 
-                 Model.Status == ReportStatus.Closed)
+            @if (Model.Status == ReportStatus.Resolved || Model.Status == ReportStatus.Closed)
             {
                 <div class="alert alert-info mb-0">
-                    <i class="bi bi-info-circle"></i> This report has been @Model.Status.ToString().ToLower(). You can no longer send messages.
+                    This report has been @Model.Status.ToString().ToLower(). You can no longer send messages.
                 </div>
             }
             else
@@ -112,9 +105,7 @@
                     @Html.AntiForgeryToken()
                     <div class="input-group">
                         <input type="text" name="message" class="form-control" placeholder="Type your message..." required maxlength="1000" />
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-send"></i> Send
-                        </button>
+                        <button type="submit" class="btn btn-primary">Send</button>
                     </div>
                 </form>
             }

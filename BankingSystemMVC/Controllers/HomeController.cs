@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystemMVC.Controllers
@@ -17,6 +18,18 @@ namespace BankingSystemMVC.Controllers
                 User.Identity?.IsAuthenticated, 
                 User.Identity?.Name ?? "Anonymous");
             
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Dashboard()
+        {
+            _logger.LogInformation("Home/Dashboard - User: {User}", User.Identity?.Name);
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
             return View();
         }
     }

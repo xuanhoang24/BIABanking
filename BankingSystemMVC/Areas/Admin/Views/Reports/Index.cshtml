@@ -5,9 +5,18 @@
     ViewData["Title"] = "Customer Reports";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Customer Reports</h2>
-</div>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1><i class="bi bi-chat-dots"></i> Customer Reports</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Reports</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
 @if (TempData["Success"] != null)
 {
@@ -25,18 +34,21 @@
     </div>
 }
 
-@if (Model.Count == 0)
-{
-    <div class="alert alert-info">
-        <i class="bi bi-info-circle"></i> No reports found.
-    </div>
-}
-else
-{
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No reports found.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list"></i> Reports List</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -80,7 +92,7 @@ else
                                 <td>@report.CreatedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</td>
                                 <td>
                                     <a asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary">
-                                        View Details
+                                        <i class="bi bi-eye"></i> View Details
                                     </a>
                                 </td>
                             </tr>

@@ -1,64 +1,67 @@
 ﻿@using BankingSystemMVC.Models.ViewModels.Customers
 @model CustomerMeViewModel
 
-<h2>My Profile</h2>
-
-<p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
-<p><strong>Email:</strong> @Model.Email</p>
-<p><strong>KYC Verified:</strong> @Model.IsKYCVerified</p>
-
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">Identity Verification</h5>
-
-        @if (Model.IsKYCVerified)
-        {
-            <span class="badge bg-success">KYC Verified</span>
-
-            <div class="mt-3">
-                <a asp-controller="Kyc"
-                   asp-action="ViewMyKyc"
-                   class="btn btn-outline-secondary">
-                    View KYC
-                </a>
-            </div>
-        }
-        else
-        {
-            <p class="text-muted">
-                Your identity has not been verified yet.
-            </p>
-
-            <a asp-controller="Kyc"
-               asp-action="Upload"
-               class="btn btn-primary">
-                Upload KYC
-            </a>
-
-            <a asp-controller="Kyc"
-               asp-action="ViewMyKyc"
-               class="btn btn-outline-secondary ms-2">
-                Check KYC Status
-            </a>
-        }
+<div class="page-container">
+    <div class="page-header">
+        <h1>Profile</h1>
+        <p>@Model.FirstName @Model.LastName</p>
     </div>
-</div>
 
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">Support</h5>
-        <p class="text-muted">
-            Need help or have an issue? Submit a report to our support team.
-        </p>
-        <a asp-controller="Reports"
-           asp-action="Index"
-           class="btn btn-outline-primary">
-            <i class="bi bi-flag"></i> View My Reports
-        </a>
-        <a asp-controller="Reports"
-           asp-action="Create"
-           class="btn btn-primary ms-2">
-            <i class="bi bi-plus-circle"></i> Submit New Report
-        </a>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted">Name</label>
+                    <p class="fw-semibold">@Model.FirstName @Model.LastName</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted">Email</label>
+                    <p class="fw-semibold">@Model.Email</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="text-muted">KYC Status</label>
+                    <p class="fw-semibold">
+                        @if (Model.IsKYCVerified)
+                        {
+                            <span class="badge bg-success">Verified</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning">Not Verified</span>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Identity Verification</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.IsKYCVerified)
+            {
+                <p class="text-muted mb-3">Your identity has been verified.</p>
+                <a asp-controller="Kyc" asp-action="ViewMyKyc" class="btn btn-secondary">View KYC</a>
+            }
+            else
+            {
+                <p class="text-muted mb-3">Your identity has not been verified yet.</p>
+                <a asp-controller="Kyc" asp-action="Upload" class="btn btn-primary me-2">Upload KYC</a>
+                <a asp-controller="Kyc" asp-action="ViewMyKyc" class="btn btn-secondary">Check Status</a>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Support</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Need help or have an issue? Submit a report to our support team.</p>
+            <a asp-controller="Reports" asp-action="Index" class="btn btn-secondary me-2">View Reports</a>
+            <a asp-controller="Reports" asp-action="Create" class="btn btn-primary">Submit Report</a>
+        </div>
     </div>
 </div>

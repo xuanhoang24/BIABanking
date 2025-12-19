@@ -13,7 +13,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1><i class="fas fa-file-alt"></i> KYC Review</h1>
+            <h1><i class="bi bi-file-earmark-check"></i> KYC Review</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
@@ -26,45 +26,45 @@
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-4">
-            <div class="card bg-primary text-white">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Total Submissions</h6>
+                            <h6 class="text-muted text-uppercase mb-1">Total Submissions</h6>
                             <h2 class="mb-0 fw-bold">@totalCount</h2>
                         </div>
                         <div>
-                            <i class="fas fa-file-alt fa-3x opacity-50"></i>
+                            <i class="bi bi-file-earmark-check display-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-warning text-white">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Pending Review</h6>
+                            <h6 class="text-muted text-uppercase mb-1">Pending Review</h6>
                             <h2 class="mb-0 fw-bold">@pendingList.Count</h2>
                         </div>
                         <div>
-                            <i class="fas fa-clock fa-3x opacity-50"></i>
+                            <i class="bi bi-clock display-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-info text-white">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Under Review</h6>
+                            <h6 class="text-muted text-uppercase mb-1">Under Review</h6>
                             <h2 class="mb-0 fw-bold">@underReviewList.Count</h2>
                         </div>
                         <div>
-                            <i class="fas fa-hourglass-half fa-3x opacity-50"></i>
+                            <i class="bi bi-hourglass-split display-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -77,9 +77,9 @@
         <!-- Pending Submissions -->
         <div class="col-lg-6 mb-3">
             <div class="card h-100">
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-clock"></i> Pending Submissions
+                        <i class="bi bi-clock"></i> Pending Submissions
                     </h5>
                     <span class="badge bg-warning">@pendingList.Count</span>
                 </div>
@@ -87,7 +87,7 @@
                     @if (!pendingList.Any())
                     {
                         <div class="text-center py-5 text-muted">
-                            <i class="fas fa-check-circle fa-3x mb-3 opacity-50"></i>
+                            <i class="bi bi-check-circle display-3 mb-3 opacity-50"></i>
                             <h5>No Pending Submissions</h5>
                             <p class="mb-0">All KYC documents have been reviewed</p>
                         </div>
@@ -116,7 +116,7 @@
                                             </td>
                                             <td>
                                                 <small class="text-muted">
-                                                    <i class="far fa-clock"></i>
+                                                    <i class="bi bi-clock"></i>
                                                     @item.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC
                                                 </small>
                                             </td>
@@ -126,7 +126,7 @@
                                                    asp-action="Review"
                                                    asp-route-id="@item.Id"
                                                    class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> Review
+                                                    <i class="bi bi-eye"></i> Review
                                                 </a>
                                             </td>
                                         </tr>
@@ -142,17 +142,17 @@
         <!-- Under Review Submissions -->
         <div class="col-lg-6 mb-3">
             <div class="card h-100">
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-hourglass-half"></i> Under Review
+                        <i class="bi bi-hourglass-split"></i> Under Review
                     </h5>
-                    <span class="badge bg-info">@underReviewList.Count</span>
+                    <span class="badge bg-secondary">@underReviewList.Count</span>
                 </div>
                 <div class="card-body p-0">
                     @if (!underReviewList.Any())
                     {
                         <div class="text-center py-5 text-muted">
-                            <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
+                            <i class="bi bi-inbox display-3 mb-3 opacity-50"></i>
                             <h5>No Submissions Under Review</h5>
                             <p class="mb-0">No documents are currently being reviewed</p>
                         </div>
@@ -190,7 +190,7 @@
                                                 @if (!string.IsNullOrEmpty(item.ReviewerName))
                                                 {
                                                     <small>
-                                                        <i class="fas fa-user text-primary"></i> @item.ReviewerName
+                                                        <i class="bi bi-person"></i> @item.ReviewerName
                                                     </small>
                                                 }
                                                 else
@@ -220,32 +220,6 @@
 </div>
 
 <style>
-    .card {
-        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    .table th {
-        border-top: none;
-        font-weight: 600;
-        background-color: #f8f9fa;
-    }
-
-    .badge {
-        font-weight: 500;
-        padding: 0.35em 0.65em;
-    }
-
     .opacity-50 {
         opacity: 0.5;
     }

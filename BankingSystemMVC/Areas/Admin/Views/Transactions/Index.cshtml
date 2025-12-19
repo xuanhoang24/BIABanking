@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1><i class="fas fa-exchange-alt"></i> All Transactions</h1>
+            <h1><i class="bi bi-arrow-left-right"></i> All Transactions</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
@@ -19,33 +19,33 @@
 
     <div class="row mb-3">
         <div class="col-md-3">
-            <div class="card bg-primary text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Total Transactions</h6>
+                    <h6 class="text-muted">Total Transactions</h6>
                     <h3>@Model.Count</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-success text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Completed</h6>
+                    <h6 class="text-muted">Completed</h6>
                     <h3>@Model.Count(t => t.Status == "Completed")</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-warning text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Today Volume</h6>
+                    <h6 class="text-muted">Today Volume</h6>
                     <h3>$@Model.Where(t => t.CreatedAt.Date == DateTime.Today && t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-info text-white">
+            <div class="card">
                 <div class="card-body">
-                    <h6>Total Volume</h6>
+                    <h6 class="text-muted">Total Volume</h6>
                     <h3>$@Model.Where(t => t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
                 </div>
             </div>
@@ -53,9 +53,9 @@
     </div>
 
     <div class="card">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-list"></i> Transaction History</h5>
-            <span class="badge bg-light text-dark">Showing: @Model.Count</span>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list"></i> Transaction History</h5>
+            <span class="badge bg-secondary">Showing: @Model.Count</span>
         </div>
         <div class="card-body p-0">
             @if (Model.Any())
@@ -85,22 +85,22 @@
                                         @switch (transaction.Type)
                                         {
                                             case "Transfer":
-                                                <span class="badge bg-primary"><i class="fas fa-exchange-alt"></i> Transfer</span>
+                                                <span class="badge bg-primary"><i class="bi bi-arrow-left-right"></i> Transfer</span>
                                                 break;
                                             case "Deposit":
-                                                <span class="badge bg-success"><i class="fas fa-arrow-up"></i> Deposit</span>
+                                                <span class="badge bg-success"><i class="bi bi-arrow-up"></i> Deposit</span>
                                                 break;
                                             case "Withdrawal":
-                                                <span class="badge bg-warning"><i class="fas fa-arrow-down"></i> Withdrawal</span>
+                                                <span class="badge bg-warning"><i class="bi bi-arrow-down"></i> Withdrawal</span>
                                                 break;
                                             case "Fee":
-                                                <span class="badge bg-danger"><i class="fas fa-dollar-sign"></i> Fee</span>
+                                                <span class="badge bg-danger"><i class="bi bi-currency-dollar"></i> Fee</span>
                                                 break;
                                             case "Interest":
-                                                <span class="badge bg-info"><i class="fas fa-percent"></i> Interest</span>
+                                                <span class="badge bg-secondary"><i class="bi bi-percent"></i> Interest</span>
                                                 break;
                                             case "Refund":
-                                                <span class="badge bg-secondary"><i class="fas fa-undo"></i> Refund</span>
+                                                <span class="badge bg-secondary"><i class="bi bi-arrow-counterclockwise"></i> Refund</span>
                                                 break;
                                             default:
                                                 <span class="badge bg-secondary">@transaction.Type</span>
@@ -176,7 +176,7 @@
             else
             {
                 <div class="text-center py-5 text-muted">
-                    <i class="fas fa-exchange-alt fa-3x mb-3 opacity-50"></i>
+                    <i class="bi bi-arrow-left-right display-3 mb-3 opacity-50"></i>
                     <h5>No Transactions Found</h5>
                     <p>There are no transactions in the system yet.</p>
                 </div>

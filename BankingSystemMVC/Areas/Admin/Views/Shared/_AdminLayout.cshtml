@@ -7,80 +7,74 @@
     <title>@ViewData["Title"] - Banking System Admin</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BankingSystemMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
 <body class="admin-body">
 
     <div class="d-flex admin-container">
 
         <!-- Sidebar -->
-        <nav class="sidebar bg-dark text-white p-3" style="width:250px; min-height:100vh;">
-            <div class="sidebar-header mb-4">
-                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="text-decoration-none text-white">
-                    <h4><i class="fas fa-shield-alt"></i> Admin Panel</h4>
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sidebar-brand">
+                    <i class="bi bi-shield-check"></i> Admin Panel
                 </a>
-                <hr class="text-white">
             </div>
 
             <ul class="nav flex-column">
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                        <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 </li>
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Customers" asp-action="Index">
-                        <i class="fas fa-users"></i> Customer Management
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Customers" asp-action="Index">
+                        <i class="bi bi-people"></i> Customers
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Accounts" asp-action="Index">
-                        <i class="fas fa-credit-card"></i> Account Management
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Accounts" asp-action="Index">
+                        <i class="bi bi-wallet2"></i> Accounts
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Kyc" asp-action="Index">
-                        <i class="fas fa-file-alt"></i> KYC Review
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Kyc" asp-action="Index">
+                        <i class="bi bi-file-earmark-check"></i> KYC Review
                     </a>
                 </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Reports" asp-action="Index">
-                        <i class="fas fa-flag"></i> Customer Reports
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Reports" asp-action="Index">
+                        <i class="bi bi-chat-dots"></i> Reports
                     </a>
                 </li>
                 @if (User.HasClaim("perm", PermissionCodes.CustomerManage))
                 {
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-white" asp-area="Admin" asp-controller="Users" asp-action="Index">
-                            <i class="fas fa-user-shield"></i> Employees
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                            <i class="bi bi-person-badge"></i> Employees
                         </a>
                     </li>
                 }
                 @if (User.HasClaim("perm", "transaction.read"))
                 {
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-white" asp-area="Admin" asp-controller="Transactions" asp-action="Index">
-                            <i class="fas fa-exchange-alt"></i> Transactions
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Transactions" asp-action="Index">
+                            <i class="bi bi-arrow-left-right"></i> Transactions
                         </a>
                     </li>
                 }
 
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Audit" asp-action="Index">
-                        <i class="fas fa-bell"></i> Audit Logs
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Audit" asp-action="Index">
+                        <i class="bi bi-clock-history"></i> Audit Logs
                     </a>
                 </li>
 
-                <li class="nav-item mb-2"><a class="nav-link text-white" href="#"><i class="fas fa-cog"></i> Settings</a></li>
-
-                <hr class="text-white mt-4">
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                <li class="nav-item mt-auto">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
                     </a>
                 </li>
             </ul>
@@ -100,7 +94,7 @@
                         <!-- Time Block -->
                         <div class="time-tabs">
                             <div class="time-tab local-time">
-                                <i class="fas fa-clock"></i>
+                                <i class="bi bi-clock"></i>
                                 <span class="time-label">Local:</span>
                                 <span id="localTime" class="time-value">--:--:--</span>
                             </div>
@@ -108,7 +102,7 @@
                             <div class="time-separator">|</div>
 
                             <div class="time-tab utc-time">
-                                <i class="fas fa-globe"></i>
+                                <i class="bi bi-globe"></i>
                                 <span class="time-label">UTC:</span>
                                 <span id="utcTime" class="time-value">--:--:--</span>
                             </div>
@@ -120,17 +114,17 @@
                                href="#"
                                role="button"
                                data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle fs-5"></i>
+                                <i class="bi bi-person-circle fs-5"></i>
                                 Admin User
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                        <i class="bi bi-box-arrow-right"></i> Logout
                                     </a>
                                 </li>
                             </ul>
@@ -201,11 +195,11 @@
             }
 
         .local-time i {
-            color: #0d6efd;
+            color: #000000;
         }
 
         .utc-time i {
-            color: #6c757d;
+            color: #000000;
         }
 
         .time-label,
