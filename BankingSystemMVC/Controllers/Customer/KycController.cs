@@ -21,6 +21,11 @@ namespace BankingSystemMVC.Controllers.Customer
         {
             var kyc = await _customerApi.GetMyKycAsync();
 
+            if (kyc != null && kyc.Status == KYCStatus.Approved)
+            {
+                return RedirectToAction(nameof(ViewMyKyc));
+            }
+
             if (kyc != null &&
                 (kyc.Status == KYCStatus.Pending || kyc.Status == KYCStatus.UnderReview))
             {

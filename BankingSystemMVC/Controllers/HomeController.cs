@@ -1,3 +1,4 @@
+using BankingSystemMVC.Services.Interfaces.Customers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +7,12 @@ namespace BankingSystemMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ICustomerApiClient _customerApi;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ICustomerApiClient customerApi)
         {
             _logger = logger;
+            _customerApi = customerApi;
         }
 
         public IActionResult Index()
@@ -22,9 +25,14 @@ namespace BankingSystemMVC.Controllers
         }
 
         [Authorize]
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
             _logger.LogInformation("Home/Dashboard - User: {User}", User.Identity?.Name);
+            
+            var kyc = await _customerApi.GetMyKycAsync();
+            ViewBag.IsKycVerified = kyc?.Status == Models.ViewModels.Kyc.KYCStatus.Approved;
+            ViewBag.HasKycSubmission = kyc != null;
+            
             return View();
         }
 

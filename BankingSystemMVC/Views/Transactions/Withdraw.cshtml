@@ -8,6 +8,8 @@
 <div class="form-page">
     <h2>Withdraw</h2>
 
+    <partial name="_ErrorAlert" />
+
     <form asp-action="Withdraw" method="post">
         @Html.AntiForgeryToken()
 

@@ -40,7 +40,13 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            var reference = await _transactionApi.DepositAsync(model);
+            var (success, reference, errorMessage) = await _transactionApi.DepositAsync(model);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Deposit failed");
+                return View(model);
+            }
 
             var account = (await _accountApi.GetMyAccountsAsync())
                 .First(a => a.Id == model.AccountId);
@@ -69,7 +75,13 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            var reference = await _transactionApi.WithdrawAsync(model);
+            var (success, reference, errorMessage) = await _transactionApi.WithdrawAsync(model);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Withdrawal failed");
+                return View(model);
+            }
 
             var account = (await _accountApi.GetMyAccountsAsync())
                 .First(a => a.Id == model.AccountId);
@@ -123,7 +135,13 @@ namespace BankingSystemMVC.Controllers.Accounts
                 vm.Transfer.ToAccountNumber = toAccountInternal.AccountNumber;
             }
 
-            var reference = await _transactionApi.TransferAsync(vm.Transfer);
+            var (success, reference, errorMessage) = await _transactionApi.TransferAsync(vm.Transfer);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Transfer failed");
+                return View(vm);
+            }
 
             var toAccountNumber = vm.Transfer.ToAccountNumber;
             
@@ -161,7 +179,13 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (!ModelState.IsValid)
                 return View(model);
 
-            var reference = await _transactionApi.PaymentAsync(model);
+            var (success, reference, errorMessage) = await _transactionApi.PaymentAsync(model);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Payment failed");
+                return View(model);
+            }
 
             var account = (await _accountApi.GetMyAccountsAsync())
                 .First(a => a.Id == model.AccountId);

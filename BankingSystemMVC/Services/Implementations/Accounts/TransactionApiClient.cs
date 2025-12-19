@@ -1,5 +1,6 @@
 ﻿using BankingSystemMVC.Models.ViewModels.Accounts.Transactions;
 using BankingSystemMVC.Services.Interfaces.Accounts;
+using System.Text.Json;
 
 namespace BankingSystemMVC.Services.Implementations.Accounts
 {
@@ -11,40 +12,75 @@ namespace BankingSystemMVC.Services.Implementations.Accounts
         {
             _http = factory.CreateClient("CustomerApi");
         }
-        public async Task<string> DepositAsync(DepositViewModel model)
+        public async Task<(bool Success, string? Reference, string? ErrorMessage)> DepositAsync(DepositViewModel model)
         {
             var res = await _http.PostAsJsonAsync("api/transactions/deposit", model);
-            res.EnsureSuccessStatusCode();
+            
+            if (res.IsSuccessStatusCode)
+            {
+                var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
+                return (true, result!.Reference, null);
+            }
 
-            var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
-            return result!.Reference;
+            var errorMessage = await ExtractErrorMessageAsync(res);
+            return (false, null, errorMessage);
         }
 
-        public async Task<string> WithdrawAsync(WithdrawViewModel model)
+        public async Task<(bool Success, string? Reference, string? ErrorMessage)> WithdrawAsync(WithdrawViewModel model)
         {
             var res = await _http.PostAsJsonAsync("api/transactions/withdraw", model);
-            res.EnsureSuccessStatusCode();
+            
+            if (res.IsSuccessStatusCode)
+            {
+                var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
+                return (true, result!.Reference, null);
+            }
 
-            var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
-            return result!.Reference;
+            var errorMessage = await ExtractErrorMessageAsync(res);
+            return (false, null, errorMessage);
         }
 
-        public async Task<string> TransferAsync(TransferViewModel model)
+        public async Task<(bool Success, string? Reference, string? ErrorMessage)> TransferAsync(TransferViewModel model)
         {
             var res = await _http.PostAsJsonAsync("api/transactions/transfer", model);
-            res.EnsureSuccessStatusCode();
+            
+            if (res.IsSuccessStatusCode)
+            {
+                var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
+                return (true, result!.Reference, null);
+            }
 
-            var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
-            return result!.Reference;
+            var errorMessage = await ExtractErrorMessageAsync(res);
+            return (false, null, errorMessage);
         }
 
-        public async Task<string> PaymentAsync(PaymentViewModel model)
+        public async Task<(bool Success, string? Reference, string? ErrorMessage)> PaymentAsync(PaymentViewModel model)
         {
             var res = await _http.PostAsJsonAsync("api/transactions/payment", model);
-            res.EnsureSuccessStatusCode();
+            
+            if (res.IsSuccessStatusCode)
+            {
+                var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
+                return (true, result!.Reference, null);
+            }
 
-            var result = await res.Content.ReadFromJsonAsync<TransactionResultViewModel>();
-            return result!.Reference;
+            var errorMessage = await ExtractErrorMessageAsync(res);
+            return (false, null, errorMessage);
+        }
+
+        private async Task<string> ExtractErrorMessageAsync(HttpResponseMessage response)
+        {
+            try
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorBody, options);
+                return errorResponse?.GetValueOrDefault("error") ?? "Transaction failed";
+            }
+            catch
+            {
+                return "Transaction failed";
+            }
         }
     }
 }

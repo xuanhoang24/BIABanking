@@ -89,11 +89,11 @@ namespace BankingSystemMVC.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var success = await _authApi.RegisterAsync(model);
+            var (success, errorMessage) = await _authApi.RegisterAsync(model);
 
             if (!success)
             {
-                ModelState.AddModelError(string.Empty, "Registration failed");
+                ModelState.AddModelError(string.Empty, errorMessage ?? "Registration failed");
                 return View(model);
             }
 

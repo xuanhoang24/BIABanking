@@ -64,9 +64,12 @@
                         <a asp-controller="Reports" asp-action="Create" class="btn btn-outline-primary text-start">
                             <i class="bi bi-chat-left-text me-2"></i> Submit Support Ticket
                         </a>
-                        <a asp-controller="Kyc" asp-action="Upload" class="btn btn-outline-primary text-start">
-                            <i class="bi bi-file-earmark-arrow-up me-2"></i> Upload KYC Document
-                        </a>
+                        @if (ViewBag.IsKycVerified != true)
+                        {
+                            <a asp-controller="Kyc" asp-action="Upload" class="btn btn-outline-primary text-start">
+                                <i class="bi bi-file-earmark-arrow-up me-2"></i> Upload KYC Document
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

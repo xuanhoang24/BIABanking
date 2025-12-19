@@ -8,6 +8,8 @@
 <div class="form-page">
     <h2>Deposit</h2>
 
+    <partial name="_ErrorAlert" />
+
     <form asp-action="Deposit" method="post">
         @Html.AntiForgeryToken()
 

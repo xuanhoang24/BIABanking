@@ -109,6 +109,36 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--bg);
 }
 
+.btn-outline-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.btn-outline-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    border: 1px solid #f0ad4e;
+    color: #856404;
+}
+
+.btn-outline-warning:hover {
+    background: #f0ad4e;
+    color: white;
+}
+
 /* ===== CARDS ===== */
 .card {
     border: 1px solid var(--border);
@@ -298,6 +328,43 @@ main {
     font-size: 0.875rem;
     margin-top: 0.25rem;
     display: block;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+}
+
+.alert-danger {
+    background-color: #FEE;
+    border-color: #FCC;
+    color: #C00;
+}
+
+.alert-danger strong {
+    font-weight: 600;
+}
+
+.alert-success {
+    background-color: #EFE;
+    border-color: #CFC;
+    color: #060;
+}
+
+.alert-warning {
+    background-color: #FFC;
+    border-color: #FEC;
+    color: #840;
+}
+
+.alert-info {
+    background-color: #EEF;
+    border-color: #CCF;
+    color: #006;
 }
 
 /* Multiple buttons in forms */

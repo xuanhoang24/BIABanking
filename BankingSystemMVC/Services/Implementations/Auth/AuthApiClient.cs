@@ -32,13 +32,27 @@ namespace BankingSystemMVC.Services.Implementations.Auth
             return JsonSerializer.Deserialize<LoginResponseDto>(body, options);
         }
 
-        public async Task<bool> RegisterAsync(RegisterViewModel model)
+        public async Task<(bool Success, string? ErrorMessage)> RegisterAsync(RegisterViewModel model)
         {
             var json = JsonSerializer.Serialize(model);
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _client.PostAsync("api/auth/register", content);
-            return response.IsSuccessStatusCode;
+            
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+
+            var errorBody = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorBody, options);
+                return (false, errorResponse?.GetValueOrDefault("error") ?? "Registration failed");
+            }
+            catch
+            {
+                return (false, "Registration failed");
+            }
         }
     }
 }

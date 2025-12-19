@@ -73,20 +73,34 @@ namespace BankingSystemAPI.Controllers.KycReviewer
         [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> MarkUnderReview(int id)
         {
-            var adminId = User.GetRequiredUserId();
+            try
+            {
+                var adminId = User.GetRequiredUserId();
 
-            await _kycAdminService.MarkUnderReviewAsync(id, adminId);
-            return Ok();
+                await _kycAdminService.MarkUnderReviewAsync(id, adminId);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPost("{id}/approve")]
         [Authorize(Policy = PermissionCodes.KycReview)]
         public async Task<IActionResult> Approve(int id)
         {
-            var adminId = User.GetRequiredUserId();
+            try
+            {
+                var adminId = User.GetRequiredUserId();
 
-            await _kycAdminService.ApproveAsync(id, adminId);
-            return Ok();
+                await _kycAdminService.ApproveAsync(id, adminId);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPost("{id}/reject")]
@@ -95,10 +109,17 @@ namespace BankingSystemAPI.Controllers.KycReviewer
             int id,
             [FromBody] RejectKycRequest request)
         {
-            var adminId = User.GetRequiredUserId();
+            try
+            {
+                var adminId = User.GetRequiredUserId();
 
-            await _kycAdminService.RejectAsync(id, adminId, request.ReviewNotes);
-            return Ok();
+                await _kycAdminService.RejectAsync(id, adminId, request.ReviewNotes);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
 }

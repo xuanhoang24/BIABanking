@@ -67,22 +67,29 @@
     @if (Model.Status == KYCStatus.Pending || Model.Status == KYCStatus.UnderReview)
     {
         <div class="alert alert-info">
+            <i class="bi bi-clock-history me-2"></i>
             Your KYC submission is pending review. You cannot upload a new document at this time.
         </div>
     }
     else if (Model.Status == KYCStatus.Rejected)
     {
         <div class="alert alert-danger mb-3">
+            <i class="bi bi-x-circle me-2"></i>
             Your KYC submission was rejected. Please upload a new document.
         </div>
-        <a asp-controller="Kyc" asp-action="Upload" class="btn btn-primary">Upload New KYC</a>
+        <a asp-controller="Kyc" asp-action="Upload" class="btn btn-primary">
+            <i class="bi bi-file-earmark-arrow-up me-2"></i> Upload New KYC
+        </a>
     }
     else if (Model.Status == KYCStatus.Approved)
     {
         <div class="alert alert-success">
-            Your identity has been verified successfully.
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong>Verified!</strong> Your identity has been verified successfully. You cannot upload a new document.
         </div>
     }
 
-    <a asp-controller="Profile" asp-action="Index" class="btn btn-secondary mt-3">Back to Profile</a>
+    <a asp-controller="Profile" asp-action="Index" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left me-2"></i> Back to Profile
+    </a>
 </div>

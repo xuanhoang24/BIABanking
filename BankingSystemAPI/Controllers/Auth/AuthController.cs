@@ -25,25 +25,32 @@ namespace BankingSystemAPI.Controllers.Auth
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto request)
         {
-            var customer = await _customerService.RegisterCustomerAsync(
-                request.FirstName,
-                request.LastName,
-                request.Email,
-                request.Password,
-                request.PhoneNumber,
-                request.DateOfBirth,
-                request.Address
-            );
+            try
+            {
+                var customer = await _customerService.RegisterCustomerAsync(
+                    request.FirstName,
+                    request.LastName,
+                    request.Email,
+                    request.Password,
+                    request.PhoneNumber,
+                    request.DateOfBirth,
+                    request.Address
+                );
 
-            await _auditService.LogAsync(
-                AuditAction.CustomerRegistration,
-                "Customer",
-                customer.Id,
-                customer.Id,
-                $"Customer registered with email {customer.Email}"
-            );
+                await _auditService.LogAsync(
+                    AuditAction.CustomerRegistration,
+                    "Customer",
+                    customer.Id,
+                    customer.Id,
+                    $"Customer registered with email {customer.Email}"
+                );
 
-            return Ok(new { customer.Id });
+                return Ok(new { customer.Id });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPost("login")]

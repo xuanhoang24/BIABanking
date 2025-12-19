@@ -8,6 +8,8 @@
 <div class="form-page">
     <h2>Payment</h2>
 
+    <partial name="_ErrorAlert" />
+
     <form asp-action="Payment" method="post">
         @Html.AntiForgeryToken()
 

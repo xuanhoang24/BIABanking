@@ -26,11 +26,11 @@
         </div>
     }
 
+    <partial name="_ErrorAlert" />
+
     <div class="card shadow-sm">
         <div class="card-body">
             <form asp-area="Admin" asp-controller="Users" asp-action="Create" method="post">
-                <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label asp-for="FirstName" class="form-label"></label>
