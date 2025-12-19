@@ -27,7 +27,8 @@
 
         <div class="form-group">
             <label asp-for="Password" class="form-label">Password</label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <input asp-for="Password" type="password" class="form-control" minlength="6" />
+            <small class="form-text text-muted">At least 6 characters, 1 capital letter, and 1 special character</small>
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
@@ -39,13 +40,15 @@
 
         <div class="form-group">
             <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-            <input asp-for="PhoneNumber" class="form-control" />
+            <input asp-for="PhoneNumber" class="form-control" type="tel" pattern="\d{10}" maxlength="10" placeholder="1234567890" />
+            <small class="form-text text-muted">Enter 10 digits without spaces or dashes</small>
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
-            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <input asp-for="DateOfBirth" type="date" class="form-control" id="dateOfBirth" />
+            <small class="form-text text-muted">Must be between 01/01/1900 and @DateTime.Today.AddYears(-16).ToString("MM/dd/yyyy") (at least 16 years old)</small>
             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
 
@@ -62,3 +65,52 @@
         <p class="text-muted">Already have an account? <a asp-action="Login">Sign In</a></p>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Calculate age from birth date
+            function calculateAge(birthDate) {
+                var today = new Date();
+                var age = today.getFullYear() - birthDate.getFullYear();
+                var m = today.getMonth() - birthDate.getMonth();
+                // Adjust age if birthday hasn't occurred this year yet
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+            
+            // Validate date of birth on change or blur
+            $('#dateOfBirth').on('change blur', function() {
+                var dateValue = $(this).val();
+                if (!dateValue) return;
+                
+                var date = new Date(dateValue);
+                var $error = $(this).siblings('.text-danger');
+                
+                // Check if year is before 1900
+                if (date.getFullYear() < 1900) {
+                    $error.text('Please enter a valid date of birth');
+                    $(this).addClass('input-validation-error');
+                }
+                // Check if date is in the future
+                else if (date > new Date()) {
+                    $error.text('Date of birth cannot be in the future');
+                    $(this).addClass('input-validation-error');
+                }
+                // Check if user is at least 16 years old
+                else if (calculateAge(date) < 16) {
+                    $error.text('You must be at least 16 years old to register');
+                    $(this).addClass('input-validation-error');
+                }
+                // Clear error if valid
+                else {
+                    $error.text('');
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+        });
+    </script>
+}
