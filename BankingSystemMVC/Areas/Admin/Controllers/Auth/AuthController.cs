@@ -1,4 +1,5 @@
 ﻿using BankingSystemMVC.Areas.Admin.Models;
+using BankingSystemMVC.Areas.Admin.Models.ViewModels.Auth;
 using BankingSystemMVC.Areas.Admin.Services.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,10 +56,60 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Auth
             var token = new JwtSecurityTokenHandler().ReadJwtToken(result.AccessToken);
             var hasReviewerRole = token.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "KycReviewer");
 
+            // Check if password is default "employee"
+            if (model.Password == "employee")
+            {
+                TempData["UserEmail"] = model.Email;
+                return RedirectToAction("ChangePassword", new { isFirstLogin = true });
+            }
+
             if (hasReviewerRole)
                 return RedirectToAction("Index", "Kyc", new { area = "Admin" });
 
             return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword(bool isFirstLogin = false)
+        {
+            var model = new ChangePasswordViewModel
+            {
+                IsFirstLogin = isFirstLogin
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var email = User.Identity?.Name ?? TempData["UserEmail"]?.ToString();
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError(string.Empty, "Unable to identify user. Please login again.");
+                return View(model);
+            }
+
+            var success = await _authApi.ChangePasswordAsync(email, model.CurrentPassword, model.NewPassword);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, "Failed to change password. Please verify your current password.");
+                return View(model);
+            }
+
+            TempData["SuccessMessage"] = "Password changed successfully. Please login with your new password.";
+            
+            Response.Cookies.Delete("admin_access_token", 
+                new CookieOptions
+                {
+                    Path = "/Admin"
+                });
+
+            return RedirectToAction("Login");
         }
 
         public IActionResult Logout()

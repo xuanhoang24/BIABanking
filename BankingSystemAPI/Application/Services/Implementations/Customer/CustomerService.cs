@@ -107,5 +107,27 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
                 CurrentKycStatus = latestKyc?.Status
             };
         }
+
+        public async Task<bool> ChangePasswordAsync(int customerId, string currentPassword, string newPassword)
+        {
+            var customer = await _context.Customers
+                .FirstOrDefaultAsync(c => c.Id == customerId);
+
+            if (customer == null)
+                return false;
+
+            // Verify current password
+            if (!_passwordHasher.Verify(currentPassword, customer.PasswordHash, customer.PasswordSalt))
+                return false;
+
+            // Update to new password
+            _passwordHasher.CreateHash(newPassword, out var hash, out var salt);
+            customer.PasswordHash = hash;
+            customer.PasswordSalt = salt;
+            customer.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

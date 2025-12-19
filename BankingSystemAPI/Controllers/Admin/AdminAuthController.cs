@@ -37,5 +37,29 @@ namespace BankingSystemAPI.Controllers.Admin
                 ExpiresAt = DateTime.UtcNow.AddMinutes(30)
             });
         }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto dto)
+        {
+            // Authenticate with current password
+            var admin = await _adminService.AuthenticateAsync(dto.Email, dto.CurrentPassword);
+            if (admin == null)
+                return BadRequest(new { message = "Current password is incorrect" });
+
+            // Update password
+            var success = await _adminService.UpdatePasswordAsync(dto.Email, dto.NewPassword);
+            if (!success)
+                return BadRequest(new { message = "Failed to update password" });
+
+            await _auditService.LogAsync(
+                AuditAction.PasswordChanged,
+                "AdminUser",
+                admin.Id,
+                null,
+                $"Admin user {admin.Email} changed their password"
+            );
+
+            return Ok(new { message = "Password changed successfully" });
+        }
     }
 }

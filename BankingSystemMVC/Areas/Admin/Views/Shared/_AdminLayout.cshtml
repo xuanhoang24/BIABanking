@@ -72,6 +72,12 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </li>
+
                 <li class="nav-item mt-auto">
                     <a class="nav-link" asp-area="Admin" asp-controller="Auth" asp-action="Logout">
                         <i class="bi bi-box-arrow-right"></i> Logout
@@ -115,12 +121,12 @@
                                role="button"
                                data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle fs-5"></i>
-                                Admin User
+                                <strong>@(User.Identity?.Name ?? "Admin User")</strong>
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="Index"><i class="bi bi-person"></i> Profile</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Profile" asp-action="ChangePassword"><i class="bi bi-key"></i> Change Password</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Auth" asp-action="Logout">

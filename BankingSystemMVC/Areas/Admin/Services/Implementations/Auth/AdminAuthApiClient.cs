@@ -31,6 +31,22 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Auth
             };
             return JsonSerializer.Deserialize<LoginResponseDto>(body, options);
         }
+
+        public async Task<bool> ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        {
+            var payload = new
+            {
+                Email = email,
+                CurrentPassword = currentPassword,
+                NewPassword = newPassword
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("api/admin/auth/change-password", content);
+            return response.IsSuccessStatusCode;
+        }
     }
 
 }

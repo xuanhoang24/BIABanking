@@ -26,7 +26,11 @@
         </div>
     }
 
-    <partial name="_ErrorAlert" />
+    <partial name="_ErrorAlert" model="null" />
+
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle"></i> <strong>Default Password:</strong> All new employee accounts will be created with the password <strong>"employee"</strong>. Users should change this password after their first login.
+    </div>
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -51,14 +55,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" type="password" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-6">
                         <label asp-for="RoleId" class="form-label"></label>
-                        <select asp-for="RoleId" class="form-select" asp-items="@(new SelectList(Model.AvailableRoles, nameof(AdminRoleViewModel.Id), nameof(AdminRoleViewModel.Name)))">
+                        <select asp-for="RoleId" class="form-select" asp-items="@(new SelectList(Model.AvailableRoles, "Id", "Name"))">
                             <option value="">-- Select Role --</option>
                         </select>
                         <span class="form-text text-muted">Role determines the permissions granted to this user.</span>

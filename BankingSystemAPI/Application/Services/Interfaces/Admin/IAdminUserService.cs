@@ -18,5 +18,7 @@ namespace BankingSystemAPI.Application.Services.Interfaces.Admin
             string email,
             string password,
             int roleId);
+
+        Task<bool> UpdatePasswordAsync(string email, string newPassword);
     }
 }

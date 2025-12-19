@@ -47,7 +47,10 @@ namespace BankingSystemAPI.Infrastructure.Security.Implements
             {
                 new Claim(JwtRegisteredClaimNames.Sub, admin.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, admin.Email)
+                new Claim(ClaimTypes.Name, admin.FirstName),
+                new Claim(JwtRegisteredClaimNames.Email, admin.Email),
+                new Claim("firstname", admin.FirstName),
+                new Claim("lastname", admin.LastName)
             };
 
             claims.AddRange(permissions.Select(p => new Claim("perm", p)));

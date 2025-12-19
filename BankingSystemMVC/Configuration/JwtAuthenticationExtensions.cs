@@ -88,7 +88,7 @@ namespace BankingSystemMVC.Configuration
                     Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)
                 ),
 
-                NameClaimType = JwtRegisteredClaimNames.Sub
+                NameClaimType = System.Security.Claims.ClaimTypes.Name
             };
         }
     }

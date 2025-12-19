@@ -79,5 +79,20 @@ namespace BankingSystemMVC.Services.Implementations.Customers
                 ContentType = contentType
             };
         }
+
+        public async Task<bool> ChangePasswordAsync(string currentPassword, string newPassword)
+        {
+            var payload = new
+            {
+                CurrentPassword = currentPassword,
+                NewPassword = newPassword
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("api/customers/change-password", content);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

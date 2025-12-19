@@ -17,9 +17,7 @@ namespace BankingSystemMVC.Models.ViewModels.Auth
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?""':{}|<>]).{6,}$", 
-            ErrorMessage = "Password must contain at least 1 capital letter and 1 special character")]
+        [StrongPassword]
         public string Password { get; set; } = string.Empty;
 
         [Required, Compare(nameof(Password))]

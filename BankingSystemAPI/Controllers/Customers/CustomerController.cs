@@ -39,5 +39,25 @@ namespace BankingSystemAPI.Controllers.Customers
 
             return Ok(customer);
         }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto dto)
+        {
+            var customerIdClaim =
+                User.FindFirst(ClaimTypes.NameIdentifier)
+                ?? User.FindFirst("sub");
+
+            if (customerIdClaim == null)
+                return Unauthorized();
+
+            var customerId = int.Parse(customerIdClaim.Value);
+
+            var success = await _customerService.ChangePasswordAsync(customerId, dto.CurrentPassword, dto.NewPassword);
+
+            if (!success)
+                return BadRequest(new { message = "Current password is incorrect or failed to update password" });
+
+            return Ok(new { message = "Password changed successfully" });
+        }
     }
 }

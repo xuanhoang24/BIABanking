@@ -42,6 +42,9 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Users
             var roles = await _adminUserApiClient.GetRolesAsync();
             model.AvailableRoles = roles ?? new List<AdminRoleViewModel>();
 
+            // Set default password
+            model.Password = "employee";
+
             if (!ModelState.IsValid)
                 return View(model);
 

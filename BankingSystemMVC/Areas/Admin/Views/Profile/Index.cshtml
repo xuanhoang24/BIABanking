@@ -1,0 +1,84 @@
+@model BankingSystemMVC.Areas.Admin.Models.ViewModels.Profile.AdminProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>My Profile</h2>
+            <p class="text-muted">Manage your account information and security settings</p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-person"></i> Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="text-muted">Name</label>
+                        <p class="fw-semibold">@Model.FirstName</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Email</label>
+                        <p class="fw-semibold">@Model.Email</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Roles</label>
+                        <p>
+                            @foreach (var role in Model.Roles)
+                            {
+                                <span class="badge bg-primary me-1">@role</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-shield-lock"></i> Security</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">Keep your account secure by regularly updating your password.</p>
+                    <a asp-area="Admin" asp-controller="Profile" asp-action="ChangePassword" class="btn btn-primary">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-clock-history"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="bi bi-speedometer2"></i> Go to Dashboard
+                        </a>
+                        <a asp-area="Admin" asp-controller="Audit" asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-clock-history"></i> View Audit Logs
+                        </a>
+                        <a asp-area="Admin" asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

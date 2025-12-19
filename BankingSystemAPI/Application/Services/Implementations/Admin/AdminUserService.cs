@@ -103,5 +103,25 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
 
             return adminUser;
         }
+
+        public async Task<bool> UpdatePasswordAsync(string email, string newPassword)
+        {
+            email = email.ToLowerInvariant();
+
+            var admin = await _context.AdminUsers
+                .FirstOrDefaultAsync(a => a.Email == email && a.IsActive);
+
+            if (admin == null)
+                return false;
+
+            _passwordHasher.CreateHash(newPassword, out var hash, out var salt);
+
+            admin.PasswordHash = hash;
+            admin.PasswordSalt = salt;
+            admin.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

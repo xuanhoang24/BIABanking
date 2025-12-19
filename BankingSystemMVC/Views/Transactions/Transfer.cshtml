@@ -10,7 +10,7 @@
 <div class="form-page">
     <h2>Transfer Funds</h2>
 
-    <partial name="_ErrorAlert" />
+    <partial name="_ErrorAlert" model="null" />
 
     <form asp-action="Transfer" method="post">
         @Html.AntiForgeryToken()

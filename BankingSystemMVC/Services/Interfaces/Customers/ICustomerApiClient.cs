@@ -11,5 +11,6 @@ namespace BankingSystemMVC.Services.Interfaces.Customers
         Task<(bool Success, string? Error)> UploadKycAsync(UploadKycViewModel model);
         Task<KycSubmissionViewModel?> GetMyKycAsync();
         Task<ApiFileResult?> GetMyKycFileAsync();
+        Task<bool> ChangePasswordAsync(string currentPassword, string newPassword);
     }
 }
