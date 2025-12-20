@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /BankingSystemAPI/BankingSystem.db-shm
 /BankingSystemAPI/BankingSystem.db-wal
 /text.txt
+/docker-compose.override.yml
