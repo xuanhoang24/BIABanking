@@ -26,6 +26,19 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Users
         }
 
         [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var user = await _adminUserApiClient.GetAdminUserByIdAsync(id);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "Employee not found";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(user);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var model = new AdminUserCreateViewModel();
@@ -58,6 +71,42 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Users
 
             TempData["SuccessMessage"] = "Admin user created successfully.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(int id)
+        {
+            var success = await _adminUserApiClient.ResetAdminPasswordAsync(id);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Employee password has been reset to 'employee'. They will be required to change it on next login.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to reset employee password";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var success = await _adminUserApiClient.ToggleAdminStatusAsync(id);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Employee account status updated successfully";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to update employee account status";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

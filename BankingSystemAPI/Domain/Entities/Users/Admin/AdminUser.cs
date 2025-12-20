@@ -27,6 +27,7 @@ namespace BankingSystemAPI.Domain.Entities.Users.Admin
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
         public bool IsActive { get; set; } = true;
+        public bool RequiresPasswordChange { get; set; } = false;
         public DateTime? LastLoginAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -27,7 +27,8 @@ namespace BankingSystemAPI.Infrastructure.Security.Implements
                 new Claim(ClaimTypes.NameIdentifier, customer.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, customer.Email),
                 new Claim("firstname", customer.FirstName),
-                new Claim("kyc_verified", customer.IsKYCVerified ? "true" : "false")
+                new Claim("kyc_verified", customer.IsKYCVerified ? "true" : "false"),
+                new Claim("requires_password_change", customer.RequiresPasswordChange ? "true" : "false")
             };
 
             return BuildToken(claims, 15);
@@ -50,7 +51,8 @@ namespace BankingSystemAPI.Infrastructure.Security.Implements
                 new Claim(ClaimTypes.Name, admin.FirstName),
                 new Claim(JwtRegisteredClaimNames.Email, admin.Email),
                 new Claim("firstname", admin.FirstName),
-                new Claim("lastname", admin.LastName)
+                new Claim("lastname", admin.LastName),
+                new Claim("requires_password_change", admin.RequiresPasswordChange ? "true" : "false")
             };
 
             claims.AddRange(permissions.Select(p => new Claim("perm", p)));

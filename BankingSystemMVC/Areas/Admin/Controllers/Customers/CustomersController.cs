@@ -80,5 +80,22 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Customers
 
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpPost]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
+        public async Task<IActionResult> ResetPassword(int id)
+        {
+            var result = await _customerApi.ResetCustomerPasswordAsync(id);
+            if (result)
+            {
+                TempData["Success"] = "Customer password has been reset successfully. The new password is based on their first name and date of birth.";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to reset customer password";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
     }
 }

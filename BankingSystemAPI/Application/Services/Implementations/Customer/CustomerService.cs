@@ -124,6 +124,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
             _passwordHasher.CreateHash(newPassword, out var hash, out var salt);
             customer.PasswordHash = hash;
             customer.PasswordSalt = salt;
+            customer.RequiresPasswordChange = false; // Clear the flag
             customer.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

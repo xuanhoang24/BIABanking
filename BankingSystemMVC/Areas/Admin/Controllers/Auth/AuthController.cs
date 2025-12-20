@@ -55,9 +55,9 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Auth
             
             var token = new JwtSecurityTokenHandler().ReadJwtToken(result.AccessToken);
             var hasReviewerRole = token.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "KycReviewer");
+            var requiresPasswordChange = token.Claims.Any(c => c.Type == "requires_password_change" && c.Value == "true");
 
-            // Check if password is default "employee"
-            if (model.Password == "employee")
+            if (requiresPasswordChange)
             {
                 TempData["UserEmail"] = model.Email;
                 return RedirectToAction("ChangePassword", new { isFirstLogin = true });

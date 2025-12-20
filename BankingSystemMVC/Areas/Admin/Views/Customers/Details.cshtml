@@ -76,6 +76,9 @@
                                 <i class="bi bi-arrow-left-right"></i> View Transactions
                             </a>
                         }
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">
+                            <i class="bi bi-key"></i> Reset Password
+                        </button>
                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#statusModal">
                             <i class="bi bi-pencil"></i> Change Status
                         </button>
@@ -212,6 +215,36 @@
                     }
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="bi bi-key"></i> Reset Customer Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="ResetPassword" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> <strong>Warning:</strong> This will reset the customer's password.
+                    </div>
+                    <p>The new password will be generated based on:</p>
+                    <ul>
+                        <li><strong>First Name:</strong> @Model.FirstName.ToLower()</li>
+                        <li><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("MMddyy")</li>
+                    </ul>
+                    <p class="mb-0"><strong>New Password:</strong> <code>@(Model.FirstName.ToLower())@(Model.DateOfBirth.ToString("MMddyy"))</code></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Reset Password</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

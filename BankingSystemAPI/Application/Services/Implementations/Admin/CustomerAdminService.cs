@@ -3,6 +3,7 @@ using BankingSystemAPI.Application.Dtos.Admin;
 using BankingSystemAPI.Application.Services.Interfaces.Admin;
 using BankingSystemAPI.Domain.Entities.Users.Customers;
 using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Infrastructure.Security.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Admin
@@ -10,10 +11,12 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
     public class CustomerAdminService : ICustomerAdminService
     {
         private readonly AppDbContext _context;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public CustomerAdminService(AppDbContext context)
+        public CustomerAdminService(AppDbContext context, IPasswordHasher passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<List<CustomerListDto>> GetAllCustomersAsync()
@@ -160,6 +163,26 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             }
 
             return false;
+        }
+
+        public async Task<bool> ResetCustomerPasswordAsync(int customerId)
+        {
+            var customer = await _context.Customers.FindAsync(customerId);
+            if (customer == null)
+                return false;
+
+            // Generate password: firstname + MMddyy
+            var newPassword = $"{customer.FirstName.ToLower()}{customer.DateOfBirth:MMddyy}";
+
+            _passwordHasher.CreateHash(newPassword, out var hash, out var salt);
+
+            customer.PasswordHash = hash;
+            customer.PasswordSalt = salt;
+            customer.RequiresPasswordChange = true;
+            customer.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<AccountListDto>> GetAllAccountsAsync()

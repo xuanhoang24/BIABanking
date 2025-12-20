@@ -92,6 +92,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
                 PasswordHash = hash,
                 PasswordSalt = salt,
                 IsActive = true,
+                RequiresPasswordChange = true,
                 UserRoles =
                 {
                     new UserRole { RoleId = roleId }
@@ -118,6 +119,45 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
 
             admin.PasswordHash = hash;
             admin.PasswordSalt = salt;
+            admin.RequiresPasswordChange = false;
+            admin.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<AdminUser?> GetAdminUserByIdAsync(int id)
+        {
+            return await _context.AdminUsers
+                .Include(a => a.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<bool> ResetAdminPasswordAsync(int id)
+        {
+            var admin = await _context.AdminUsers.FindAsync(id);
+            if (admin == null)
+                return false;
+
+            _passwordHasher.CreateHash("employee", out var hash, out var salt);
+
+            admin.PasswordHash = hash;
+            admin.PasswordSalt = salt;
+            admin.RequiresPasswordChange = true;
+            admin.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ToggleAdminStatusAsync(int id)
+        {
+            var admin = await _context.AdminUsers.FindAsync(id);
+            if (admin == null)
+                return false;
+
+            admin.IsActive = !admin.IsActive;
             admin.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

@@ -7,6 +7,9 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces.Users
     {
         Task<List<AdminRoleViewModel>?> GetRolesAsync(); 
         Task<List<AdminUserListViewModel>?> GetAdminUsersAsync();
+        Task<AdminUserDetailViewModel?> GetAdminUserByIdAsync(int id);
         Task<bool> CreateAdminUserAsync(AdminUserCreateViewModel model);
+        Task<bool> ResetAdminPasswordAsync(int id);
+        Task<bool> ToggleAdminStatusAsync(int id);
     }
 }

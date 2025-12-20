@@ -39,6 +39,28 @@ namespace BankingSystemAPI.Controllers.Admin
             return Ok(dto);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAdminUserById(int id)
+        {
+            var admin = await _adminService.GetAdminUserByIdAsync(id);
+            if (admin == null)
+                return NotFound();
+
+            var dto = new AdminUserDetailDto
+            {
+                Id = admin.Id,
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                Email = admin.Email,
+                Roles = admin.UserRoles.Select(ur => ur.Role.Name).ToList(),
+                IsActive = admin.IsActive,
+                LastLoginAt = admin.LastLoginAt,
+                CreatedAt = admin.CreatedAt
+            };
+
+            return Ok(dto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAdminUser([FromBody] AdminUserCreateRequestDto request)
         {
@@ -57,6 +79,26 @@ namespace BankingSystemAPI.Controllers.Admin
                 return BadRequest(new { message = "Unable to create admin user. Email may already exist or role is invalid." });
 
             return Ok(new { admin.Id });
+        }
+
+        [HttpPost("{id}/reset-password")]
+        public async Task<IActionResult> ResetPassword(int id)
+        {
+            var success = await _adminService.ResetAdminPasswordAsync(id);
+            if (!success)
+                return NotFound();
+
+            return Ok(new { message = "Password reset successfully" });
+        }
+
+        [HttpPost("{id}/toggle-status")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var success = await _adminService.ToggleAdminStatusAsync(id);
+            if (!success)
+                return NotFound();
+
+            return Ok(new { message = "Status updated successfully" });
         }
     }
 }

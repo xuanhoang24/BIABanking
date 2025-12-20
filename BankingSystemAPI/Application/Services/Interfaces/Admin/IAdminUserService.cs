@@ -20,5 +20,11 @@ namespace BankingSystemAPI.Application.Services.Interfaces.Admin
             int roleId);
 
         Task<bool> UpdatePasswordAsync(string email, string newPassword);
+
+        Task<AdminUser?> GetAdminUserByIdAsync(int id);
+
+        Task<bool> ResetAdminPasswordAsync(int id);
+
+        Task<bool> ToggleAdminStatusAsync(int id);
     }
 }

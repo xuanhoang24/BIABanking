@@ -51,6 +51,24 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Users
             }
         }
 
+        public async Task<AdminUserDetailViewModel?> GetAdminUserByIdAsync(int id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/admin/users/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonHelper.Deserialize<AdminUserDetailViewModel>(json);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> CreateAdminUserAsync(AdminUserCreateViewModel model)
         {
             try
@@ -71,6 +89,32 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Users
                 );
 
                 var response = await _httpClient.PostAsync("api/admin/users", content);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ResetAdminPasswordAsync(int id)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsync($"api/admin/users/{id}/reset-password", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ToggleAdminStatusAsync(int id)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsync($"api/admin/users/{id}/toggle-status", null);
                 return response.IsSuccessStatusCode;
             }
             catch

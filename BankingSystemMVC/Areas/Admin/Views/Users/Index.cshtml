@@ -38,6 +38,7 @@
                             <th>Status</th>
                             <th>Last Login</th>
                             <th>Created</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +71,11 @@
                                     </td>
                                     <td>@(admin.LastLoginAt?.ToString("yyyy-MM-dd HH:mm") ?? "—")</td>
                                     <td>@admin.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@admin.Id" class="btn btn-sm btn-outline-primary" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }

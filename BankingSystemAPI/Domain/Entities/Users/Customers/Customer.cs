@@ -34,6 +34,8 @@ namespace BankingSystemAPI.Domain.Entities.Users.Customers
 
         public CustomerStatus Status { get; set; } = CustomerStatus.Active;
 
+        public bool RequiresPasswordChange { get; set; } = false;
+
         public int FailedLoginAttempts { get; set; } = 0;
         public DateTime? LockedUntil { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

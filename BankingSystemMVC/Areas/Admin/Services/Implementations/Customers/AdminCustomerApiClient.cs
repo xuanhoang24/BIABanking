@@ -106,6 +106,19 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Customers
             }
         }
 
+        public async Task<bool> ResetCustomerPasswordAsync(int customerId)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsync($"api/admin/customers/{customerId}/reset-password", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<List<AccountListViewModel>?> GetAllAccountsAsync()
         {
             try

@@ -60,6 +60,16 @@ namespace BankingSystemMVC.Controllers
                     }
                 );
 
+                var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(result.AccessToken);
+                var requiresPasswordChange = token.Claims.FirstOrDefault(c => c.Type == "requires_password_change")?.Value == "true";
+
+                if (requiresPasswordChange)
+                {
+                    TempData["PasswordResetMessage"] = "Your password was reset by an administrator. Please change it now.";
+                    return RedirectToAction("ChangePassword", "Profile");
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)

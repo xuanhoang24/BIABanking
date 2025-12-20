@@ -71,6 +71,17 @@ namespace BankingSystemAPI.Controllers.Admin
             return Ok(new { message = "Customer status updated successfully" });
         }
 
+        [HttpPost("{id}/reset-password")]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
+        public async Task<IActionResult> ResetCustomerPassword(int id)
+        {
+            var result = await _customerService.ResetCustomerPasswordAsync(id);
+            if (!result)
+                return BadRequest(new { message = "Failed to reset customer password" });
+
+            return Ok(new { message = "Customer password reset successfully" });
+        }
+
         [HttpGet("all-accounts")]
         public async Task<IActionResult> GetAllAccounts()
         {
