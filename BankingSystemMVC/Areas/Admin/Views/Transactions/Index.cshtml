@@ -37,16 +37,37 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="text-muted">Today Volume</h6>
-                    <h3>$@Model.Where(t => t.CreatedAt.Date == DateTime.Today && t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
+                    <h6 class="text-muted">Net Flow Today</h6>
+                    @{
+                        // Convert local "today" to UTC range
+                        var todayLocalStart = DateTime.Today;
+                        var todayLocalEnd = todayLocalStart.AddDays(1);
+                        var todayUtcStart = todayLocalStart.ToUniversalTime();
+                        var todayUtcEnd = todayLocalEnd.ToUniversalTime();
+                        
+                        var todayCompleted = Model.Where(t => t.CreatedAt >= todayUtcStart && t.CreatedAt < todayUtcEnd && t.Status == "Completed");
+                        var deposits = todayCompleted.Where(t => t.Type == "Deposit").Sum(t => t.Amount);
+                        var withdrawals = todayCompleted.Where(t => t.Type == "Withdrawal").Sum(t => t.Amount);
+                        // Only count external transfers (to different customers)
+                        var externalTransfers = todayCompleted.Where(t => t.Type == "Transfer" && t.FromCustomerId != t.ToCustomerId).Sum(t => t.Amount);
+                        var payments = todayCompleted.Where(t => t.Type == "Fee").Sum(t => t.Amount);
+                        var netFlow = deposits - withdrawals - externalTransfers - payments;
+                    }
+                    <h3>$@netFlow.ToString("N2")</h3>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="text-muted">Total Volume</h6>
-                    <h3>$@Model.Where(t => t.Status == "Completed").Sum(t => t.Amount).ToString("N2")</h3>
+                    <h6 class="text-muted">Average Transaction Value</h6>
+                    @{
+                        var todayTransactions = Model.Where(t => t.CreatedAt >= todayUtcStart && t.CreatedAt < todayUtcEnd && t.Status == "Completed");
+                        var todayCount = todayTransactions.Count();
+                        var todayTotalVolume = todayTransactions.Sum(t => t.Amount);
+                        var avgValue = todayCount > 0 ? todayTotalVolume / todayCount : 0;
+                    }
+                    <h3>$@avgValue.ToString("N2")</h3>
                 </div>
             </div>
         </div>
@@ -165,7 +186,7 @@
                                         <small>@transaction.Description</small>
                                     </td>
                                     <td>
-                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC</small>
+                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy HH:mm tt")</small>
                                     </td>
                                 </tr>
                             }

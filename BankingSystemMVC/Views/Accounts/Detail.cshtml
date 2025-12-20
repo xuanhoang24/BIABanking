@@ -82,8 +82,8 @@
                         {
                             <tr>
                                 <td>
-                                    <div class="fw-semibold">@tx.Date.ToString("MMM dd")</div>
-                                    <div class="text-muted small">@tx.Date.ToString("HH:mm")</div>
+                                    <div class="fw-semibold">@tx.Date.ToLocalTime().ToString("MMM dd")</div>
+                                    <div class="text-muted small">@tx.Date.ToLocalTime().ToString("hh:mm tt")</div>
                                 </td>
                                 <td>
                                     <div class="fw-semibold">@tx.Type</div>

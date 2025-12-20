@@ -28,16 +28,43 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
                 .Where(k => k.Status == KYCStatus.Pending || k.Status == KYCStatus.UnderReview)
                 .CountAsync();
 
-            var todayVolume = await _context.Transactions
-                .Where(t => t.CreatedAt.Date == DateTime.Today && t.Status == TransactionStatus.Completed)
-                .SumAsync(t => (decimal?)t.AmountInCents / 100) ?? 0;
+            // Calculate Net Flow Today = Deposits - Withdrawals - External Transfers - Payments
+            // External transfers are transfers where FromCustomerId != ToCustomerId
+            // Convert local "today" to UTC range for querying
+            var todayLocalStart = DateTime.Today; // Start of today in local time
+            var todayLocalEnd = todayLocalStart.AddDays(1); // Start of tomorrow in local time
+            var todayUtcStart = todayLocalStart.ToUniversalTime();
+            var todayUtcEnd = todayLocalEnd.ToUniversalTime();
+
+            var todayTransactions = await _context.Transactions
+                .Where(t => t.CreatedAt >= todayUtcStart && t.CreatedAt < todayUtcEnd && t.Status == TransactionStatus.Completed)
+                .ToListAsync();
+
+            var totalDeposits = todayTransactions
+                .Where(t => t.Type == TransactionType.Deposit)
+                .Sum(t => (decimal)t.AmountInCents / 100);
+
+            var totalWithdrawals = todayTransactions
+                .Where(t => t.Type == TransactionType.Withdrawal)
+                .Sum(t => (decimal)t.AmountInCents / 100);
+
+            // Only count external transfers (to different customers)
+            var totalExternalTransfers = todayTransactions
+                .Where(t => t.Type == TransactionType.Transfer && t.FromCustomerId != t.ToCustomerId)
+                .Sum(t => (decimal)t.AmountInCents / 100);
+
+            var totalPayments = todayTransactions
+                .Where(t => t.Type == TransactionType.Fee)
+                .Sum(t => (decimal)t.AmountInCents / 100);
+
+            var netFlowToday = totalDeposits - totalWithdrawals - totalExternalTransfers - totalPayments;
 
             return new DashboardStatsDto
             {
                 TotalCustomers = totalCustomers,
                 ActiveAccounts = activeAccounts,
                 PendingKYC = pendingKYC,
-                TodayVolume = todayVolume
+                NetFlowToday = netFlowToday
             };
         }
     }
