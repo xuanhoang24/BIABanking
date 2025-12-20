@@ -1,6 +1,6 @@
 using BankingSystemAPI.Application.Dtos.Admin;
 using BankingSystemAPI.Domain.Entities.Users.Roles;
-using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Configuration;
 using BankingSystemAPI.Application.Services.Interfaces.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

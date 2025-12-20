@@ -1,12 +1,8 @@
-using BankingSystemAPI.Infrastructure.Persistence;
 using BankingSystemAPI.Application.Dtos.Customers;
-using BankingSystemAPI.Domain.Entities.Users.Customers;
-using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Configuration;
 using BankingSystemAPI.Application.Services.Interfaces.Kyc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace BankingSystemAPI.Controllers.Customers
 {

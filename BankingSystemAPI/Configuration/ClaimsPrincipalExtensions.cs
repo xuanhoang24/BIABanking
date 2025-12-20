@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace BankingSystemAPI.Extensions
+namespace BankingSystemAPI.Configuration
 {
     public static class ClaimsPrincipalExtensions
     {

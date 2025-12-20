@@ -1,6 +1,6 @@
 using BankingSystemAPI.Domain.Entities.Users.Roles;
 
-namespace BankingSystemAPI.Extensions
+namespace BankingSystemAPI.Configuration
 {
     public static class AuthorizationExtensions
     {

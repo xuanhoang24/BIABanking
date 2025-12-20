@@ -39,7 +39,6 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (customer == null || !customer.IsKYCVerified)
             {
                 TempData["ErrorMessage"] = "You must complete KYC verification before creating an account.";
-                TempData["ShowKycLink"] = true;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -56,7 +55,6 @@ namespace BankingSystemMVC.Controllers.Accounts
             if (customer == null || !customer.IsKYCVerified)
             {
                 TempData["ErrorMessage"] = "You must complete KYC verification before creating an account.";
-                TempData["ShowKycLink"] = true;
                 return RedirectToAction(nameof(Index));
             }
 

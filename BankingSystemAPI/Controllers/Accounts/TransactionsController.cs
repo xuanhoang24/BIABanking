@@ -1,9 +1,8 @@
-using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Configuration;
 using BankingSystemAPI.Application.Dtos.Transactions;
 using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace BankingSystemAPI.Controllers.Accounts
 {

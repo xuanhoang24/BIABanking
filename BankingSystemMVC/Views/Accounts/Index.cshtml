@@ -8,14 +8,14 @@
 <div class="page-container">
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            @TempData["ErrorMessage"]
-            @if (TempData["ShowKycLink"] != null && (bool)TempData["ShowKycLink"])
-            {
-                <br />
+        <div class="alert alert-info d-flex align-items-start" role="alert" style="background-color: var(--bg-subtle); border: 1px solid var(--border); color: var(--text);">
+            <i class="bi bi-info-circle-fill me-3" style="font-size: 1.25rem; color: var(--text-muted);"></i>
+            <div class="flex-grow-1">
+                <strong>Notice</strong>
+                <p class="mb-0 mt-1">@TempData["ErrorMessage"]</p>
                 <a asp-controller="Kyc" asp-action="Upload">Upload KYC Documents</a>
-            }
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <button type="button" class="btn-close ms-3" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 

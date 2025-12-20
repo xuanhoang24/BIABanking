@@ -1,14 +1,12 @@
 using BankingSystemAPI.Infrastructure.Persistence;
-using BankingSystemAPI.Extensions;
+using BankingSystemAPI.Configuration;
 using BankingSystemAPI.Domain.Entities.Accounts;
 using BankingSystemAPI.Application.Dtos.Accounts;
 using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Application.Services.Implementations.Admin;
-using BankingSystemAPI.Application.Services.Interfaces.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace BankingSystemAPI.Controllers.Accounts
