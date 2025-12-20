@@ -26,14 +26,14 @@
       - api
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ApiSettings__BaseUrl=/api
+      - ApiSettings__BaseUrl=http://api:8080/
     restart: unless-stopped
 
   nginx:
     image: nginx:alpine
     container_name: bankingsystem-nginx
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:

@@ -8,7 +8,15 @@ namespace BankingSystemAPI.Configuration
             {
                 options.AddPolicy("AllowMVC", policy =>
                 {
-                    policy.WithOrigins("http://localhost:7000", "http://localhost:5173", "http://web:8080")
+                    policy.WithOrigins(
+                            "http://localhost:7000", 
+                            "http://localhost:5173", 
+                            "http://web:8080",
+                            "http://biabanking.site",
+                            "https://biabanking.site",
+                            "http://www.biabanking.site",
+                            "https://www.biabanking.site"
+                          )
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
