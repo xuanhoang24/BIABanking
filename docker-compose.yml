@@ -1,0 +1,28 @@
+﻿version: "3.8"
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "BankingPass123!"
+    ports:
+      - "1433:1433"
+
+  api:
+    build: ./BankingSystemAPI
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=BankingSystemDb;User Id=sa;Password=BankingPass123!;TrustServerCertificate=True
+
+  web:
+    build: ./BankingSystemMVC
+    ports:
+      - "7000:8080"
+    depends_on:
+      - api
+    environment:
+      - ApiSettings__BaseUrl=http://api:8080/

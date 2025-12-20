@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="BankingSystemAPI/BankingSystemAPI.csproj" />
   <Project Path="BankingSystemMVC/BankingSystemMVC.csproj" />
 </Solution>

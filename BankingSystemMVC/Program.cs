@@ -27,17 +27,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7098/";
+
 // Customer API client
 builder.Services.AddHttpClient("CustomerApi", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7098/");
+    client.BaseAddress = new Uri(apiBaseUrl);
 })
 .AddHttpMessageHandler<CustomerJwtHandler>();
 
 // Admin API client
 builder.Services.AddHttpClient("AdminApi", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7098/");
+    client.BaseAddress = new Uri(apiBaseUrl);
 })
 .AddHttpMessageHandler<AdminJwtHandler>();
 

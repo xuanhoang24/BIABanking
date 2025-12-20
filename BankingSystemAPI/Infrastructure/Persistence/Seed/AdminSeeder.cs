@@ -15,8 +15,6 @@ namespace BankingSystemAPI.Infrastructure.Persistence.Seed
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
-            await context.Database.MigrateAsync();
-
             if (await context.AdminUsers.AnyAsync())
                 return;
 
