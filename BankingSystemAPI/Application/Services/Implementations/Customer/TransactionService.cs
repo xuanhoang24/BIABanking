@@ -3,6 +3,7 @@ using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using BankingSystemAPI.Domain.Entities.Accounts;
 using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
@@ -12,11 +13,13 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
     {
         private readonly AppDbContext _context;
         private readonly AuditService _audit;
+        private readonly NotificationService _notification;
 
-        public TransactionService(AppDbContext context, AuditService audit)
+        public TransactionService(AppDbContext context, AuditService audit, NotificationService notification)
         {
             _context = context;
             _audit = audit;
+            _notification = notification;
         }
 
         // DEPOSIT
@@ -170,6 +173,8 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
             );
 
             await tx.CommitAsync();
+
+            await _notification.NotifyAllAsync();
 
             return transaction.TransactionReference;
         }

@@ -8,6 +8,7 @@ using BankingSystemAPI.Application.Services.Interfaces.Kyc;
 using BankingSystemAPI.Application.Services.Interfaces.Report;
 using BankingSystemAPI.Infrastructure.Security.Implements;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
+using BankingSystemAPI.Infrastructure.Services;
 
 namespace BankingSystemAPI.Configuration
 {
@@ -35,6 +36,8 @@ namespace BankingSystemAPI.Configuration
             // Report services
             services.AddScoped<IReportService, ReportService>();
 
+            // Notification service
+            services.AddScoped<NotificationService>();
             return services;
         }
     }

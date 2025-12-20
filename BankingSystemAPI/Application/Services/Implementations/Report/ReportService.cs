@@ -1,6 +1,7 @@
 using BankingSystemAPI.Application.Services.Interfaces.Report;
 using BankingSystemAPI.Domain.Entities.Reports;
 using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Report
@@ -8,10 +9,12 @@ namespace BankingSystemAPI.Application.Services.Implementations.Report
     public class ReportService : IReportService
     {
         private readonly AppDbContext _context;
+        private readonly NotificationService _notification;
 
-        public ReportService(AppDbContext context)
+        public ReportService(AppDbContext context, NotificationService notification)
         {
             _context = context;
+            _notification = notification;
         }
 
         public async Task<Domain.Entities.Reports.Report> CreateReportAsync(int customerId, string name, string title, string description)
@@ -29,6 +32,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Report
 
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
 
             return report;
         }
@@ -67,6 +71,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Report
             report.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
             return report;
         }
 
@@ -84,6 +89,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Report
 
             _context.ReportMessages.Add(reportMessage);
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
 
             return reportMessage;
         }

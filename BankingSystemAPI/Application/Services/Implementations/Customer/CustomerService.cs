@@ -3,6 +3,7 @@ using BankingSystemAPI.Application.Services.Implementations.Admin;
 using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using BankingSystemAPI.Infrastructure.Persistence;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
+using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Customer
@@ -12,12 +13,14 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
         private readonly AppDbContext _context;
         private readonly AuditService _auditService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly NotificationService _notification;
 
-        public CustomerService( AppDbContext context, AuditService auditService, IPasswordHasher passwordHasher)
+        public CustomerService(AppDbContext context, AuditService auditService, IPasswordHasher passwordHasher, NotificationService notification)
         {
             _context = context;
             _auditService = auditService;
             _passwordHasher = passwordHasher;
+            _notification = notification;
         }
 
         public async Task<Domain.Entities.Users.Customers.Customer> RegisterCustomerAsync(
@@ -54,6 +57,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
+            await _notification.NotifyAllAsync();
             return customer;
         }
 
@@ -128,6 +132,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
             customer.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
             return true;
         }
     }
