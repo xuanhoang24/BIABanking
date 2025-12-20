@@ -30,34 +30,41 @@ namespace BankingSystemAPI.Controllers.Customers
             if (string.IsNullOrEmpty(customerIdClaim) || !int.TryParse(customerIdClaim, out int customerId))
                 return Unauthorized();
 
-            var report = await _reportService.CreateReportAsync(
-                customerId,
-                request.Name,
-                request.Title,
-                request.Description
-            );
-
-            await _auditService.LogAsync(
-                AuditAction.ReportCreated,
-                "Report",
-                report.Id,
-                customerId,
-                $"Customer created report: {request.Title}"
-            );
-
-            var reportDto = new ReportDto
+            try
             {
-                Id = report.Id,
-                Name = report.Name,
-                Title = report.Title,
-                Description = report.Description,
-                Status = report.Status,
-                CustomerId = report.CustomerId,
-                CreatedAt = report.CreatedAt,
-                UpdatedAt = report.UpdatedAt
-            };
+                var report = await _reportService.CreateReportAsync(
+                    customerId,
+                    request.Name,
+                    request.Title,
+                    request.Description
+                );
 
-            return Ok(reportDto);
+                await _auditService.LogAsync(
+                    AuditAction.ReportCreated,
+                    "Report",
+                    report.Id,
+                    customerId,
+                    $"Customer created report: {request.Title}"
+                );
+
+                var reportDto = new ReportDto
+                {
+                    Id = report.Id,
+                    Name = report.Name,
+                    Title = report.Title,
+                    Description = report.Description,
+                    Status = report.Status,
+                    CustomerId = report.CustomerId,
+                    CreatedAt = report.CreatedAt,
+                    UpdatedAt = report.UpdatedAt
+                };
+
+                return Ok(reportDto);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpGet]
@@ -152,6 +159,36 @@ namespace BankingSystemAPI.Controllers.Customers
             };
 
             return Ok(messageDto);
+        }
+
+        [HttpPost("{id}/close")]
+        public async Task<IActionResult> CloseReport(int id)
+        {
+            var customerIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(customerIdClaim) || !int.TryParse(customerIdClaim, out int customerId))
+                return Unauthorized();
+
+            var report = await _reportService.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            if (report.CustomerId != customerId)
+                return Forbid();
+
+            if (report.Status == ReportStatus.Closed)
+                return BadRequest(new { error = "Report is already closed" });
+
+            var updatedReport = await _reportService.UpdateReportStatusAsync(id, ReportStatus.Closed);
+
+            await _auditService.LogAsync(
+                AuditAction.ReportStatusUpdated,
+                "Report",
+                id,
+                customerId,
+                $"Customer closed report: {report.Title}"
+            );
+
+            return Ok(new { message = "Report closed successfully" });
         }
 
         [HttpGet("{id}/messages")]

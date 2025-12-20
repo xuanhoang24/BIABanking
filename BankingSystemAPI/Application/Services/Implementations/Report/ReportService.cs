@@ -19,6 +19,16 @@ namespace BankingSystemAPI.Application.Services.Implementations.Report
 
         public async Task<Domain.Entities.Reports.Report> CreateReportAsync(int customerId, string name, string title, string description)
         {
+            var hasActiveReport = await _context.Reports
+                .AnyAsync(r => r.CustomerId == customerId && 
+                              r.Status != ReportStatus.Resolved && 
+                              r.Status != ReportStatus.Closed);
+
+            if (hasActiveReport)
+            {
+                throw new InvalidOperationException("You already have an active report. Please wait until it is resolved or closed before creating a new one.");
+            }
+
             var report = new Domain.Entities.Reports.Report
             {
                 CustomerId = customerId,

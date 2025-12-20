@@ -252,11 +252,24 @@
             .withUrl(apiUrl + "/notificationHub")
             .build();
 
-        connection.on("ReceiveNotification", () => window.location.reload());
-        connection.start().then(() => console.log("SignalR connected")).catch(err => console.error("SignalR error:", err));
+        // Prevent reload during form submission or navigation
+        let isNavigating = false;
+        
+        document.addEventListener('submit', function() {
+            isNavigating = true;
+        });
+        
+        window.addEventListener('beforeunload', function() {
+            isNavigating = true;
+        });
 
-        // Fallback: refresh every 30 seconds
-        setInterval(() => window.location.reload(), 30000);
+        connection.on("ReceiveNotification", () => {
+            if (!isNavigating) {
+                window.location.reload();
+            }
+        });
+        
+        connection.start().then(() => console.log("SignalR connected")).catch(err => console.error("SignalR error:", err));
     </script>
 
 </body>

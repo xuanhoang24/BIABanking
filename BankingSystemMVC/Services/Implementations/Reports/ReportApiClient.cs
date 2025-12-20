@@ -79,5 +79,16 @@ namespace BankingSystemMVC.Services.Implementations.Reports
 
             return JsonHelper.Deserialize<List<ReportMessageViewModel>>(json) ?? new List<ReportMessageViewModel>();
         }
+
+        public async Task<(bool Success, string? Error)> CloseReportAsync(int reportId)
+        {
+            var response = await _client.PostAsync($"api/customer/reports/{reportId}/close", null);
+
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+
+            var error = await response.Content.ReadAsStringAsync();
+            return (false, error);
+        }
     }
 }

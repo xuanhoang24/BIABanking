@@ -20,12 +20,24 @@ namespace BankingSystemMVC.Controllers.Customer
         public async Task<IActionResult> Index()
         {
             var reports = await _reportApi.GetMyReportsAsync();
+            var hasActiveReport = reports.Any(r => r.Status != ReportStatus.Resolved && r.Status != ReportStatus.Closed);
+            ViewBag.HasActiveReport = hasActiveReport;
+            
             return View(reports);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var reports = await _reportApi.GetMyReportsAsync();
+            var hasActiveReport = reports.Any(r => r.Status != ReportStatus.Resolved && r.Status != ReportStatus.Closed);
+            
+            if (hasActiveReport)
+            {
+                TempData["ErrorMessage"] = "You already have an active report. Please wait until it is resolved or closed before creating a new one.";
+                return RedirectToAction(nameof(Index));
+            }
+            
             return View();
         }
 
@@ -40,7 +52,13 @@ namespace BankingSystemMVC.Controllers.Customer
 
             if (!result.Success)
             {
-                ModelState.AddModelError(string.Empty, "Failed to create report. Please try again.");
+                if (result.Error?.Contains("active report") == true)
+                {
+                    TempData["ErrorMessage"] = result.Error;
+                    return RedirectToAction(nameof(Index));
+                }
+                
+                ModelState.AddModelError(string.Empty, result.Error ?? "Failed to create report. Please try again.");
                 return View(model);
             }
 
@@ -83,6 +101,34 @@ namespace BankingSystemMVC.Controllers.Customer
             await _reportApi.AddMessageAsync(id, message);
 
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Close(int id)
+        {
+            var report = await _reportApi.GetReportByIdAsync(id);
+            if (report == null)
+                return NotFound();
+
+            if (report.Status == ReportStatus.Closed)
+            {
+                TempData["ErrorMessage"] = "Report is already closed.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var result = await _reportApi.CloseReportAsync(id);
+
+            if (result.Success)
+            {
+                TempData["SuccessMessage"] = "Report closed successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to close report. Please try again.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
         }
     }
 }

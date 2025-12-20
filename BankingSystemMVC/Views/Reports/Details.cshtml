@@ -2,12 +2,37 @@
 @model ReportViewModel
 
 <div class="page-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
             <h1>Report #@Model.Id</h1>
             <p>@Model.Title</p>
         </div>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
+        <div>
+            @if (Model.Status != ReportStatus.Closed)
+            {
+                <form asp-action="Close" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to close this report? This action cannot be undone.');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Close Report</button>
+                </form>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </div>
     </div>
 
     <div class="card mb-4">

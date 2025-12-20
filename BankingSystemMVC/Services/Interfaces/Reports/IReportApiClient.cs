@@ -9,5 +9,6 @@ namespace BankingSystemMVC.Services.Interfaces.Reports
         Task<ReportViewModel?> GetReportByIdAsync(int id);
         Task<(bool Success, string? Error)> AddMessageAsync(int reportId, string message);
         Task<List<ReportMessageViewModel>> GetMessagesAsync(int reportId);
+        Task<(bool Success, string? Error)> CloseReportAsync(int reportId);
     }
 }

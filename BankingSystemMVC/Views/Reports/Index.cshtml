@@ -10,19 +10,37 @@
         </div>
     }
 
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
             <h1>Reports</h1>
             <p>View and manage your support tickets</p>
         </div>
-        <a asp-action="Create" class="btn btn-primary">Create Report</a>
+        @if (ViewBag.HasActiveReport == true)
+        {
+            <button class="btn btn-secondary" disabled title="You already have an active report">Create Report</button>
+        }
+        else
+        {
+            <a asp-action="Create" class="btn btn-primary">Create Report</a>
+        }
     </div>
 
     @if (Model.Count == 0)
     {
         <div class="card text-center p-5">
             <p class="text-muted mb-3">You haven't submitted any reports yet.</p>
-            <a asp-action="Create" class="btn btn-primary">Create Your First Report</a>
+            @if (ViewBag.HasActiveReport != true)
+            {
+                <a asp-action="Create" class="btn btn-primary">Create Your First Report</a>
+            }
         </div>
     }
     else
