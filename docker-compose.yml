@@ -1,26 +1,45 @@
 ﻿services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: bankingsystem-db
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "BankingPass123!"
-    ports:
-      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
 
   api:
+    container_name: bankingsystem-api
     build: ./BankingSystemAPI
-    ports:
-      - "5000:8080"
     depends_on:
       - db
     environment:
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Server=db;Database=BankingSystemDb;User Id=sa;Password=BankingPass123!;TrustServerCertificate=True
+    restart: unless-stopped
 
   web:
+    container_name: bankingsystem-web
     build: ./BankingSystemMVC
-    ports:
-      - "7000:8080"
     depends_on:
       - api
     environment:
-      - ApiSettings__BaseUrl=http://api:8080/
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ApiSettings__BaseUrl=/api
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: bankingsystem-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - api
+    restart: unless-stopped
+
+volumes:
+  mssql_data:
