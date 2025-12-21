@@ -34,5 +34,19 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Dashboard
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStats()
+        {
+            var stats = await _dashboardApi.GetDashboardStatsAsync();
+            return PartialView("_StatsCards", stats ?? new DashboardStatsViewModel());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRecentActivity()
+        {
+            var logs = await _auditApi.GetRecentAsync();
+            return PartialView("_RecentActivity", logs ?? new List<AuditLogViewModel>());
+        }
     }
 }

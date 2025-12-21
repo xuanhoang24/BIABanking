@@ -24,6 +24,13 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Kyc
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetKycList()
+        {
+            var pending = await _api.GetPendingAsync();
+            return PartialView("_KycList", pending);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Review(int id)
         {
             var kyc = await _api.GetForReviewAsync(id);

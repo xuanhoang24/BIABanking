@@ -22,5 +22,12 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Transactions
             var transactions = await _customerApi.GetAllTransactionsAsync(limit);
             return View(transactions ?? new List<TransactionListViewModel>());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTransactionsList([FromQuery] int limit = 100)
+        {
+            var transactions = await _customerApi.GetAllTransactionsAsync(limit);
+            return PartialView("_TransactionsList", transactions ?? new List<TransactionListViewModel>());
+        }
     }
 }

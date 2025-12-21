@@ -73,149 +73,8 @@
     </div>
 
     <!-- KYC Submissions -->
-    <div class="row">
-        <!-- Pending Submissions -->
-        <div class="col-lg-6 mb-3">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="bi bi-clock"></i> Pending Submissions
-                    </h5>
-                    <span class="badge bg-warning">@pendingList.Count</span>
-                </div>
-                <div class="card-body p-0">
-                    @if (!pendingList.Any())
-                    {
-                        <div class="text-center py-5 text-muted">
-                            <i class="bi bi-check-circle display-3 mb-3 opacity-50"></i>
-                            <h5>No Pending Submissions</h5>
-                            <p class="mb-0">All KYC documents have been reviewed</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>Document Type</th>
-                                        <th>Submitted</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in pendingList)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <strong>@item.CustomerName</strong>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-secondary">@item.DocumentType</span>
-                                            </td>
-                                            <td>
-                                                <small class="text-muted">
-                                                    <i class="bi bi-clock"></i>
-                                                    @item.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <a asp-area="Admin"
-                                                   asp-controller="Kyc"
-                                                   asp-action="Review"
-                                                   asp-route-id="@item.Id"
-                                                   class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-eye"></i> Review
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- Under Review Submissions -->
-        <div class="col-lg-6 mb-3">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="bi bi-hourglass-split"></i> Under Review
-                    </h5>
-                    <span class="badge bg-secondary">@underReviewList.Count</span>
-                </div>
-                <div class="card-body p-0">
-                    @if (!underReviewList.Any())
-                    {
-                        <div class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox display-3 mb-3 opacity-50"></i>
-                            <h5>No Submissions Under Review</h5>
-                            <p class="mb-0">No documents are currently being reviewed</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Customer</th>
-                                        <th>Document Type</th>
-                                        <th>Submitted</th>
-                                        <th>Reviewer</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in underReviewList)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <strong>@item.CustomerName</strong>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-secondary">@item.DocumentType</span>
-                                            </td>
-                                            <td>
-                                                <small class="text-muted">
-                                                    <i class="far fa-clock"></i>
-                                                    @item.CreatedAt.ToString("MMM dd, yyyy HH:mm") UTC
-                                                </small>
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrEmpty(item.ReviewerName))
-                                                {
-                                                    <small>
-                                                        <i class="bi bi-person"></i> @item.ReviewerName
-                                                    </small>
-                                                }
-                                                else
-                                                {
-                                                    <small class="text-muted">-</small>
-                                                }
-                                            </td>
-                                            <td>
-                                                <a asp-area="Admin"
-                                                   asp-controller="Kyc"
-                                                   asp-action="Review"
-                                                   asp-route-id="@item.Id"
-                                                   class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> Review
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
+    <div class="row" id="kycListContainer">
+        @await Html.PartialAsync("_KycList", Model)
     </div>
 </div>
 
@@ -224,3 +83,18 @@
         opacity: 0.5;
     }
 </style>
+
+<script>
+    function updateKycList() {
+        fetch('@Url.Action("GetKycList", "Kyc", new { area = "Admin" })')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('kycListContainer').innerHTML = html;
+            })
+            .catch(error => console.error('Error updating KYC list:', error));
+    }
+
+    setInterval(() => {
+        updateKycList();
+    }, 30000);
+</script>

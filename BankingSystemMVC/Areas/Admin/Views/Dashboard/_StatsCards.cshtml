@@ -1,0 +1,65 @@
+@model BankingSystemMVC.Areas.Admin.Models.ViewModels.Dashboard.DashboardStatsViewModel
+
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted mb-2">Total Customers</h6>
+                    <h2 class="mb-0">@Model.TotalCustomers</h2>
+                </div>
+                <div>
+                    <i class="bi bi-people display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted mb-2">Active Accounts</h6>
+                    <h2 class="mb-0">@Model.ActiveAccounts</h2>
+                </div>
+                <div>
+                    <i class="bi bi-wallet2 display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted mb-2">Pending KYC</h6>
+                    <h2 class="mb-0">@Model.PendingKYC</h2>
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-check display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-muted mb-2">Net Flow Today</h6>
+                    <h2 class="mb-0">$@Model.NetFlowToday.ToString("N2")</h2>
+                </div>
+                <div>
+                    <i class="bi bi-arrow-left-right display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

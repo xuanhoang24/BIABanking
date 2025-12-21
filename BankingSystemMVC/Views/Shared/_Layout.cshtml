@@ -125,6 +125,7 @@
         : window.location.origin;
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(apiUrl + "/notificationHub")
+        .configureLogging(signalR.LogLevel.None)
         .build();
 
     // Prevent reload during form submission or navigation
@@ -144,5 +145,6 @@
         }
     });
     
-    connection.start().then(() => console.log("SignalR connected")).catch(err => console.error("SignalR error:", err));
+    connection.start()
+        .catch(err => console.error("SignalR error:", err));
 </script>

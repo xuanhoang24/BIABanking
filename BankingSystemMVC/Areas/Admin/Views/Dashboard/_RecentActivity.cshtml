@@ -1,0 +1,53 @@
+@model List<BankingSystemMVC.Areas.Admin.Models.ViewModels.Audit.AuditLogViewModel>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-sm table-striped mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 100px;">Action</th>
+                    <th style="width: 150px;">Entity</th>
+                    <th style="width: 100px;">Customer ID</th>
+                    <th>Description</th>
+                    <th style="width: 160px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge bg-primary">
+                                @log.ActionNumber
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                @log.Entity
+                            </small>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                @log.CustomerId
+                            </small>
+                        </td>
+                        <td>@log.Description</td>
+                        <td>
+                            <small class="text-muted">
+                                @log.Date
+                            </small>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-clock-history display-4 mb-2"></i>
+        <p class="mb-0">No recent audit activity</p>
+    </div>
+}

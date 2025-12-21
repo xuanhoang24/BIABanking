@@ -78,133 +78,26 @@
             <h5 class="mb-0"><i class="bi bi-list"></i> Transaction History</h5>
             <span class="badge bg-secondary">Showing: @Model.Count</span>
         </div>
-        <div class="card-body p-0">
-            @if (Model.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0" id="transactionsTable">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Reference</th>
-                                <th>Type</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var transaction in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        <small class="font-monospace">@transaction.TransactionReference</small>
-                                    </td>
-                                    <td>
-                                        @switch (transaction.Type)
-                                        {
-                                            case "Transfer":
-                                                <span class="badge bg-primary"><i class="bi bi-arrow-left-right"></i> Transfer</span>
-                                                break;
-                                            case "Deposit":
-                                                <span class="badge bg-success"><i class="bi bi-arrow-up"></i> Deposit</span>
-                                                break;
-                                            case "Withdrawal":
-                                                <span class="badge bg-warning"><i class="bi bi-arrow-down"></i> Withdrawal</span>
-                                                break;
-                                            case "Fee":
-                                                <span class="badge bg-danger"><i class="bi bi-currency-dollar"></i> Fee</span>
-                                                break;
-                                            case "Interest":
-                                                <span class="badge bg-secondary"><i class="bi bi-percent"></i> Interest</span>
-                                                break;
-                                            case "Refund":
-                                                <span class="badge bg-secondary"><i class="bi bi-arrow-counterclockwise"></i> Refund</span>
-                                                break;
-                                            default:
-                                                <span class="badge bg-secondary">@transaction.Type</span>
-                                                break;
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(transaction.FromCustomerName))
-                                        {
-                                            <div>
-                                                <strong>@transaction.FromCustomerName</strong>
-                                            </div>
-                                            <small class="font-monospace text-muted">@transaction.FromAccountNumber</small>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted">-</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(transaction.ToCustomerName))
-                                        {
-                                            <div>
-                                                <strong>@transaction.ToCustomerName</strong>
-                                            </div>
-                                            <small class="font-monospace text-muted">@transaction.ToAccountNumber</small>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted">-</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        <strong class="@(transaction.Amount >= 0 ? "text-success" : "text-danger")">
-                                            $@transaction.Amount.ToString("N2")
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        @switch (transaction.Status)
-                                        {
-                                            case "Completed":
-                                                <span class="badge bg-success">Completed</span>
-                                                break;
-                                            case "Pending":
-                                                <span class="badge bg-warning">Pending</span>
-                                                break;
-                                            case "Processing":
-                                                <span class="badge bg-info">Processing</span>
-                                                break;
-                                            case "Failed":
-                                                <span class="badge bg-danger">Failed</span>
-                                                break;
-                                            case "Cancelled":
-                                                <span class="badge bg-secondary">Cancelled</span>
-                                                break;
-                                            default:
-                                                <span class="badge bg-secondary">@transaction.Status</span>
-                                                break;
-                                        }
-                                    </td>
-                                    <td>
-                                        <small>@transaction.Description</small>
-                                    </td>
-                                    <td>
-                                        <small>@transaction.CreatedAt.ToString("MMM dd, yyyy HH:mm tt")</small>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-arrow-left-right display-3 mb-3 opacity-50"></i>
-                    <h5>No Transactions Found</h5>
-                    <p>There are no transactions in the system yet.</p>
-                </div>
-            }
+        <div class="card-body p-0" id="transactionsListContainer">
+            @await Html.PartialAsync("_TransactionsList", Model)
         </div>
     </div>
 </div>
+
+<script>
+    function updateTransactions() {
+        fetch('@Url.Action("GetTransactionsList", "Transactions", new { area = "Admin" })')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('transactionsListContainer').innerHTML = html;
+            })
+            .catch(error => console.error('Error updating transactions:', error));
+    }
+
+    setInterval(() => {
+        updateTransactions();
+    }, 30000);
+</script>
 
 @section Scripts {
     <script>
