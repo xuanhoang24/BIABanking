@@ -9,9 +9,19 @@
 else if (TempData["Error"] != null || TempData["ErrorMessage"] != null)
 {
     var message = TempData["Error"]?.ToString() ?? TempData["ErrorMessage"]?.ToString();
+    var kycRequired = TempData["KycRequired"]?.ToString() == "true";
+    
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @message
+        <strong>@message</strong>
+        @if (kycRequired)
+        {
+            <div class="mt-1">
+                <a asp-controller="Kyc" asp-action="Upload" class="btn btn-warning btn-sm">
+                    <i class="bi bi-file-earmark-arrow-up me-1"></i>Complete KYC Verification Now
+                </a>
+            </div>
+        }
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
