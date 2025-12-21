@@ -5,7 +5,6 @@ using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Domain.Entities.Users.Customers;
 using BankingSystemAPI.Infrastructure.Persistence;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
-using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Admin
@@ -15,14 +14,12 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
         private readonly AppDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
         private readonly AuditService _auditService;
-        private readonly NotificationService _notification;
 
-        public CustomerAdminService(AppDbContext context, IPasswordHasher passwordHasher, AuditService auditService, NotificationService notification)
+        public CustomerAdminService(AppDbContext context, IPasswordHasher passwordHasher, AuditService auditService)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _auditService = auditService;
-            _notification = notification;
         }
 
         public async Task<List<CustomerListDto>> GetAllCustomersAsync()
@@ -165,7 +162,6 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
                 customer.Status = customerStatus;
                 customer.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                await _notification.NotifyAllAsync();
                 return true;
             }
 
@@ -189,7 +185,6 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             customer.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            await _notification.NotifyAllAsync();
             return true;
         }
 
@@ -220,7 +215,6 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             _context.Customers.Remove(customer);
 
             await _context.SaveChangesAsync();
-            await _notification.NotifyAllAsync();
 
             // Log audit action
             await _auditService.LogAsync(
