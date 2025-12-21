@@ -367,3 +367,10 @@ FodyWeavers.xsd
 /BankingSystemAPI/BankingSystem.db-wal
 /text.txt
 /docker-compose.override.yml
+
+# Email configuration
+email-config.json
+**/email-config.json
+
+# Environment variables
+.env

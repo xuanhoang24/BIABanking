@@ -19,14 +19,9 @@
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
-        </div>
-    }
-
-    <partial name="_ErrorAlert" model="null" />
+    <partial name="_SuccessAlert" />
+    <partial name="_ErrorAlert" />
+    <partial name="_InfoAlert" />
 
     <div class="alert alert-info" role="alert">
         <i class="fas fa-info-circle"></i> <strong>Default Password:</strong> All new employee accounts will be created with the password <strong>"employee"</strong>. Users should change this password after their first login.

@@ -17,5 +17,6 @@ namespace BankingSystemAPI.Application.Services.Interfaces.Customer
         Task<BankingSystemAPI.Domain.Entities.Users.Customers.Customer?> AuthenticateCustomerAsync( string email, string password);
         Task<CustomerMeDto?> GetMeAsync(int customerId);
         Task<bool> ChangePasswordAsync(int customerId, string currentPassword, string newPassword);
+        Task<bool> VerifyEmailAsync(string token);
     }
 }

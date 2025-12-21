@@ -82,6 +82,17 @@ namespace BankingSystemAPI.Controllers.Admin
             return Ok(new { message = "Customer password reset successfully" });
         }
 
+        [HttpDelete("{id}")]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            var result = await _customerService.DeleteCustomerAsync(id);
+            if (!result)
+                return BadRequest(new { message = "Failed to delete customer" });
+
+            return Ok(new { message = "Customer deleted successfully" });
+        }
+
         [HttpGet("all-accounts")]
         public async Task<IActionResult> GetAllAccounts()
         {

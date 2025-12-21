@@ -1,9 +1,11 @@
 using BankingSystemAPI.Application.Dtos.Accounts;
 using BankingSystemAPI.Application.Dtos.Admin;
 using BankingSystemAPI.Application.Services.Interfaces.Admin;
+using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Domain.Entities.Users.Customers;
 using BankingSystemAPI.Infrastructure.Persistence;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
+using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Admin
@@ -12,11 +14,15 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
     {
         private readonly AppDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly AuditService _auditService;
+        private readonly NotificationService _notification;
 
-        public CustomerAdminService(AppDbContext context, IPasswordHasher passwordHasher)
+        public CustomerAdminService(AppDbContext context, IPasswordHasher passwordHasher, AuditService auditService, NotificationService notification)
         {
             _context = context;
             _passwordHasher = passwordHasher;
+            _auditService = auditService;
+            _notification = notification;
         }
 
         public async Task<List<CustomerListDto>> GetAllCustomersAsync()
@@ -159,6 +165,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
                 customer.Status = customerStatus;
                 customer.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
+                await _notification.NotifyAllAsync();
                 return true;
             }
 
@@ -182,6 +189,48 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             customer.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            var customer = await _context.Customers
+                .Include(c => c.Accounts)
+                .Include(c => c.SentTransactions)
+                .Include(c => c.ReceivedTransactions)
+                .FirstOrDefaultAsync(c => c.Id == customerId);
+
+            if (customer == null)
+                return false;
+
+            var customerName = $"{customer.FirstName} {customer.LastName}";
+            var customerEmail = customer.Email;
+            var accountCount = customer.Accounts.Count;
+            var transactionCount = customer.SentTransactions.Count + customer.ReceivedTransactions.Count;
+
+            // Delete related reports
+            var reports = await _context.Reports.Where(r => r.CustomerId == customerId).ToListAsync();
+            _context.Reports.RemoveRange(reports);
+
+            // Delete related entities
+            _context.Transactions.RemoveRange(customer.SentTransactions);
+            _context.Transactions.RemoveRange(customer.ReceivedTransactions);
+            _context.Accounts.RemoveRange(customer.Accounts);
+            _context.Customers.Remove(customer);
+
+            await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
+
+            // Log audit action
+            await _auditService.LogAsync(
+                AuditAction.CustomerDeleted,
+                "Customer",
+                customerId,
+                null, // No admin user ID available in service layer
+                $"Deleted customer {customerName} ({customerEmail}) with {accountCount} accounts and {transactionCount} transactions"
+            );
+
             return true;
         }
 

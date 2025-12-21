@@ -97,5 +97,22 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Customers
 
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpPost]
+        [Authorize(Policy = PermissionCodes.CustomerManage)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _customerApi.DeleteCustomerAsync(id);
+            if (result)
+            {
+                TempData["Success"] = "Customer has been deleted successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["Error"] = "Failed to delete customer";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace BankingSystemAPI.Configuration
                 {
                     policy.WithOrigins(
                             "http://localhost:7000", 
+                            "http://localhost:8080",
                             "http://localhost:5173", 
                             "http://web:8080",
                             "http://biabanking.site",

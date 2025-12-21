@@ -56,21 +56,46 @@ namespace BankingSystemAPI.Controllers.Auth
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto request)
         {
-            var customer = await _customerService.AuthenticateCustomerAsync(
-                request.Email,
-                request.Password
-            );
-
-            if (customer == null)
-                return Unauthorized();
-
-            var token = _jwt.GenerateCustomerToken(customer);
-
-            return Ok(new LoginResponseDto
+            try
             {
-                AccessToken = token,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(15)
-            });
+                var customer = await _customerService.AuthenticateCustomerAsync(
+                    request.Email,
+                    request.Password
+                );
+
+                if (customer == null)
+                    return Unauthorized();
+
+                var token = _jwt.GenerateCustomerToken(customer);
+
+                return Ok(new LoginResponseDto
+                {
+                    AccessToken = token,
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(15)
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        {
+            try
+            {
+                var success = await _customerService.VerifyEmailAsync(token);
+
+                if (!success)
+                    return BadRequest(new { error = "Invalid verification token" });
+
+                return Ok(new { message = "Email verified successfully" });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
 }

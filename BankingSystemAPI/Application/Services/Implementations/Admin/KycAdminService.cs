@@ -2,6 +2,7 @@
 using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Domain.Entities.Users.Customers;
 using BankingSystemAPI.Infrastructure.Persistence;
+using BankingSystemAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Admin
@@ -10,11 +11,13 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
     {
         private readonly AppDbContext _context;
         private readonly AuditService _auditService;
+        private readonly NotificationService _notification;
 
-        public KycAdminService(AppDbContext context, AuditService auditService)
+        public KycAdminService(AppDbContext context, AuditService auditService, NotificationService notification)
         {
             _context = context;
             _auditService = auditService;
+            _notification = notification;
         }
 
         public async Task<KYCDocument?> GetPendingAsync(int kycId)
@@ -49,6 +52,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             doc.ReviewedByAdminId = adminId;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
 
             await _auditService.LogAsync(
                 AuditAction.AdminActionPerformed,
@@ -72,6 +76,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             doc.Customer!.IsKYCVerified = true;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
 
             await _auditService.LogAsync(
                 AuditAction.AdminActionPerformed,
@@ -96,6 +101,7 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             doc.Customer!.IsKYCVerified = false;
 
             await _context.SaveChangesAsync();
+            await _notification.NotifyAllAsync();
 
             await _auditService.LogAsync(
                 AuditAction.AdminActionPerformed,

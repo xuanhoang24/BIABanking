@@ -119,6 +119,19 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Customers
             }
         }
 
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/admin/customers/{customerId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<List<AccountListViewModel>?> GetAllAccountsAsync()
         {
             try

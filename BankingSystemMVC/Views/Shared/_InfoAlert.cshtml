@@ -1,10 +1,13 @@
-@model string
-
-@if (!string.IsNullOrEmpty(Model))
+@if (TempData["Info"] != null || TempData["Warning"] != null)
 {
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        <strong>Info:</strong> @Model
+    var message = TempData["Info"]?.ToString() ?? TempData["Warning"]?.ToString();
+    var isWarning = TempData["Warning"] != null;
+    var alertClass = isWarning ? "alert-warning" : "alert-info";
+    var icon = isWarning ? "bi-exclamation-circle-fill" : "bi-info-circle-fill";
+    
+    <div class="alert @alertClass alert-dismissible fade show" role="alert">
+        <i class="bi @icon me-2"></i>
+        @message
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }

@@ -1,10 +1,9 @@
-@model string
-
-@if (!string.IsNullOrEmpty(Model))
+@if (TempData["Success"] != null || TempData["SuccessMessage"] != null)
 {
+    var message = TempData["Success"]?.ToString() ?? TempData["SuccessMessage"]?.ToString();
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle-fill me-2"></i>
-        <strong>Success:</strong> @Model
+        @message
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }

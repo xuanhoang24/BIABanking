@@ -72,6 +72,13 @@ namespace BankingSystemMVC.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            catch (InvalidOperationException ex)
+            {
+                // This catches specific errors like "Please verify your email before logging in"
+                _logger.LogWarning(ex, "Login validation failed for email: {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login for email: {Email}", model.Email);
@@ -107,7 +114,40 @@ namespace BankingSystemMVC.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Login");
+            TempData["SuccessMessage"] = "Registration successful! Please check your email to verify your account.";
+            TempData["RegistrationEmail"] = model.Email;
+            return RedirectToAction("RegistrationSuccess");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegistrationSuccess()
+        {
+            ViewBag.Email = TempData["RegistrationEmail"];
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ErrorMessage"] = "Invalid verification link";
+                return RedirectToAction("Login");
+            }
+
+            var (success, errorMessage) = await _authApi.VerifyEmailAsync(token);
+
+            if (success)
+            {
+                return View("VerifyEmailSuccess");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = errorMessage ?? "Email verification failed";
+                return RedirectToAction("Login");
+            }
         }
 
         // LOGOUT

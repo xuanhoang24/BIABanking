@@ -7,5 +7,6 @@ namespace BankingSystemMVC.Services.Interfaces.Auth
     {
         Task<LoginResponseDto?> LoginAsync(LoginViewModel model);
         Task<(bool Success, string? ErrorMessage)> RegisterAsync(RegisterViewModel model);
+        Task<(bool Success, string? ErrorMessage)> VerifyEmailAsync(string token);
     }
 }

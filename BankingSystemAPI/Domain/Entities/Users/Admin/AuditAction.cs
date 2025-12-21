@@ -22,6 +22,7 @@ namespace BankingSystemAPI.Domain.Entities.Users.Admin
         KYCRejected = 18,
         KYCDocumentUploaded = 19,
         ReportCreated = 20,
-        ReportStatusUpdated = 21
+        ReportStatusUpdated = 21,
+        CustomerDeleted = 22
     }
 }

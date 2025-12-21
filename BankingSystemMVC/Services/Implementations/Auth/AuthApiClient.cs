@@ -21,15 +21,36 @@ namespace BankingSystemMVC.Services.Implementations.Auth
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _client.PostAsync("api/auth/login", content);
+            
             if (!response.IsSuccessStatusCode)
+            {
+                // Try to get error message from response
+                var errorBody = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorBody, options);
+                    var errorMessage = errorResponse?.GetValueOrDefault("error");
+                    
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        throw new InvalidOperationException(errorMessage);
+                    }
+                }
+                catch (JsonException)
+                {
+                    // If JSON parsing fails, just return null
+                }
+                
                 return null;
+            }
 
             var body = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
+            var jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-            return JsonSerializer.Deserialize<LoginResponseDto>(body, options);
+            return JsonSerializer.Deserialize<LoginResponseDto>(body, jsonOptions);
         }
 
         public async Task<(bool Success, string? ErrorMessage)> RegisterAsync(RegisterViewModel model)
@@ -52,6 +73,26 @@ namespace BankingSystemMVC.Services.Implementations.Auth
             catch
             {
                 return (false, "Registration failed");
+            }
+        }
+
+        public async Task<(bool Success, string? ErrorMessage)> VerifyEmailAsync(string token)
+        {
+            var response = await _client.GetAsync($"api/auth/verify-email?token={Uri.EscapeDataString(token)}");
+
+            if (response.IsSuccessStatusCode)
+                return (true, null);
+
+            var errorBody = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorBody, options);
+                return (false, errorResponse?.GetValueOrDefault("error") ?? "Verification failed");
+            }
+            catch
+            {
+                return (false, "Verification failed");
             }
         }
     }

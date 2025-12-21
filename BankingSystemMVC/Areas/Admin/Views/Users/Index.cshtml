@@ -19,12 +19,9 @@
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
-        </div>
-    }
+    <partial name="_SuccessAlert" />
+    <partial name="_ErrorAlert" />
+    <partial name="_InfoAlert" />
 
     <div class="card shadow-sm">
         <div class="card-body">

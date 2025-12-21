@@ -23,7 +23,7 @@ namespace BankingSystemAPI.Infrastructure.Persistence.Seed
             var reviewerRole = await context.Roles.SingleAsync(r => r.Name == "KycReviewer");
 
             passwordHasher.CreateHash(
-                "123",
+                "IDontKnowWhyISetThisPasswordSoLong*",
                 out var hash,
                 out var salt
             );

@@ -1,9 +1,11 @@
 ﻿using BankingSystemAPI.Application.Services.Implementations.Admin;
 using BankingSystemAPI.Application.Services.Implementations.Customer;
+using BankingSystemAPI.Application.Services.Implementations.Email;
 using BankingSystemAPI.Application.Services.Implementations.Kyc;
 using BankingSystemAPI.Application.Services.Implementations.Report;
 using BankingSystemAPI.Application.Services.Interfaces.Admin;
 using BankingSystemAPI.Application.Services.Interfaces.Customer;
+using BankingSystemAPI.Application.Services.Interfaces.Email;
 using BankingSystemAPI.Application.Services.Interfaces.Kyc;
 using BankingSystemAPI.Application.Services.Interfaces.Report;
 using BankingSystemAPI.Infrastructure.Security.Implements;
@@ -38,6 +40,10 @@ namespace BankingSystemAPI.Configuration
 
             // Notification service
             services.AddScoped<NotificationService>();
+
+            // Email service
+            services.AddScoped<IEmailService, EmailService>();
+
             return services;
         }
     }

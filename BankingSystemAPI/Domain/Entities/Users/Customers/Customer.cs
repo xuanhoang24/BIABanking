@@ -36,6 +36,11 @@ namespace BankingSystemAPI.Domain.Entities.Users.Customers
 
         public bool RequiresPasswordChange { get; set; } = false;
 
+        // Email Verification
+        public bool EmailVerified { get; set; } = false;
+        public string? EmailVerificationToken { get; set; }
+        public DateTime? EmailVerificationTokenExpiry { get; set; }
+
         public int FailedLoginAttempts { get; set; } = 0;
         public DateTime? LockedUntil { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

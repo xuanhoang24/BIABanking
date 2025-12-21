@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6; 
+            color: #1a1a1a; 
+            background-color: #f5f5f5; 
+            padding: 20px; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background-color: #ffffff; 
+            border: 1px solid #e0e0e0; 
+        }
+        .header { 
+            background-color: #1a1a1a; 
+            color: #ffffff; 
+            padding: 40px 30px; 
+            text-align: center; 
+        }
+        .content { 
+            padding: 50px 30px; 
+        }
+        .button { 
+            display: inline-block; 
+            padding: 16px 40px; 
+            background-color: #1a1a1a; 
+            color: #ffffff !important; 
+            text-decoration: none !important; 
+        }
+        .button:visited,
+        .button:hover,
+        .button:active {
+            color: #ffffff !important;
+        }
+        a {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>BIABANK</h1>
+        </div>
+        <div class='content'>
+            <p>Hello <strong>{{FirstName}}</strong>,</p>
+            <p>Please verify your email address:</p>
+            <p><a href='{{VerificationUrl}}' class='button' style='color: #ffffff !important; text-decoration: none !important;'>VERIFY EMAIL</a></p>
+            <p style='color: #1a1a1a !important;'>Or copy this link: <span style='color: #1a1a1a !important; text-decoration: none !important;'>{{VerificationUrl}}</span></p>
+        </div>
+    </div>
+</body>
+</html>

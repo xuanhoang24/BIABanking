@@ -10,6 +10,7 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces.Customers
         Task<List<TransactionSummaryViewModel>?> GetCustomerTransactionsAsync(int customerId, int limit = 50);
         Task<bool> UpdateCustomerStatusAsync(int customerId, string status);
         Task<bool> ResetCustomerPasswordAsync(int customerId);
+        Task<bool> DeleteCustomerAsync(int customerId);
         Task<List<AccountListViewModel>?> GetAllAccountsAsync();
         Task<List<TransactionListViewModel>?> GetAllTransactionsAsync(int limit = 100);
     }

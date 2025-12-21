@@ -42,43 +42,52 @@
 
 <hr />
 
-@if (Model.Status == KYCStatus.Pending)
-{
+<!-- ACTION BUTTONS -->
+<div class="d-flex align-items-center gap-2 mt-3">
+
+    @if (Model.Status == KYCStatus.Pending)
+    {
+        <form asp-area="Admin"
+              asp-controller="Kyc"
+              asp-action="MarkUnderReview"
+              method="post"
+              class="d-inline">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-warning">
+                <i class="fas fa-clock"></i> Mark Under Review
+            </button>
+        </form>
+    }
+
     <form asp-area="Admin"
           asp-controller="Kyc"
-          asp-action="MarkUnderReview"
+          asp-action="Approve"
           method="post"
           class="d-inline">
-
         @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.Id" />
-
-        <button type="submit" class="btn btn-warning">
-            <i class="fas fa-clock"></i> Mark Under Review
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check"></i> Approve
         </button>
     </form>
-}
 
-<form asp-area="Admin"
-      asp-controller="Kyc"
-      asp-action="Approve"
-      method="post"
-      class="d-inline">
-
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="id" value="@Model.Id" />
-
-    <button type="submit" class="btn btn-success">
-        <i class="fas fa-check"></i> Approve
+    <button class="btn btn-danger"
+            data-bs-toggle="collapse"
+            data-bs-target="#rejectForm">
+        <i class="fas fa-times"></i> Reject
     </button>
-</form>
 
-<button class="btn btn-danger ms-2"
-        data-bs-toggle="collapse"
-        data-bs-target="#rejectForm">
-    <i class="fas fa-times"></i> Reject
-</button>
+    <a asp-area="Admin"
+       asp-controller="Kyc"
+       asp-action="Index"
+       class="btn btn-secondary ms-auto">
+        Back to List
+    </a>
 
+</div>
+
+<!-- REJECT FORM -->
 <div id="rejectForm" class="collapse mt-3">
     <form asp-area="Admin"
           asp-controller="Kyc"
@@ -101,10 +110,3 @@
         </button>
     </form>
 </div>
-
-<a asp-area="Admin"
-   asp-controller="Kyc"
-   asp-action="Index"
-   class="btn btn-secondary mt-4">
-    Back to List
-</a>

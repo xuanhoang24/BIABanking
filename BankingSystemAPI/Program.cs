@@ -15,8 +15,13 @@ builder.Services.Configure<PasswordOptions>(
     builder.Configuration.GetSection("PasswordOptions")
 );
 
+builder.Services.Configure<BankingSystemAPI.Domain.Entities.Email.EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings")
+);
+
 // Services
 builder.Services.AddApplicationServices();
+builder.Services.AddScoped<BankingSystemAPI.Application.Services.Interfaces.Email.IEmailService, BankingSystemAPI.Application.Services.Implementations.Email.EmailService>();
 
 // CORS for SignalR
 builder.Services.AddCorsPolicy();
