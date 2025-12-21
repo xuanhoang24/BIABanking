@@ -374,3 +374,9 @@ email-config.json
 
 # Environment variables
 .env
+
+# SSL certificates
+nginx/ssl/
+*.pem
+*.crt
+*.key
