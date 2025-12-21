@@ -247,10 +247,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
         // Real-time updates with SignalR
-        const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'http://api:8080';
+        const apiUrl = window.location.hostname === 'localhost'
+            ? 'http://localhost:5000'
+            : window.location.origin;
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(apiUrl + "/notificationHub")
             .build();
+
 
         // Prevent reload during form submission or navigation
         let isNavigating = false;
