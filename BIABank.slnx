@@ -3,6 +3,6 @@
     <File Path="docker-compose.override.yml" />
     <File Path="docker-compose.yml" />
   </Folder>
-  <Project Path="BankingSystemAPI/BankingSystemAPI.csproj" />
-  <Project Path="BankingSystemMVC/BankingSystemMVC.csproj" />
+  <Project Path="BIABankAPI/BIABankAPI.csproj" />
+  <Project Path="BIABankMVC/BIABankMVC.csproj" />
 </Solution>

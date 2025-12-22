@@ -1,7 +1,7 @@
 ﻿services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: bankingsystem-db
+    container_name: biabank-db
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: ${DB_PASSWORD}
@@ -10,13 +10,13 @@
     restart: unless-stopped
 
   api:
-    container_name: bankingsystem-api
-    build: ./BankingSystemAPI
+    container_name: biabank-api
+    build: ./BIABankAPI
     depends_on:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Server=db;Database=BankingSystemDb;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=db;Database=BIABankDb;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True
       - Jwt__Key=${JWT_SECRET_KEY}
       - EmailSettings__SmtpHost=${EMAIL_SMTP_HOST}
       - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
@@ -29,8 +29,8 @@
     restart: unless-stopped
 
   web:
-    container_name: bankingsystem-web
-    build: ./BankingSystemMVC
+    container_name: biabank-web
+    build: ./BIABankMVC
     depends_on:
       - api
     environment:
@@ -41,7 +41,7 @@
 
   nginx:
     image: nginx:alpine
-    container_name: bankingsystem-nginx
+    container_name: biabank-nginx
     ports:
       - "80:80"
       - "443:443"

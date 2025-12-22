@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BankingSystemAPI.Migrations
+namespace BIABankAPI.Migrations
 {
     /// <inheritdoc />
     public partial class InitalCreate : Migration

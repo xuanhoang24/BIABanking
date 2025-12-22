@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "StartUp",
+    "Projects": [
+      {
+        "Path": "BIABankAPI\\BIABankAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "BIABankMVC\\BIABankMVC.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

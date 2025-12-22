@@ -56,7 +56,7 @@ namespace BankingSystemMVC.Controllers
                         Secure = false, // localhost only
                         SameSite = SameSiteMode.Lax,
                         Path = "/",
-                        Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+                        Expires = DateTimeOffset.UtcNow.AddMinutes(30)
                     }
                 );
 
