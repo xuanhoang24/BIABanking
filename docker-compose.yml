@@ -32,6 +32,7 @@
   nginx:
     image: nginx:alpine
     container_name: biabank-nginx
+    profiles: ["prod"]
     ports:
       - "80:80"
       - "443:443"
