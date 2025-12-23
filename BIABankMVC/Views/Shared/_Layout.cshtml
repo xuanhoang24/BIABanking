@@ -109,42 +109,10 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-<script>
-    (function () {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (tz) {
-            document.cookie = "timezone=" + tz + "; path=/";
-        }
-    })();
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-<script>
-    // Real-time updates with SignalR
-    const apiUrl = window.location.hostname === 'localhost'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl(apiUrl + "/notificationHub")
-        .configureLogging(signalR.LogLevel.None)
-        .build();
-
-    // Prevent reload during form submission or navigation
-    let isNavigating = false;
-    
-    document.addEventListener('submit', function() {
-        isNavigating = true;
-    });
-    
-    window.addEventListener('beforeunload', function() {
-        isNavigating = true;
-    });
-
-    connection.on("ReceiveNotification", () => {
-        if (!isNavigating) {
-            window.location.reload();
-        }
-    });
-    
-    connection.start()
-        .catch(err => console.error("SignalR error:", err));
-</script>
+<environment include="Development">
+    <script src="~/js/app.js" asp-append-version="true"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/app.min.js" asp-append-version="true"></script>
+</environment>

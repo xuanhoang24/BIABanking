@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "obfuscate-app": "javascript-obfuscator wwwroot/js/app.js --output wwwroot/js/app.min.js --compact true --control-flow-flattening true --dead-code-injection true --string-array true --string-array-threshold 0.75 --self-defending true"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^5.1.0"
+  }
+}
