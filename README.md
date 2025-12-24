@@ -158,10 +158,13 @@ services:
   api:
     ports:
       - "5000:8080"
-
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development / Production
   web:
     ports:
       - "7000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development / Production
 ```
 
 3. **Run with Docker Compose**

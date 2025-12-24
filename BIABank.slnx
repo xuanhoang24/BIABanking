@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path="docker-compose.override.yml" />
     <File Path="docker-compose.yml" />
+    <File Path="README.md" />
   </Folder>
   <Project Path="BIABankAPI/BIABankAPI.csproj" />
   <Project Path="BIABankMVC/BIABankMVC.csproj" />
