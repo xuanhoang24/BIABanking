@@ -4,6 +4,7 @@
 @model List<AdminKycPendingViewModel>
 
 @{
+    ViewData["Title"] = "KYC List";
     var pendingList = Model.Where(x => x.Status == KYCStatus.Pending).ToList();
     var underReviewList = Model.Where(x => x.Status == KYCStatus.UnderReview).ToList();
 }
