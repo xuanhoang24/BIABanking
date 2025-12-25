@@ -11,10 +11,9 @@
             <h1><i class="fas fa-credit-card"></i> Customer Accounts</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="
-                    " asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
                     <li class="breadcrumb-item"><a asp-action="Index">Customers</a></li>
-                    <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@customer.Id">@customer.FirstName @customer.LastName</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@customer?.Id">@customer?.FirstName @customer?.LastName</a></li>
                     <li class="breadcrumb-item active">Accounts</li>
                 </ol>
             </nav>
@@ -28,13 +27,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <h5 class="mb-0">
-                                <i class="fas fa-user"></i> @customer.FirstName @customer.LastName
-                                <small class="text-muted">(ID: #@customer.Id)</small>
+                                <i class="fas fa-user"></i> @customer?.FirstName @customer?.LastName
+                                <small class="text-muted">(ID: #@customer?.Id)</small>
                             </h5>
-                            <p class="mb-0 text-muted">@customer.Email</p>
+                            <p class="mb-0 text-muted">@customer?.Email</p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-outline-primary">
+                            <a asp-action="Details" asp-route-id="@customer?.Id" class="btn btn-outline-primary">
                                 <i class="fas fa-arrow-left"></i> Back to Details
                             </a>
                         </div>
