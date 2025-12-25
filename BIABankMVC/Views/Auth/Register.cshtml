@@ -4,80 +4,126 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="form-page">
-    <h2>Create Account</h2>
-
-    <partial name="_ErrorAlert" model="null" />
-
-    <form asp-action="Register" method="post">
-        <div class="form-group">
-            <label asp-for="FirstName" class="form-label">First Name</label>
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="LastName" class="form-label">Last Name</label>
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Email" class="form-label">Email</label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Password" class="form-label">Password</label>
-            <input asp-for="Password" id="password" type="password" class="form-control" minlength="6" />
-            <small class="form-text text-muted">At least 6 characters, 1 capital letter, and 1 special character</small>
-            <div id="passwordRequirements" class="mt-2" style="display: none;">
-                <small class="d-block text-danger" id="lengthCheck">
-                    <i class="bi bi-x-circle"></i> At least 6 characters
-                </small>
-                <small class="d-block text-danger" id="capitalCheck">
-                    <i class="bi bi-x-circle"></i> At least 1 capital letter
-                </small>
-                <small class="d-block text-danger" id="specialCheck">
-                    <i class="bi bi-x-circle"></i> At least 1 special character
-                </small>
+<div class="auth-page">
+    <div class="auth-container auth-container-wide">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Your Account</h2>
+                <p class="auth-subtitle">Join BIABank for secure, modern banking</p>
             </div>
-            <span asp-validation-for="Password" class="text-danger"></span>
+
+            <partial name="_ErrorAlert" model="null" />
+
+            <form asp-action="Register" method="post" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="form-label">
+                            <i class="bi bi-person"></i> First Name
+                        </label>
+                        <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="LastName" class="form-label">
+                            <i class="bi bi-person"></i> Last Name
+                        </label>
+                        <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">
+                        <i class="bi bi-envelope"></i> Email Address
+                    </label>
+                    <input asp-for="Email" class="form-control" placeholder="your.email@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">
+                            <i class="bi bi-lock"></i> Password
+                        </label>
+                        <input asp-for="Password" id="password" type="password" class="form-control" minlength="6" placeholder="Create a strong password" />
+                        <small class="form-text text-muted">At least 6 characters, 1 capital letter, and 1 special character</small>
+                        <div id="passwordRequirements" class="password-requirements mt-2" style="display: none;">
+                            <small class="requirement-item text-danger" id="lengthCheck">
+                                <i class="bi bi-x-circle"></i> At least 6 characters
+                            </small>
+                            <small class="requirement-item text-danger" id="capitalCheck">
+                                <i class="bi bi-x-circle"></i> At least 1 capital letter
+                            </small>
+                            <small class="requirement-item text-danger" id="specialCheck">
+                                <i class="bi bi-x-circle"></i> At least 1 special character
+                            </small>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="form-label">
+                            <i class="bi bi-lock-fill"></i> Confirm Password
+                        </label>
+                        <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" placeholder="Re-enter your password" />
+                        <small id="confirmPasswordFeedback" class="form-text"></small>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber" class="form-label">
+                            <i class="bi bi-telephone"></i> Phone Number
+                        </label>
+                        <input asp-for="PhoneNumber" class="form-control" type="tel" pattern="\d{10}" maxlength="10" placeholder="1234567890" />
+                        <small class="form-text text-muted">10 digits without spaces or dashes</small>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DateOfBirth" class="form-label">
+                            <i class="bi bi-calendar"></i> Date of Birth
+                        </label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" id="dateOfBirth" />
+                        <small class="form-text text-muted">Must be at least 16 years old</small>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Address" class="form-label">
+                        <i class="bi bi-geo-alt"></i> Address
+                    </label>
+                    <input asp-for="Address" class="form-control" placeholder="Enter your full address" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-auth">
+                    <i class="bi bi-check-circle"></i> Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p class="text-muted">Already have an account? <a asp-action="Login" class="auth-link">Sign In</a></p>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
-            <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" />
-            <small id="confirmPasswordFeedback" class="form-text"></small>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        <div class="auth-info">
+            <div class="info-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Secure & encrypted</span>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-lightning"></i>
+                <span>Quick setup</span>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-award"></i>
+                <span>Trusted by thousands</span>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-            <input asp-for="PhoneNumber" class="form-control" type="tel" pattern="\d{10}" maxlength="10" placeholder="1234567890" />
-            <small class="form-text text-muted">Enter 10 digits without spaces or dashes</small>
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
-            <input asp-for="DateOfBirth" type="date" class="form-control" id="dateOfBirth" />
-            <small class="form-text text-muted">Must be between 01/01/1900 and @DateTime.Today.AddYears(-16).ToString("MM/dd/yyyy") (at least 16 years old)</small>
-            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Address" class="form-label">Address</label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Create Account</button>
-    </form>
-
-    <div class="text-center mt-4">
-        <p class="text-muted">Already have an account? <a asp-action="Login">Sign In</a></p>
     </div>
 </div>
 
