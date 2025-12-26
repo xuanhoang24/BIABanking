@@ -2,6 +2,7 @@ using BankingSystemAPI.Configuration;
 using BankingSystemAPI.Domain.Entities.Security;
 using BankingSystemAPI.Infrastructure.Hubs;
 using BankingSystemAPI.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,9 @@ builder.Services.AddScoped<BankingSystemAPI.Application.Services.Interfaces.Emai
 // CORS for SignalR
 builder.Services.AddCorsPolicy();
 
+// Rate Limiting
+builder.Services.AddRateLimiting();
+
 // JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -35,12 +39,34 @@ builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
 
+// Configure request size limits
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 10_485_760; // 10MB
+});
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 10_485_760; // 10MB
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+else
+{
+    // HSTS - HTTP Strict Transport Security
+    app.UseHsts();
+}
+
+// Force HTTPS redirection
+app.UseHttpsRedirection();
+
+// Rate limiting middleware
+app.UseRateLimiter();
 
 app.UseCors("AllowMVC");
 app.UseAuthentication();

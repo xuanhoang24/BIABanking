@@ -31,8 +31,43 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             if (admin == null)
                 return null;
 
+            // Check if account is locked
+            if (admin.LockedUntil.HasValue && admin.LockedUntil.Value > DateTime.UtcNow)
+            {
+                var remainingMinutes = (int)(admin.LockedUntil.Value - DateTime.UtcNow).TotalMinutes;
+                throw new InvalidOperationException($"Account is locked. Try again in {remainingMinutes} minutes.");
+            }
+
+            // Reset lock if expired
+            if (admin.LockedUntil.HasValue && admin.LockedUntil.Value <= DateTime.UtcNow)
+            {
+                admin.LockedUntil = null;
+                admin.FailedLoginAttempts = 0;
+                await _context.SaveChangesAsync();
+            }
+
             if (!_passwordHasher.Verify(password, admin.PasswordHash, admin.PasswordSalt))
+            {
+                // Increment failed login attempts
+                admin.FailedLoginAttempts++;
+                
+                // Lock account after 5 failed attempts
+                if (admin.FailedLoginAttempts >= 5)
+                {
+                    admin.LockedUntil = DateTime.UtcNow.AddMinutes(15);
+                    await _context.SaveChangesAsync();
+                    throw new InvalidOperationException("Account locked due to too many failed login attempts. Try again in 15 minutes.");
+                }
+                
+                await _context.SaveChangesAsync();
                 return null;
+            }
+
+            // Successful login - reset failed attempts
+            if (admin.FailedLoginAttempts > 0)
+            {
+                admin.FailedLoginAttempts = 0;
+            }
 
             admin.LastLoginAt = DateTime.UtcNow;
             admin.UpdatedAt = DateTime.UtcNow;

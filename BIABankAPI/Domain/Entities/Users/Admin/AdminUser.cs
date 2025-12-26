@@ -28,6 +28,8 @@ namespace BankingSystemAPI.Domain.Entities.Users.Admin
 
         public bool IsActive { get; set; } = true;
         public bool RequiresPasswordChange { get; set; } = false;
+        public int FailedLoginAttempts { get; set; } = 0;
+        public DateTime? LockedUntil { get; set; }
         public DateTime? LastLoginAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

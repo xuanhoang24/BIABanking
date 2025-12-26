@@ -4,11 +4,13 @@ using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using BankingSystemAPI.Domain.Entities.Users.Admin;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BankingSystemAPI.Controllers.Auth
 {
     [ApiController]
     [Route("api/auth")]
+    [EnableRateLimiting("auth")]
     public class AuthController : ControllerBase
     {
         private readonly ICustomerService _customerService;

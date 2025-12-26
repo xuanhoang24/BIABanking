@@ -24,6 +24,8 @@ namespace BIABankAPI.Migrations
                     PasswordSalt = table.Column<string>(type: "TEXT", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     RequiresPasswordChange = table.Column<bool>(type: "INTEGER", nullable: false),
+                    FailedLoginAttempts = table.Column<int>(type: "INTEGER", nullable: false),
+                    LockedUntil = table.Column<DateTime>(type: "TEXT", nullable: true),
                     LastLoginAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)

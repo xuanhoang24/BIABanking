@@ -20,9 +20,25 @@ namespace BankingSystemAPI.Controllers.Customers
 
         // POST: api/kyc/upload
         [HttpPost("upload")]
+        [RequestSizeLimit(5_242_880)] // 5MB limit
         public async Task<IActionResult> Upload([FromForm] UploadKycDocumentRequestDto dto)
         {
             var customerId = User.GetRequiredUserId();
+
+            // Validate file size
+            if (dto.File.Length > 5_242_880) // 5MB
+            {
+                return BadRequest(new { message = "File size must not exceed 5MB" });
+            }
+
+            // Validate file type
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            var fileExtension = Path.GetExtension(dto.File.FileName).ToLowerInvariant();
+            
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest(new { message = "Only JPG, PNG, and PDF files are allowed" });
+            }
 
             try
             {

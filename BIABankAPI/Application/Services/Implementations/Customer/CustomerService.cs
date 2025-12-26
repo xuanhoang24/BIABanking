@@ -92,11 +92,56 @@ namespace BankingSystemAPI.Application.Services.Implementations.Customer
             if (customer == null)
                 return null;
 
+            // Check if account is locked
+            if (customer.LockedUntil.HasValue && customer.LockedUntil.Value > DateTime.UtcNow)
+            {
+                var remainingMinutes = (int)(customer.LockedUntil.Value - DateTime.UtcNow).TotalMinutes;
+                throw new InvalidOperationException($"Account is locked. Try again in {remainingMinutes} minutes.");
+            }
+
+            // Reset lock if expired
+            if (customer.LockedUntil.HasValue && customer.LockedUntil.Value <= DateTime.UtcNow)
+            {
+                customer.LockedUntil = null;
+                customer.FailedLoginAttempts = 0;
+                await _context.SaveChangesAsync();
+            }
+
             if (!customer.EmailVerified)
                 throw new InvalidOperationException("Please verify your email before logging in");
 
             if (!_passwordHasher.Verify(password, customer.PasswordHash, customer.PasswordSalt))
+            {
+                // Increment failed login attempts
+                customer.FailedLoginAttempts++;
+                
+                // Lock account after 5 failed attempts
+                if (customer.FailedLoginAttempts >= 5)
+                {
+                    customer.LockedUntil = DateTime.UtcNow.AddMinutes(15);
+                    await _context.SaveChangesAsync();
+                    
+                    await _auditService.LogAsync(
+                        Domain.Entities.Users.Admin.AuditAction.CustomerRegistration,
+                        "Customer",
+                        customer.Id,
+                        customer.Id,
+                        $"Account locked due to {customer.FailedLoginAttempts} failed login attempts"
+                    );
+                    
+                    throw new InvalidOperationException("Account locked due to too many failed login attempts. Try again in 15 minutes.");
+                }
+                
+                await _context.SaveChangesAsync();
                 return null;
+            }
+
+            // Successful login - reset failed attempts
+            if (customer.FailedLoginAttempts > 0)
+            {
+                customer.FailedLoginAttempts = 0;
+                await _context.SaveChangesAsync();
+            }
 
             return customer;
         }

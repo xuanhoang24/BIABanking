@@ -3,11 +3,13 @@ using BankingSystemAPI.Application.Services.Implementations.Admin;
 using BankingSystemAPI.Infrastructure.Security.Interfaces;
 using BankingSystemAPI.Domain.Entities.Users.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BankingSystemAPI.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/auth")]
+    [EnableRateLimiting("auth")]
     public class AdminAuthController : ControllerBase
     {
         private readonly AdminUserService _adminService;

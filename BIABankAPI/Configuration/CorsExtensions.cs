@@ -20,7 +20,8 @@ namespace BankingSystemAPI.Configuration
                           )
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials();
+                          .AllowCredentials()
+                          .SetIsOriginAllowedToAllowWildcardSubdomains();
                 });
             });
 

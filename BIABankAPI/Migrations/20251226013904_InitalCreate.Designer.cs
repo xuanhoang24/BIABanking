@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIABankAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251222103052_InitalCreate")]
+    [Migration("20251226013904_InitalCreate")]
     partial class InitalCreate
     {
         /// <inheritdoc />
@@ -264,6 +264,9 @@ namespace BIABankAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("FailedLoginAttempts")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -278,6 +281,9 @@ namespace BIABankAPI.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LockedUntil")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")

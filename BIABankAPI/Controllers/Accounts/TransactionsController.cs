@@ -3,12 +3,14 @@ using BankingSystemAPI.Application.Dtos.Transactions;
 using BankingSystemAPI.Application.Services.Interfaces.Customer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BankingSystemAPI.Controllers.Accounts
 {
     [ApiController]
     [Route("api/transactions")]
     [Authorize]
+    [EnableRateLimiting("transactions")]
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
