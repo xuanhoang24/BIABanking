@@ -2,41 +2,49 @@
 @model TransactionConfirmViewModel
 
 <div class="page-container">
-    <div class="page-header">
+    <div class="text-center mb-4">
+        <div class="mb-3">
+            <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
+        </div>
         <h1>@Model.Title</h1>
+        <p class="text-success fs-5">@Model.Type completed successfully</p>
     </div>
 
     <div class="card">
-        <div class="card-body">
-            <p class="fw-bold text-success mb-4">@Model.Type successful</p>
+        <div class="card-body p-4">
+            <h5 class="card-title mb-4"><i class="bi bi-receipt"></i> Transaction Details</h5>
 
             @if (!string.IsNullOrEmpty(Model.FromAccountNumber))
             {
-                <div class="mb-3">
-                    <label class="text-muted">From Account</label>
-                    <p class="fw-semibold">@Model.FromAccountNumber</p>
+                <div class="mb-3 pb-3 border-bottom">
+                    <label class="text-muted d-block mb-1"><i class="bi bi-wallet2"></i> From Account</label>
+                    <p class="fw-semibold mb-0">@Model.FromAccountNumber</p>
                 </div>
             }
 
             @if (!string.IsNullOrEmpty(Model.ToAccountNumber))
             {
-                <div class="mb-3">
-                    <label class="text-muted">To Account</label>
-                    <p class="fw-semibold">@Model.ToAccountNumber</p>
+                <div class="mb-3 pb-3 border-bottom">
+                    <label class="text-muted d-block mb-1"><i class="bi bi-wallet"></i> To Account</label>
+                    <p class="fw-semibold mb-0">@Model.ToAccountNumber</p>
                 </div>
             }
 
-            <div class="mb-3">
-                <label class="text-muted">Amount</label>
-                <p class="fw-semibold fs-4">@Model.Amount.ToString("C")</p>
+            <div class="mb-3 pb-3 border-bottom">
+                <label class="text-muted d-block mb-1"><i class="bi bi-currency-dollar"></i> Amount</label>
+                <p class="fw-bold fs-3 text-success mb-0">@Model.Amount.ToString("C")</p>
             </div>
 
             <div class="mb-3">
-                <label class="text-muted">Reference</label>
-                <p class="fw-semibold">@Model.Reference</p>
+                <label class="text-muted d-block mb-1"><i class="bi bi-hash"></i> Reference Number</label>
+                <p class="fw-semibold mb-0 font-monospace">@Model.Reference</p>
             </div>
         </div>
     </div>
 
-    <a asp-controller="Accounts" asp-action="Index" class="btn btn-primary mt-4">Back to Accounts</a>
+    <div class="text-center mt-4">
+        <a asp-controller="Accounts" asp-action="Index" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Back to Accounts
+        </a>
+    </div>
 </div>

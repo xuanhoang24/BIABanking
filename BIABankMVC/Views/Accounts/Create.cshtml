@@ -4,28 +4,81 @@
     ViewData["Title"] = "Create Account";
 }
 
-<div class="form-page">
-    <h2>Create Account</h2>
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="bi bi-plus-circle"></i> Create New Account</h1>
+        <p class="text-muted">Open a new checking or savings account</p>
+    </div>
 
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            <label asp-for="AccountName" class="form-label">Account Name</label>
-            <input asp-for="AccountName" class="form-control" />
-            <span asp-validation-for="AccountName" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="AccountName" class="form-label">
+                        <i class="bi bi-tag"></i> Account Name
+                    </label>
+                    <input asp-for="AccountName" class="form-control" placeholder="e.g., My Savings Account" />
+                    <span asp-validation-for="AccountName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="AccountType" class="form-label">
+                        <i class="bi bi-wallet2"></i> Account Type
+                    </label>
+                    <select asp-for="AccountType" class="form-select">
+                        <option value="">Select account type</option>
+                        <option value="1">
+                            <i class="bi bi-cash-stack"></i> Checking - For everyday transactions
+                        </option>
+                        <option value="2">
+                            <i class="bi bi-piggy-bank"></i> Savings - For saving money
+                        </option>
+                    </select>
+                    <span asp-validation-for="AccountType" class="text-danger"></span>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Note:</strong> Your new account will be created with a $0.00 balance. You can deposit funds after creation.
+                </div>
+
+                <div class="btn-group-form">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Create Account
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label asp-for="AccountType" class="form-label">Account Type</label>
-            <select asp-for="AccountType" class="form-select">
-                <option value="1">Checking</option>
-                <option value="2">Savings</option>
-            </select>
-            <span asp-validation-for="AccountType" class="text-danger"></span>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-lightbulb"></i> Account Types</h5>
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-cash-stack text-dark fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Checking Account</h6>
+                            <p class="text-muted small mb-0">Perfect for daily transactions, bill payments, and transfers. Easy access to your money.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-piggy-bank text-dark fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Savings Account</h6>
+                            <p class="text-muted small mb-0">Ideal for building your savings. Earn interest on your balance over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">Create Account</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+    </div>
 </div>
