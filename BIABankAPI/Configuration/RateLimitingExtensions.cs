@@ -20,13 +20,13 @@ namespace BankingSystemAPI.Configuration
                             QueueLimit = 10
                         }));
 
-                // Authentication endpoints - 5 attempts per minute per IP
+                // Authentication endpoints - 10 attempts per minute per IP
                 options.AddPolicy("auth", context =>
                     RateLimitPartition.GetFixedWindowLimiter(
                         partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                         factory: partition => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 5,
+                            PermitLimit = 10,
                             Window = TimeSpan.FromMinutes(1),
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                             QueueLimit = 0
