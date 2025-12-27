@@ -4,25 +4,14 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 
 ## Tech Stack
 
-### Backend (API)
-- **Framework**: ASP.NET Core 9.0
-- **Database**: SQLite with Entity Framework Core 9.0
-- **Authentication**: JWT Bearer Tokens
-- **Real-time Communication**: SignalR
-- **API Documentation**: OpenAPI/Swagger
-- **Email Service**: SMTP Integration
-
-### Frontend (MVC)
-- **Framework**: ASP.NET Core MVC 9.0
-- **Authentication**: JWT Bearer Tokens
-- **Real-time Updates**: SignalR Client
-- **UI**: Razor Views with Bootstrap
-
-### Infrastructure
-- **Containerization**: Docker & Docker Compose
-- **Reverse Proxy**: Nginx
-- **SSL/TLS**: HTTPS Support
-- **Database Storage**: Persistent SQLite Volume
+| Layer | Technology |
+|-------|------------|
+| **Backend** | ASP.NET Core 9.0, Entity Framework Core 9.0, SQLite |
+| **Frontend** | ASP.NET Core MVC 9.0, Razor Views, Bootstrap |
+| **Authentication** | JWT Bearer Tokens |
+| **Real-time** | SignalR |
+| **Infrastructure** | Docker, Docker Compose, Nginx |
+| **Email** | SMTP Integration |
 
 ## Features
 
@@ -56,13 +45,21 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 ![Admin Portal](Image/Admin.png)
 
 ### Security Features
-- JWT-based authentication and authorization
-- Role-Based Access Control (RBAC) for admin and customer roles
-- Permission-based authorization
-- Secure password hashing and validation
-- SSL/TLS (HTTPS) encryption
-- CORS policy configuration
-- SQL injection prevention via Entity Framework
+
+| Category | Implementation |
+|----------|----------------|
+| **Authentication** | JWT Bearer Tokens with issuer/audience validation |
+| **Authorization** | Role-Based Access Control (RBAC) + Permission-based policies |
+| **Rate Limiting** | Global: 100 req/min, Auth: 10 req/min, Transactions: 20 req/min |
+| **Password Security** | Secure hashing with configurable password policies |
+| **Transport Security** | SSL/TLS (HTTPS) via Nginx reverse proxy |
+| **API Security** | CORS policy, SQL injection prevention via EF Core |
+
+**Permission Policies:**
+- `DashboardView` - Access to admin dashboard
+- `CustomerRead` / `CustomerManage` - Customer data access
+- `KycRead` / `KycReview` - KYC verification workflow
+- `TransactionRead` - Transaction history access
 
 ### Technical Features
 - Responsive web interface
@@ -149,8 +146,7 @@ cd BIABanking
 
 2. **Configure environment variables**
 
-Create a `.env` file in the root directory  
-(see [Configuration → Environment Variables](#environment-variables)).
+Create a `.env` file in the root directory (see [Configuration → Environment Variables](#environment-variables)).
 
 For development, create a `docker-compose.override.yml` file:
 ```yaml
