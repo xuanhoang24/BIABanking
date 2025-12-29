@@ -11,7 +11,7 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 | **Authentication** | JWT Bearer Tokens |
 | **Real-time** | SignalR |
 | **Infrastructure** | Docker, Docker Compose, Nginx |
-| **Email** | SMTP Integration |
+| **Email** | Resend API |
 
 ## Features
 
@@ -68,7 +68,7 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 - Environment-based configuration
 - Database migrations
 - Nginx reverse proxy
-- Email notifications via SMTP
+- Email notifications via Resend
 - Secure API architecture with MVC pattern
 
 ## Architecture
@@ -100,7 +100,7 @@ The application follows a clean architecture pattern with clear separation of co
 - **Presentation**: MVC Web App (Razor Views, Controllers)
 - **Application**: Business logic, services, use cases, DTOs
 - **Domain**: Core entities, value objects, business rules
-- **Infrastructure**: EF Core, SQLite, SMTP, external integrations
+- **Infrastructure**: EF Core, SQLite, Resend, external integrations
 
 ## Configuration
 
@@ -112,13 +112,10 @@ Create a `.env` file in the root directory with the following variables:
 # JWT Configuration
 JWT_SECRET_KEY=your-secret-key-here
 
-# Email Configuration
-EMAIL_SMTP_HOST=smtp.example.com
-EMAIL_SMTP_PORT=587
-EMAIL_USERNAME=your-email@example.com
-EMAIL_PASSWORD=your-email-password
-EMAIL_FROM=noreply@biabank.com
-EMAIL_FROM_NAME=BIABank
+# Resend Email Configuration
+RESEND_API_KEY=your-resend-api-key
+RESEND_FROM_EMAIL=noreply@yourdomain.com
+RESEND_FROM_NAME=BIABank
 
 # Application Settings
 APP_BASE_URL=https://yourdomain.com
@@ -179,13 +176,23 @@ docker-compose --profile prod up -d
 
 **Development mode:**
 - Web Application: http://localhost:7000
+- Admin Portal: http://localhost:7000/Admin
 - API Base: http://localhost:5000
 
 **Production mode (with nginx):**
 - Web Application: https://localhost (or https://biabanking.site)
+- Admin Portal: https://localhost/Admin (or https://biabanking.site/Admin)
 - API Base: https://localhost/api (or https://biabanking.site/api)
 
 > **Note**: The API doesn't have a root landing page. Use the web application to interact with the system, or access specific API endpoints like `/api/auth/login`.
+
+### Default Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@biabank.com | IDontKnowWhyISetThisPasswordSoLong* |
+| **Manager** | manager@biabank.com | IDontKnowWhyISetThisPasswordSoLong* |
+| **KYC Reviewer** | kyc@biabank.com | IDontKnowWhyISetThisPasswordSoLong* |
 
 ## Support
 For issues and questions, please open an issue in the repository.

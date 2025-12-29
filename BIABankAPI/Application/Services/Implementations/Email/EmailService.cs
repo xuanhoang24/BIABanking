@@ -1,8 +1,7 @@
-using System.Net;
-using System.Net.Mail;
 using BankingSystemAPI.Application.Services.Interfaces.Email;
 using BankingSystemAPI.Domain.Entities.Email;
 using Microsoft.Extensions.Options;
+using Resend;
 
 namespace BankingSystemAPI.Application.Services.Implementations.Email
 {
@@ -10,43 +9,40 @@ namespace BankingSystemAPI.Application.Services.Implementations.Email
     {
         private readonly EmailSettings _settings;
         private readonly ILogger<EmailService> _logger;
+        private readonly IResend _resend;
 
-        public EmailService(IOptions<EmailSettings> settings, ILogger<EmailService> logger)
+        public EmailService(IOptions<EmailSettings> settings, ILogger<EmailService> logger, IResend resend)
         {
             _settings = settings.Value;
             _logger = logger;
+            _resend = resend;
 
-            // Validate settings
-            if (string.IsNullOrEmpty(_settings.SmtpHost))
+            if (string.IsNullOrEmpty(_settings.ApiKey))
             {
-                _logger.LogWarning("Email service is not configured. Emails will not be sent.");
+                _logger.LogWarning("Resend API key is not configured. Emails will not be sent.");
             }
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
-            // Skip if not configured
-            if (string.IsNullOrEmpty(_settings.SmtpHost) || string.IsNullOrEmpty(_settings.SmtpUsername))
+            if (string.IsNullOrEmpty(_settings.ApiKey))
             {
-                _logger.LogWarning("Email service not configured. Skipping email to {Email}", toEmail);
+                _logger.LogWarning("Resend not configured. Skipping email to {Email}", toEmail);
                 return;
             }
 
             try
             {
-                using var message = new MailMessage();
-                message.From = new MailAddress(_settings.FromEmail, _settings.FromName);
-                message.To.Add(new MailAddress(toEmail));
-                message.Subject = subject;
-                message.Body = htmlBody;
-                message.IsBodyHtml = true;
+                var message = new EmailMessage
+                {
+                    From = $"{_settings.FromName} <{_settings.FromEmail}>",
+                    To = toEmail,
+                    Subject = subject,
+                    HtmlBody = htmlBody
+                };
 
-                using var client = new SmtpClient(_settings.SmtpHost, _settings.SmtpPort);
-                client.EnableSsl = _settings.EnableSsl;
-                client.Credentials = new NetworkCredential(_settings.SmtpUsername, _settings.SmtpPassword);
-
-                await client.SendMailAsync(message);
-                _logger.LogInformation("Email sent successfully to {Email}", toEmail);
+                var response = await _resend.EmailSendAsync(message);
+                _logger.LogInformation("Email sent successfully to {Email}, Id: {Id}", toEmail, response.Content);
             }
             catch (Exception ex)
             {
@@ -59,7 +55,6 @@ namespace BankingSystemAPI.Application.Services.Implementations.Email
         {
             var verificationUrl = $"{baseUrl}/Auth/VerifyEmail?token={Uri.EscapeDataString(verificationToken)}";
 
-            // Load email template
             var templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure", "EmailTemplates", "VerificationEmail.html");
             var fallbackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Infrastructure", "EmailTemplates", "VerificationEmailFallback.html");
             
@@ -80,7 +75,6 @@ namespace BankingSystemAPI.Application.Services.Implementations.Email
                 throw new FileNotFoundException("Email templates not found");
             }
 
-            // Replace placeholders
             htmlBody = htmlBody.Replace("{{FirstName}}", firstName);
             htmlBody = htmlBody.Replace("{{VerificationUrl}}", verificationUrl);
 

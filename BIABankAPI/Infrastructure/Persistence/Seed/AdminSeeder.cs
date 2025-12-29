@@ -32,7 +32,7 @@ namespace BankingSystemAPI.Infrastructure.Persistence.Seed
             {
                 FirstName = "Super",
                 LastName = "Admin",
-                Email = "admin@bank.com",
+                Email = "admin@biabank.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
                 IsActive = true,
@@ -46,7 +46,7 @@ namespace BankingSystemAPI.Infrastructure.Persistence.Seed
             {
                 FirstName = "System",
                 LastName = "Manager",
-                Email = "manager@bank.com",
+                Email = "manager@biabank.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
                 IsActive = true,
@@ -60,7 +60,7 @@ namespace BankingSystemAPI.Infrastructure.Persistence.Seed
             {
                 FirstName = "KYC",
                 LastName = "Reviewer",
-                Email = "kyc@bank.com",
+                Email = "kyc@biabank.com",
                 PasswordHash = hash,
                 PasswordSalt = salt,
                 IsActive = true,

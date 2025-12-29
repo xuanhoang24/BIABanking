@@ -6,13 +6,9 @@
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/BIABankDb.db
       - Jwt__Key=${JWT_SECRET_KEY}
-      - EmailSettings__SmtpHost=${EMAIL_SMTP_HOST}
-      - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
-      - EmailSettings__SmtpUsername=${EMAIL_USERNAME}
-      - EmailSettings__SmtpPassword=${EMAIL_PASSWORD}
-      - EmailSettings__FromEmail=${EMAIL_FROM}
-      - EmailSettings__FromName=${EMAIL_FROM_NAME}
-      - EmailSettings__EnableSsl=true
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
+      - RESEND_FROM_NAME=${RESEND_FROM_NAME}
       - AppSettings__BaseUrl=${APP_BASE_URL}
     volumes:
       - sqlite_data:/app/data

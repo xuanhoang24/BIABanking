@@ -16,9 +16,8 @@ builder.Services.Configure<PasswordOptions>(
     builder.Configuration.GetSection("PasswordOptions")
 );
 
-builder.Services.Configure<BankingSystemAPI.Domain.Entities.Email.EmailSettings>(
-    builder.Configuration.GetSection("EmailSettings")
-);
+// Resend Email
+builder.Services.AddResendEmail();
 
 // Services
 builder.Services.AddApplicationServices();
