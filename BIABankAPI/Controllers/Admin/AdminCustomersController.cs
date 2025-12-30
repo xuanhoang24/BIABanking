@@ -102,9 +102,9 @@ namespace BankingSystemAPI.Controllers.Admin
 
         [HttpGet("all-transactions")]
         [Authorize(Policy = PermissionCodes.TransactionRead)]
-        public async Task<IActionResult> GetAllTransactions([FromQuery] int limit = 100)
+        public async Task<IActionResult> GetAllTransactions([FromQuery] TransactionFilterDto filter)
         {
-            var transactions = await _customerService.GetAllTransactionsAsync(limit);
+            var transactions = await _customerService.GetAllTransactionsAsync(filter);
             return Ok(transactions);
         }
     }

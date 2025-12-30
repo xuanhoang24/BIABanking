@@ -17,16 +17,19 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Transactions
             _customerApi = customerApi;
         }
 
-        public async Task<IActionResult> Index([FromQuery] int limit = 100)
+        public async Task<IActionResult> Index([FromQuery] TransactionFilterViewModel filter)
         {
-            var transactions = await _customerApi.GetAllTransactionsAsync(limit);
+            filter ??= new TransactionFilterViewModel();
+            var transactions = await _customerApi.GetAllTransactionsAsync(filter);
+            ViewBag.Filter = filter;
             return View(transactions ?? new List<TransactionListViewModel>());
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTransactionsList([FromQuery] int limit = 100)
+        public async Task<IActionResult> GetTransactionsList([FromQuery] TransactionFilterViewModel filter)
         {
-            var transactions = await _customerApi.GetAllTransactionsAsync(limit);
+            filter ??= new TransactionFilterViewModel();
+            var transactions = await _customerApi.GetAllTransactionsAsync(filter);
             return PartialView("_TransactionsList", transactions ?? new List<TransactionListViewModel>());
         }
     }

@@ -2,6 +2,7 @@
 @model List<TransactionListViewModel>
 @{
     ViewData["Title"] = "All Transactions";
+    var filter = ViewBag.Filter as TransactionFilterViewModel ?? new TransactionFilterViewModel();
 }
 
 <div class="container-fluid">
@@ -73,10 +74,64 @@
         </div>
     </div>
 
+    <!-- Filter Section -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filter Transactions</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label for="transactionType" class="form-label">Type</label>
+                    <select id="transactionType" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="Transfer" selected="@(filter.TransactionType == "Transfer")">Transfer</option>
+                        <option value="Deposit" selected="@(filter.TransactionType == "Deposit")">Deposit</option>
+                        <option value="Withdrawal" selected="@(filter.TransactionType == "Withdrawal")">Withdrawal</option>
+                        <option value="Fee" selected="@(filter.TransactionType == "Fee")">Fee</option>
+                        <option value="Interest" selected="@(filter.TransactionType == "Interest")">Interest</option>
+                        <option value="Refund" selected="@(filter.TransactionType == "Refund")">Refund</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Completed" selected="@(filter.Status == "Completed")">Completed</option>
+                        <option value="Pending" selected="@(filter.Status == "Pending")">Pending</option>
+                        <option value="Processing" selected="@(filter.Status == "Processing")">Processing</option>
+                        <option value="Failed" selected="@(filter.Status == "Failed")">Failed</option>
+                        <option value="Cancelled" selected="@(filter.Status == "Cancelled")">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="reference" class="form-label">Reference</label>
+                    <input type="text" id="reference" class="form-control" placeholder="Search reference..." value="@filter.Reference">
+                </div>
+                <div class="col-md-2">
+                    <label for="fromDate" class="form-label">From Date</label>
+                    <input type="date" id="fromDate" class="form-control" value="@(filter.FromDate?.ToString("yyyy-MM-dd"))">
+                </div>
+                <div class="col-md-2">
+                    <label for="toDate" class="form-label">To Date</label>
+                    <input type="date" id="toDate" class="form-control" value="@(filter.ToDate?.ToString("yyyy-MM-dd"))">
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="button" class="btn btn-primary" onclick="applyFilters()">
+                        <i class="bi bi-search"></i> Filter
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                        <i class="bi bi-x-lg"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-list"></i> Transaction History</h5>
-            <span class="badge bg-secondary">Showing: @Model.Count</span>
+            <span class="badge bg-secondary" id="transactionCount">Showing: @Model.Count</span>
         </div>
         <div class="card-body p-0" id="transactionsListContainer">
             @await Html.PartialAsync("_TransactionsList", Model)
@@ -84,24 +139,12 @@
     </div>
 </div>
 
-<script>
-    function updateTransactions() {
-        fetch('@Url.Action("GetTransactionsList", "Transactions", new { area = "Admin" })')
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('transactionsListContainer').innerHTML = html;
-            })
-            .catch(error => console.error('Error updating transactions:', error));
-    }
-
-    setInterval(() => {
-        updateTransactions();
-    }, 30000);
-</script>
-
 @section Scripts {
+    <script src="~/js/admin-transactions.min.js"></script>
     <script>
         $(document).ready(function() {
+            AdminTransactions.init('@Url.Action("GetTransactionsList", "Transactions", new { area = "Admin" })');
+            
             $('#transactionsTable').DataTable({
                 "pageLength": 25,
                 "order": [[7, "desc"]],
@@ -110,5 +153,13 @@
                 }
             });
         });
+
+        function applyFilters() {
+            AdminTransactions.applyFilters();
+        }
+
+        function clearFilters() {
+            AdminTransactions.clearFilters();
+        }
     </script>
 }

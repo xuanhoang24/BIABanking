@@ -13,6 +13,6 @@ namespace BankingSystemAPI.Application.Services.Interfaces.Admin
         Task<bool> ResetCustomerPasswordAsync(int customerId);
         Task<bool> DeleteCustomerAsync(int customerId);
         Task<List<AccountListDto>> GetAllAccountsAsync();
-        Task<List<TransactionListDto>> GetAllTransactionsAsync(int limit = 100);
+        Task<List<TransactionListDto>> GetAllTransactionsAsync(TransactionFilterDto filter);
     }
 }

@@ -251,15 +251,45 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             return accounts;
         }
 
-        public async Task<List<TransactionListDto>> GetAllTransactionsAsync(int limit = 100)
+        public async Task<List<TransactionListDto>> GetAllTransactionsAsync(TransactionFilterDto filter)
         {
-            var transactions = await _context.Transactions
+            var query = _context.Transactions
                 .Include(t => t.FromCustomer)
                 .Include(t => t.ToCustomer)
                 .Include(t => t.FromAccount)
                 .Include(t => t.ToAccount)
+                .AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(filter.TransactionType))
+            {
+                query = query.Where(t => t.Type.ToString() == filter.TransactionType);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Status))
+            {
+                query = query.Where(t => t.Status.ToString() == filter.Status);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Reference))
+            {
+                query = query.Where(t => t.TransactionReference.Contains(filter.Reference));
+            }
+
+            if (filter.FromDate.HasValue)
+            {
+                query = query.Where(t => t.CreatedAt >= filter.FromDate.Value);
+            }
+
+            if (filter.ToDate.HasValue)
+            {
+                var toDateEnd = filter.ToDate.Value.AddDays(1);
+                query = query.Where(t => t.CreatedAt < toDateEnd);
+            }
+
+            var transactions = await query
                 .OrderByDescending(t => t.CreatedAt)
-                .Take(limit)
+                .Take(filter.Limit)
                 .Select(t => new TransactionListDto
                 {
                     Id = t.Id,

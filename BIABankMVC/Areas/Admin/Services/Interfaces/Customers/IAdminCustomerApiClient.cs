@@ -12,6 +12,6 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces.Customers
         Task<bool> ResetCustomerPasswordAsync(int customerId);
         Task<bool> DeleteCustomerAsync(int customerId);
         Task<List<AccountListViewModel>?> GetAllAccountsAsync();
-        Task<List<TransactionListViewModel>?> GetAllTransactionsAsync(int limit = 100);
+        Task<List<TransactionListViewModel>?> GetAllTransactionsAsync(TransactionFilterViewModel? filter = null);
     }
 }

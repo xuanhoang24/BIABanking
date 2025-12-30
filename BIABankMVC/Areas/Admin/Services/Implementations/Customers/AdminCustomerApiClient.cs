@@ -150,11 +150,33 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Customers
             }
         }
 
-        public async Task<List<TransactionListViewModel>?> GetAllTransactionsAsync(int limit = 100)
+        public async Task<List<TransactionListViewModel>?> GetAllTransactionsAsync(TransactionFilterViewModel? filter = null)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/admin/customers/all-transactions?limit={limit}");
+                var queryParams = new List<string>();
+                
+                if (filter != null)
+                {
+                    if (!string.IsNullOrEmpty(filter.TransactionType))
+                        queryParams.Add($"transactionType={Uri.EscapeDataString(filter.TransactionType)}");
+                    if (!string.IsNullOrEmpty(filter.Status))
+                        queryParams.Add($"status={Uri.EscapeDataString(filter.Status)}");
+                    if (!string.IsNullOrEmpty(filter.Reference))
+                        queryParams.Add($"reference={Uri.EscapeDataString(filter.Reference)}");
+                    if (filter.FromDate.HasValue)
+                        queryParams.Add($"fromDate={filter.FromDate.Value:yyyy-MM-dd}");
+                    if (filter.ToDate.HasValue)
+                        queryParams.Add($"toDate={filter.ToDate.Value:yyyy-MM-dd}");
+                    queryParams.Add($"limit={filter.Limit}");
+                }
+                else
+                {
+                    queryParams.Add("limit=100");
+                }
+
+                var queryString = string.Join("&", queryParams);
+                var response = await _httpClient.GetAsync($"api/admin/customers/all-transactions?{queryString}");
                 
                 if (!response.IsSuccessStatusCode)
                     return null;
