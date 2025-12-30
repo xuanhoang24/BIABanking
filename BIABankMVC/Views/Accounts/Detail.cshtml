@@ -62,52 +62,65 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            <h5>Recent Transactions</h5>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Transactions</h5>
+            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#filterPanel">
+                <i class="bi bi-funnel me-1"></i> Filter
+            </button>
         </div>
-        <div class="card-body p-0">
-            @if (Model.RecentTransactions.Any())
-            {
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Transaction</th>
-                            <th class="text-end">Amount</th>
-                            <th class="text-end">Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var tx in Model.RecentTransactions)
-                        {
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold">@tx.Date.ToLocalTime().ToString("MMM dd")</div>
-                                    <div class="text-muted small">@tx.Date.ToLocalTime().ToString("hh:mm tt")</div>
-                                </td>
-                                <td>
-                                    <div class="fw-semibold">@tx.Type</div>
-                                    <div class="text-muted small">@tx.Reference</div>
-                                </td>
-                                <td class="text-end fw-semibold">
-                                    @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
-                                </td>
-                                <td class="text-end fw-semibold">
-                                    @tx.PostBalance.ToString("C")
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <div class="text-center text-muted py-4">
-                    No recent transactions
-                </div>
-            }
+        
+        <div class="collapse" id="filterPanel">
+            <div class="card-body border-bottom bg-light">
+                <form id="filterForm">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label small">Transaction Type</label>
+                            <select id="transactionType" class="form-select form-select-sm">
+                                <option value="">All Types</option>
+                                <option value="Deposit">Deposit</option>
+                                <option value="Withdrawal">Withdrawal</option>
+                                <option value="Transfer">Transfer</option>
+                                <option value="Payment">Payment</option>
+                                <option value="Fee">Fee</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">From Date</label>
+                            <input type="date" id="fromDate" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">To Date</label>
+                            <input type="date" id="toDate" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Reference</label>
+                            <input type="text" id="reference" class="form-control form-control-sm" 
+                                   placeholder="Search by reference..." />
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end gap-1">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="AccountTransactions.applyFilters()">
+                                <i class="bi bi-search"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="AccountTransactions.clearFilters()">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-body p-0" id="transactionsContainer">
+            @await Html.PartialAsync("_TransactionsList", Model.RecentTransactions)
         </div>
     </div>
 
     <a asp-action="Index" class="btn btn-secondary mt-4">Back to Accounts</a>
 </div>
+
+@section Scripts {
+    <script src="~/js/account-transactions.min.js"></script>
+    <script>
+        AccountTransactions.init(@Model.Id);
+    </script>
+}

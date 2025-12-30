@@ -4,6 +4,6 @@ namespace BankingSystemMVC.Services.Interfaces.Accounts
 {
     public interface IAccountViewService
     {
-        Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string timeZoneId);
+        Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string timeZoneId, TransactionFilterViewModel? filter = null);
     }
 }

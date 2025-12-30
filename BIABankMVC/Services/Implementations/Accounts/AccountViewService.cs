@@ -13,9 +13,9 @@ namespace BankingSystemMVC.Services.Implementations.Accounts
             _accountApi = accountApi;
         }
 
-        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string timeZoneId)
+        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, string timeZoneId, TransactionFilterViewModel? filter = null)
         {
-            var apiResult = await _accountApi.GetAccountDetailAsync(accountId);
+            var apiResult = await _accountApi.GetAccountDetailAsync(accountId, filter);
             if (apiResult == null)
                 return null;
 
@@ -32,6 +32,9 @@ namespace BankingSystemMVC.Services.Implementations.Accounts
                     Reference = t.Reference
                 })
                 .ToList();
+
+            apiResult.Filter = filter ?? new TransactionFilterViewModel { AccountId = accountId };
+            apiResult.Filter.AccountId = accountId;
 
             return apiResult;
         }

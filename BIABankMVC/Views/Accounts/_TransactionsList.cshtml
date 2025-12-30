@@ -1,0 +1,44 @@
+@using BankingSystemMVC.Models.ViewModels.Accounts
+@model List<AccountTransactionViewModel>
+
+@if (Model.Any())
+{
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Transaction</th>
+                <th class="text-end">Amount</th>
+                <th class="text-end">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tx in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="fw-semibold">@tx.Date.ToLocalTime().ToString("MMM dd")</div>
+                        <div class="text-muted small">@tx.Date.ToLocalTime().ToString("hh:mm tt")</div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">@tx.Type</div>
+                        <div class="text-muted small">@tx.Reference</div>
+                    </td>
+                    <td class="text-end fw-semibold">
+                        @(tx.Amount >= 0 ? "+" : "-")@Math.Abs(tx.Amount).ToString("C")
+                    </td>
+                    <td class="text-end fw-semibold">
+                        @tx.PostBalance.ToString("C")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="text-center text-muted py-4" id="noTransactions">
+        <p>No transactions match your filter criteria</p>
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="AccountTransactions.clearFilters()">Clear Filters</button>
+    </div>
+}

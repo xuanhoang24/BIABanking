@@ -10,5 +10,6 @@
         public decimal Balance { get; set; }
 
         public List<AccountTransactionViewModel> RecentTransactions { get; set; } = new();
+        public TransactionFilterViewModel Filter { get; set; } = new();
     }
 }

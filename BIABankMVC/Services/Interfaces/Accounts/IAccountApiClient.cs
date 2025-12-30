@@ -6,6 +6,6 @@ namespace BankingSystemMVC.Services.Interfaces.Accounts
     {
         Task<List<AccountSummaryViewModel>> GetMyAccountsAsync();
         Task<(bool Success, string? ErrorMessage)> CreateAccountAsync(CreateAccountViewModel model);
-        Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId);
+        Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, TransactionFilterViewModel? filter = null);
     }
 }

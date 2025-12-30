@@ -52,9 +52,30 @@ namespace BankingSystemMVC.Services.Implementations.Accounts
             return (false, "Failed to create account. Please try again.");
         }
 
-        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId)
+        public async Task<AccountDetailViewModel?> GetAccountDetailAsync(int accountId, TransactionFilterViewModel? filter = null)
         {
-            var response = await _client.GetAsync($"api/accounts/{accountId}");
+            var queryParams = new List<string>();
+
+            if (filter != null)
+            {
+                if (!string.IsNullOrEmpty(filter.TransactionType))
+                    queryParams.Add($"transactionType={Uri.EscapeDataString(filter.TransactionType)}");
+
+                if (filter.FromDate.HasValue)
+                    queryParams.Add($"fromDate={filter.FromDate.Value:yyyy-MM-dd}");
+
+                if (filter.ToDate.HasValue)
+                    queryParams.Add($"toDate={filter.ToDate.Value:yyyy-MM-dd}");
+
+                if (!string.IsNullOrEmpty(filter.Reference))
+                    queryParams.Add($"reference={Uri.EscapeDataString(filter.Reference)}");
+            }
+
+            var url = $"api/accounts/{accountId}";
+            if (queryParams.Any())
+                url += "?" + string.Join("&", queryParams);
+
+            var response = await _client.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
                 return null;

@@ -93,7 +93,12 @@ namespace BankingSystemAPI.Controllers.Accounts
 
         // GET: api/accounts/{id}
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetAccountDetail(int id)
+        public async Task<IActionResult> GetAccountDetail(
+            int id,
+            [FromQuery] string? transactionType = null,
+            [FromQuery] DateTime? fromDate = null,
+            [FromQuery] DateTime? toDate = null,
+            [FromQuery] string? reference = null)
         {
             var customerId = User.GetRequiredUserId();
 
@@ -113,10 +118,34 @@ namespace BankingSystemAPI.Controllers.Accounts
             if (account == null)
                 return NotFound();
 
-            account.RecentTransactions = await _context.LedgerEntries
-                .Where(l => l.AccountId == account.Id)
+            var query = _context.LedgerEntries
+                .Where(l => l.AccountId == account.Id);
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(transactionType))
+            {
+                query = query.Where(l => l.Transaction!.Type.ToString() == transactionType);
+            }
+
+            if (fromDate.HasValue)
+            {
+                query = query.Where(l => l.CreatedAt >= fromDate.Value);
+            }
+
+            if (toDate.HasValue)
+            {
+                var endDate = toDate.Value.Date.AddDays(1);
+                query = query.Where(l => l.CreatedAt < endDate);
+            }
+
+            if (!string.IsNullOrEmpty(reference))
+            {
+                query = query.Where(l => l.Transaction!.TransactionReference.Contains(reference));
+            }
+
+            account.RecentTransactions = await query
                 .OrderByDescending(l => l.CreatedAt)
-                .Take(10)
+                .Take(50)
                 .Select(l => new AccountTransactionDto
                 {
                     Reference = l.Transaction!.TransactionReference,

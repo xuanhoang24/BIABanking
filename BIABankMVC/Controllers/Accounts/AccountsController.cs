@@ -76,19 +76,38 @@ namespace BankingSystemMVC.Controllers.Accounts
 
         // ACCOUNT DETAILS
         // GET: /Accounts/Details/{id}
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(int id, [FromQuery] TransactionFilterViewModel filter)
         {
             var timeZoneId = Request.Cookies["timezone"];
 
             if (string.IsNullOrWhiteSpace(timeZoneId))
                 timeZoneId = TimeZoneInfo.Local.Id;
 
-            var account = await _accountViewService.GetAccountDetailAsync(id, timeZoneId);
+            filter.AccountId = id;
+            var account = await _accountViewService.GetAccountDetailAsync(id, timeZoneId, filter);
 
             if (account == null)
                 return RedirectToAction(nameof(Index));
 
             return View(account);
+        }
+
+        // GET: /Accounts/GetTransactions/{id}
+        [HttpGet]
+        public async Task<IActionResult> GetTransactions(int id, [FromQuery] TransactionFilterViewModel filter)
+        {
+            var timeZoneId = Request.Cookies["timezone"];
+
+            if (string.IsNullOrWhiteSpace(timeZoneId))
+                timeZoneId = TimeZoneInfo.Local.Id;
+
+            filter.AccountId = id;
+            var account = await _accountViewService.GetAccountDetailAsync(id, timeZoneId, filter);
+
+            if (account == null)
+                return NotFound();
+
+            return PartialView("_TransactionsList", account.RecentTransactions);
         }
     }
 }
