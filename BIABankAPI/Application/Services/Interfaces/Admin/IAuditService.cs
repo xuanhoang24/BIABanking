@@ -22,6 +22,8 @@ namespace BankingSystemAPI.Application.Services.Interfaces.Admin
             int? actionFilter = null,
             string? entityFilter = null,
             string? customerIdFilter = null,
-            DateTime? dateFilter = null);
+            string? searchRef = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null);
     }
 }

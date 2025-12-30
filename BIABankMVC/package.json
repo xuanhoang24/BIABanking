@@ -7,7 +7,8 @@
     "obfuscate-verify": "javascript-obfuscator wwwroot/js/verify-email.js --output wwwroot/js/verify-email.min.js --compact true --control-flow-flattening true --dead-code-injection true --string-array true --string-array-threshold 0.75 --self-defending true",
     "obfuscate-account-transactions": "javascript-obfuscator wwwroot/js/account-transactions.js --output wwwroot/js/account-transactions.min.js --compact true --control-flow-flattening true --dead-code-injection true --string-array true --string-array-threshold 0.75 --self-defending true",
     "obfuscate-admin-transactions": "javascript-obfuscator wwwroot/js/admin-transactions.js --output wwwroot/js/admin-transactions.min.js --compact true --control-flow-flattening true --dead-code-injection true --string-array true --string-array-threshold 0.75 --self-defending true",
-    "obfuscate-all": "npm run obfuscate-app && npm run obfuscate-register && npm run obfuscate-transfer && npm run obfuscate-password && npm run obfuscate-verify && npm run obfuscate-account-transactions && npm run obfuscate-admin-transactions"
+    "obfuscate-admin-audit": "javascript-obfuscator wwwroot/js/admin-audit-filters.js --output wwwroot/js/admin-audit-filters.min.js --compact true --control-flow-flattening true --dead-code-injection true --string-array true --string-array-threshold 0.75 --self-defending true",
+    "obfuscate-all": "npm run obfuscate-app && npm run obfuscate-register && npm run obfuscate-transfer && npm run obfuscate-password && npm run obfuscate-verify && npm run obfuscate-account-transactions && npm run obfuscate-admin-transactions && npm run obfuscate-admin-audit"
   },
   "devDependencies": {
     "javascript-obfuscator": "^5.1.0"

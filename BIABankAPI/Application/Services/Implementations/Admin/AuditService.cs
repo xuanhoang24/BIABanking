@@ -69,7 +69,9 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
             int? actionFilter = null,
             string? entityFilter = null,
             string? customerIdFilter = null,
-            DateTime? dateFilter = null)
+            string? searchRef = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
         {
             var query = _context.AuditLogs.AsNoTracking();
 
@@ -89,10 +91,23 @@ namespace BankingSystemAPI.Application.Services.Implementations.Admin
                 query = query.Where(a => a.CustomerId == customerId);
             }
 
-            if (dateFilter.HasValue)
+            if (!string.IsNullOrEmpty(searchRef))
             {
-                var filterDate = dateFilter.Value.Date;
-                query = query.Where(a => a.CreatedAt.Date == filterDate);
+                query = query.Where(a => a.Description.Contains(searchRef) || 
+                                         a.EntityType.Contains(searchRef) ||
+                                         (a.Metadata != null && a.Metadata.Contains(searchRef)));
+            }
+
+            if (fromDate.HasValue)
+            {
+                var startDate = fromDate.Value.Date;
+                query = query.Where(a => a.CreatedAt >= startDate);
+            }
+
+            if (toDate.HasValue)
+            {
+                var endDate = toDate.Value.Date.AddDays(1);
+                query = query.Where(a => a.CreatedAt < endDate);
             }
 
             return await query

@@ -11,6 +11,8 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces.Audit
             int? actionFilter = null,
             string? entityFilter = null,
             string? customerIdFilter = null,
-            DateTime? dateFilter = null);
+            string? searchRef = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null);
     }
 }

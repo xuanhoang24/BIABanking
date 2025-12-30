@@ -46,9 +46,11 @@ namespace BankingSystemAPI.Controllers.Admin
             [FromQuery] int? actionFilter = null,
             [FromQuery] string? entityFilter = null,
             [FromQuery] string? userIdFilter = null,
-            [FromQuery] DateTime? dateFilter = null)
+            [FromQuery] string? searchRef = null,
+            [FromQuery] DateTime? fromDate = null,
+            [FromQuery] DateTime? toDate = null)
         {
-            var logs = await _audit.GetFilteredAsync(page, pageSize, actionFilter, entityFilter, userIdFilter, dateFilter);
+            var logs = await _audit.GetFilteredAsync(page, pageSize, actionFilter, entityFilter, userIdFilter, searchRef, fromDate, toDate);
 
             var result = logs.Select(l => new AuditLogDto
             {

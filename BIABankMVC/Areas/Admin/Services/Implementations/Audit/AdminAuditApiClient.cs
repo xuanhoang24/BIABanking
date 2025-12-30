@@ -25,7 +25,9 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Audit
             int? actionFilter = null,
             string? entityFilter = null,
             string? customerIdFilter = null,
-            DateTime? dateFilter = null)
+            string? searchRef = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null)
         {
             var queryParams = new List<string>
             {
@@ -37,13 +39,19 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Audit
                 queryParams.Add($"actionFilter={actionFilter}");
 
             if (!string.IsNullOrEmpty(entityFilter))
-                queryParams.Add($"entityFilter={entityFilter}");
+                queryParams.Add($"entityFilter={Uri.EscapeDataString(entityFilter)}");
 
             if (!string.IsNullOrEmpty(customerIdFilter))
-                queryParams.Add($"customerIdFilter={customerIdFilter}");
+                queryParams.Add($"userIdFilter={Uri.EscapeDataString(customerIdFilter)}");
 
-            if (dateFilter.HasValue)
-                queryParams.Add($"dateFilter={dateFilter:yyyy-MM-dd}");
+            if (!string.IsNullOrEmpty(searchRef))
+                queryParams.Add($"searchRef={Uri.EscapeDataString(searchRef)}");
+
+            if (fromDate.HasValue)
+                queryParams.Add($"fromDate={fromDate:yyyy-MM-dd}");
+
+            if (toDate.HasValue)
+                queryParams.Add($"toDate={toDate:yyyy-MM-dd}");
 
             var queryString = string.Join("&", queryParams);
             var url = $"api/admin/audit/all?{queryString}";

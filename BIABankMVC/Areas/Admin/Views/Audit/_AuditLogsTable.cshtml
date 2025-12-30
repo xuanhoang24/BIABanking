@@ -1,0 +1,90 @@
+@using BankingSystemMVC.Areas.Admin.Models.ViewModels.Audit
+@model List<AuditLogViewModel>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0" id="auditTable">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 80px;">
+                        <i class="bi bi-hash"></i> Action
+                    </th>
+                    <th style="width: 150px;">
+                        <i class="bi bi-box"></i> Entity
+                    </th>
+                    <th style="width: 100px;">
+                        <i class="bi bi-person"></i> User ID
+                    </th>
+                    <th>
+                        <i class="bi bi-info-circle"></i> Description
+                    </th>
+                    <th style="width: 180px;">
+                        <i class="bi bi-clock"></i> Date
+                    </th>
+                    <th style="width: 100px;">
+                        <i class="bi bi-gear"></i> Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge bg-primary fs-6">
+                                @log.ActionNumber
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted fw-bold">
+                                @log.Entity
+                            </small>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">
+                                @log.CustomerId
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-dark">@log.Description</span>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar"></i>
+                                @log.Date
+                            </small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info" 
+                                    onclick="showLogDetails(this, @log.Id)"
+                                    data-log-id="@log.Id"
+                                    data-action="@log.ActionNumber"
+                                    data-entity="@Html.Encode(log.Entity)"
+                                    data-customerid="@log.CustomerId"
+                                    data-description="@Html.Encode(log.Description)"
+                                    data-date="@log.Date"
+                                    data-ip="@Html.Encode(log.IpAddress ?? "N/A")"
+                                    data-useragent="@Html.Encode(log.UserAgent ?? "N/A")"
+                                    data-metadata="@Html.Encode(log.Metadata ?? "")"
+                                    title="View Details">
+                                <i class="bi bi-info-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="bi bi-search fs-1 text-muted mb-3"></i>
+        <h4 class="text-muted">No Audit Logs Found</h4>
+        <p class="text-muted">No audit logs match your current filters or none exist yet.</p>
+        <button class="btn btn-outline-primary" onclick="AdminAuditFilters.clearFilters()">
+            <i class="bi bi-arrow-clockwise"></i> Clear Filters
+        </button>
+    </div>
+}

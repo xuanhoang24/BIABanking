@@ -2,235 +2,126 @@
 @model List<AuditLogViewModel>
 @{
     ViewData["Title"] = "Audit Logs";
+    var filter = ViewBag.Filter as AuditFilterViewModel ?? new AuditFilterViewModel();
 }
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>Audit Logs</h1>
-                <div>
-                    <button class="btn btn-outline-secondary" onclick="refreshLogs()">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
-                    <button class="btn btn-outline-primary" onclick="exportLogs()">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            </div>
+            <h1><i class="bi bi-journal-text"></i> Audit Logs</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Audit Logs</li>
+                </ol>
+            </nav>
         </div>
     </div>
 
-    <!-- Filters -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-filter"></i> Filters
-                        <button class="btn btn-sm btn-outline-secondary float-end" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </h5>
+    <!-- Filter Section -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filter Audit Logs</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label for="actionFilter" class="form-label">Action</label>
+                    <select class="form-select" id="actionFilter">
+                        <option value="">All Actions</option>
+                        @for (int i = 1; i <= 22; i++)
+                        {
+                            var actionName = i switch
+                            {
+                                1 => "User Registration",
+                                2 => "User Login",
+                                3 => "User Logout",
+                                4 => "Account Created",
+                                5 => "Account Frozen",
+                                6 => "Account Unfrozen",
+                                7 => "Password Changed",
+                                8 => "Profile Updated",
+                                9 => "Admin Login",
+                                10 => "Admin Logout",
+                                11 => "Admin Action",
+                                12 => "Suspicious Activity",
+                                13 => "Transaction Initiated",
+                                14 => "Transaction Completed",
+                                15 => "Transaction Failed",
+                                16 => "KYC Submitted",
+                                17 => "KYC Approved",
+                                18 => "KYC Rejected",
+                                19 => "KYC Document Uploaded",
+                                20 => "Report Created",
+                                21 => "Report Status Updated",
+                                22 => "Customer Deleted",
+                                _ => "Unknown"
+                            };
+                            var isSelected = filter.ActionFilter == i;
+                            <option value="@i" selected="@isSelected">@actionName (@i)</option>
+                        }
+                    </select>
                 </div>
-                <div class="collapse" id="filterCollapse">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label class="form-label">Action</label>
-                                <select class="form-select" id="actionFilter">
-                                    <option value="">All Actions</option>
-                                    <option value="1">User Registration (1)</option>
-                                    <option value="2">User Login (2)</option>
-                                    <option value="3">User Logout (3)</option>
-                                    <option value="4">Account Created (4)</option>
-                                    <option value="5">Account Frozen (5)</option>
-                                    <option value="6">Account Unfrozen (6)</option>
-                                    <option value="7">Password Changed (7)</option>
-                                    <option value="8">Profile Updated (8)</option>
-                                    <option value="9">Admin Login (9)</option>
-                                    <option value="10">Admin Logout (10)</option>
-                                    <option value="11">Admin Action (11)</option>
-                                    <option value="12">Suspicious Activity (12)</option>
-                                    <option value="13">Transaction Initiated (13)</option>
-                                    <option value="14">Transaction Completed (14)</option>
-                                    <option value="15">Transaction Failed (15)</option>
-                                    <option value="16">KYC Submitted (16)</option>
-                                    <option value="17">KYC Approved (17)</option>
-                                    <option value="18">KYC Rejected (18)</option>
-                                    <option value="19">KYC Document Uploaded (19)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Entity Type</label>
-                                <select class="form-select" id="entityFilter">
-                                    <option value="">All Entities</option>
-                                    <option value="User">User</option>
-                                    <option value="Account">Account</option>
-                                    <option value="Transaction">Transaction</option>
-                                    <option value="KYCDocument">KYC Document</option>
-                                    <option value="AdminUser">Admin User</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Customer ID</label>
-                                <input type="text" class="form-control" id="customerIdFilter" placeholder="Enter Customer ID">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Date Range</label>
-                                <input type="date" class="form-control" id="dateFilter">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <button class="btn btn-primary" onclick="applyFilters()">
-                                    <i class="fas fa-search"></i> Apply Filters
-                                </button>
-                                <button class="btn btn-outline-secondary" onclick="clearFilters()">
-                                    <i class="fas fa-times"></i> Clear
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-2">
+                    <label for="entityFilter" class="form-label">Entity Type</label>
+                    <select class="form-select" id="entityFilter">
+                        <option value="">All Entities</option>
+                        @{
+                            var entities = new[] { "User", "Customer", "Account", "Transaction", "KYCDocument", "AdminUser" };
+                            foreach (var entity in entities)
+                            {
+                                var isSelected = filter.EntityFilter == entity;
+                                <option value="@entity" selected="@isSelected">@entity</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="searchRef" class="form-label">Search</label>
+                    <input type="text" id="searchRef" class="form-control" placeholder="Search description..." value="@filter.SearchRef">
+                </div>
+                <div class="col-md-1">
+                    <label for="customerIdFilter" class="form-label">User ID</label>
+                    <input type="text" class="form-control" id="customerIdFilter" placeholder="ID" value="@filter.CustomerIdFilter">
+                </div>
+                <div class="col-md-2">
+                    <label for="fromDate" class="form-label">From Date</label>
+                    <input type="date" id="fromDate" class="form-control" value="@(filter.FromDate?.ToString("yyyy-MM-dd"))">
+                </div>
+                <div class="col-md-2">
+                    <label for="toDate" class="form-label">To Date</label>
+                    <input type="date" id="toDate" class="form-control" value="@(filter.ToDate?.ToString("yyyy-MM-dd"))">
+                </div>
+                <div class="col-md-1 d-flex align-items-end gap-2">
+                    <button type="button" class="btn btn-primary" onclick="AdminAuditFilters.applyFilters()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="AdminAuditFilters.clearFilters()">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Audit Logs Table -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list"></i> System Audit Logs
-                        <span class="badge bg-secondary ms-2" id="logCount">@(Model?.Count ?? 0) records</span>
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    @if (Model != null && Model.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover mb-0" id="auditTable">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th style="width: 80px;">
-                                            <i class="fas fa-hashtag"></i> Action
-                                        </th>
-                                        <th style="width: 150px;">
-                                            <i class="fas fa-cube"></i> Entity
-                                        </th>
-                                        <th style="width: 100px;">
-                                            <i class="fas fa-user"></i> User ID
-                                        </th>
-                                        <th>
-                                            <i class="fas fa-info-circle"></i> Description
-                                        </th>
-                                        <th style="width: 180px;">
-                                            <i class="fas fa-clock"></i> Date
-                                        </th>
-                                        <th style="width: 100px;">
-                                            <i class="fas fa-cog"></i> Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var log in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <span class="badge bg-primary fs-6">
-                                                    @log.ActionNumber
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <small class="text-muted fw-bold">
-                                                    @log.Entity
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-info">
-                                                    @log.CustomerId
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="text-dark">@log.Description</span>
-                                            </td>
-                                            <td>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-calendar-alt"></i>
-                                                    @log.Date
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-info" 
-                                                        onclick="showLogDetails(this, @log.Id)"
-                                                        data-log-id="@log.Id"
-                                                        data-action="@log.ActionNumber"
-                                                        data-entity="@Html.Encode(log.Entity)"
-                                                        data-customerid="@log.CustomerId"
-                                                        data-description="@Html.Encode(log.Description)"
-                                                        data-date="@log.Date"
-                                                        data-ip="@Html.Encode(log.IpAddress ?? "N/A")"
-                                                        data-useragent="@Html.Encode(log.UserAgent ?? "N/A")"
-                                                        data-metadata="@Html.Encode(log.Metadata ?? "")"
-                                                        title="View Details">
-                                                    <i class="fas fa-info-circle"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-5">
-                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                            <h4 class="text-muted">No Audit Logs Found</h4>
-                            <p class="text-muted">No audit logs match your current filters or none exist yet.</p>
-                            <button class="btn btn-outline-primary" onclick="clearFilters()">
-                                <i class="fas fa-refresh"></i> Clear Filters
-                            </button>
-                        </div>
-                    }
-                </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list"></i> System Audit Logs</h5>
+            <div>
+                <span class="badge bg-secondary me-2" id="logCount">@(Model?.Count ?? 0) records</span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="AdminAuditFilters.refreshLogs()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary" onclick="AdminAuditFilters.exportLogs()">
+                    <i class="bi bi-download"></i> Export
+                </button>
             </div>
+        </div>
+        <div class="card-body p-0" id="auditLogsContainer">
+            @await Html.PartialAsync("_AuditLogsTable", Model)
         </div>
     </div>
-
-    <!-- Pagination -->
-    @if (Model != null && Model.Any())
-    {
-        <div class="row mt-4">
-            <div class="col-12">
-                <nav aria-label="Audit logs pagination">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">
-                                <i class="fas fa-chevron-left"></i> Previous
-                            </a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                Next <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    }
 </div>
 
 <!-- Audit Log Details Modal -->
@@ -239,7 +130,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="logDetailsModalLabel">
-                    <i class="fas fa-info-circle"></i> Audit Log Details
+                    <i class="bi bi-info-circle"></i> Audit Log Details
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -248,7 +139,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="fas fa-info"></i> Basic Information</h6>
+                                <h6 class="mb-0"><i class="bi bi-info"></i> Basic Information</h6>
                             </div>
                             <div class="card-body">
                                 <table class="table table-sm">
@@ -279,7 +170,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="fas fa-network-wired"></i> Technical Details</h6>
+                                <h6 class="mb-0"><i class="bi bi-hdd-network"></i> Technical Details</h6>
                             </div>
                             <div class="card-body">
                                 <table class="table table-sm">
@@ -300,7 +191,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="fas fa-file-alt"></i> Description</h6>
+                                <h6 class="mb-0"><i class="bi bi-file-text"></i> Description</h6>
                             </div>
                             <div class="card-body">
                                 <p id="modal-description" class="mb-0"></p>
@@ -312,7 +203,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0"><i class="fas fa-code"></i> Metadata</h6>
+                                <h6 class="mb-0"><i class="bi bi-code"></i> Metadata</h6>
                             </div>
                             <div class="card-body">
                                 <pre id="modal-metadata" class="bg-light p-3 rounded" style="font-size: 0.85rem;"></pre>
@@ -323,10 +214,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times"></i> Close
+                    <i class="bi bi-x"></i> Close
                 </button>
                 <button type="button" class="btn btn-primary" onclick="copyLogDetails()">
-                    <i class="fas fa-copy"></i> Copy Details
+                    <i class="bi bi-clipboard"></i> Copy Details
                 </button>
             </div>
         </div>
@@ -388,143 +279,82 @@
     }
 </style>
 
-<script>
-    function refreshLogs() {
-        location.reload();
-    }
-    
-    function exportLogs() {
-        // TODO: Implement export functionality
-        alert('Export functionality will be implemented soon');
-    }
-    
-    function applyFilters() {
-        // TODO: Implement filtering functionality
-        const action = document.getElementById('actionFilter').value;
-        const entity = document.getElementById('entityFilter').value;
-        const customerId = document.getElementById('customerIdFilter').value;
-        const date = document.getElementById('dateFilter').value;
-        
-        console.log('Applying filters:', { action, entity, customerId, date });
-        alert('Filter functionality will be implemented soon');
-    }
-    
-    function clearFilters() {
-        document.getElementById('actionFilter').value = '';
-        document.getElementById('entityFilter').value = '';
-        document.getElementById('customerIdFilter').value = '';
-        document.getElementById('dateFilter').value = '';
-    }
-    
-    // Show log details in modal
-    function showLogDetails(button, logId) {
-        console.log('showLogDetails called with logId:', logId);
-        console.log('Button:', button);
-        
-        if (!button) {
-            console.error('Button not found');
-            alert('Error: Button not found');
-            return;
+@section Scripts {
+    <script src="~/js/admin-audit-filters.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            AdminAuditFilters.init('@Url.Action("Index", "Audit", new { area = "Admin" })');
+        });
+
+        function showLogDetails(button, logId) {
+            if (!button) return;
+            
+            try {
+                const logData = {
+                    Id: button.getAttribute('data-log-id'),
+                    ActionNumber: button.getAttribute('data-action'),
+                    Entity: button.getAttribute('data-entity'),
+                    CustomerId: button.getAttribute('data-customerid'),
+                    Description: button.getAttribute('data-description'),
+                    Date: button.getAttribute('data-date'),
+                    IpAddress: button.getAttribute('data-ip'),
+                    UserAgent: button.getAttribute('data-useragent'),
+                    Metadata: button.getAttribute('data-metadata')
+                };
+                
+                document.getElementById('modal-id').textContent = logData.Id || 'N/A';
+                document.getElementById('modal-action').innerHTML = `<span class="badge bg-primary">${logData.ActionNumber}</span>`;
+                document.getElementById('modal-entity').textContent = logData.Entity || 'N/A';
+                document.getElementById('modal-customerid').innerHTML = `<span class="badge bg-info">${logData.CustomerId}</span>`;
+                document.getElementById('modal-date').textContent = logData.Date || 'N/A';
+                document.getElementById('modal-ip').textContent = logData.IpAddress || 'N/A';
+                document.getElementById('modal-useragent').textContent = logData.UserAgent || 'N/A';
+                document.getElementById('modal-description').textContent = logData.Description || 'N/A';
+                
+                const metadataSection = document.getElementById('metadata-section');
+                const metadataElement = document.getElementById('modal-metadata');
+                
+                if (logData.Metadata && logData.Metadata.trim() !== '') {
+                    metadataSection.style.display = 'block';
+                    try {
+                        const parsedMetadata = JSON.parse(logData.Metadata);
+                        metadataElement.textContent = JSON.stringify(parsedMetadata, null, 2);
+                    } catch {
+                        metadataElement.textContent = logData.Metadata;
+                    }
+                } else {
+                    metadataSection.style.display = 'none';
+                }
+                
+                const modal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Error displaying log details:', error);
+            }
         }
         
-        try {
-            // Get data from button attributes
-            const logData = {
-                Id: button.getAttribute('data-log-id'),
-                ActionNumber: button.getAttribute('data-action'),
-                Entity: button.getAttribute('data-entity'),
-                CustomerId: button.getAttribute('data-customerid'),
-                Description: button.getAttribute('data-description'),
-                Date: button.getAttribute('data-date'),
-                IpAddress: button.getAttribute('data-ip'),
-                UserAgent: button.getAttribute('data-useragent'),
-                Metadata: button.getAttribute('data-metadata')
+        function copyLogDetails() {
+            const details = {
+                id: document.getElementById('modal-id').textContent,
+                action: document.getElementById('modal-action').textContent,
+                entity: document.getElementById('modal-entity').textContent,
+                customerId: document.getElementById('modal-customerid').textContent,
+                date: document.getElementById('modal-date').textContent,
+                ipAddress: document.getElementById('modal-ip').textContent,
+                userAgent: document.getElementById('modal-useragent').textContent,
+                description: document.getElementById('modal-description').textContent,
+                metadata: document.getElementById('modal-metadata').textContent
             };
             
-            // Populate basic information
-            document.getElementById('modal-id').textContent = logData.Id || 'N/A';
-            document.getElementById('modal-action').innerHTML = `<span class="badge bg-primary">${logData.ActionNumber}</span>`;
-            document.getElementById('modal-entity').textContent = logData.Entity || 'N/A';
-            document.getElementById('modal-customerid').innerHTML = `<span class="badge bg-info">${logData.CustomerId}</span>`;
-            document.getElementById('modal-date').textContent = logData.Date || 'N/A';
-            
-            // Populate technical details
-            document.getElementById('modal-ip').textContent = logData.IpAddress || 'N/A';
-            document.getElementById('modal-useragent').textContent = logData.UserAgent || 'N/A';
-            
-            // Populate description
-            document.getElementById('modal-description').textContent = logData.Description || 'N/A';
-            
-            // Handle metadata
-            const metadataSection = document.getElementById('metadata-section');
-            const metadataElement = document.getElementById('modal-metadata');
-            
-            if (logData.Metadata && logData.Metadata.trim() !== '') {
-                metadataSection.style.display = 'block';
-                try {
-                    // Try to format as JSON if possible
-                    const parsedMetadata = JSON.parse(logData.Metadata);
-                    metadataElement.textContent = JSON.stringify(parsedMetadata, null, 2);
-                } catch {
-                    // If not JSON, display as plain text
-                    metadataElement.textContent = logData.Metadata;
-                }
-            } else {
-                metadataSection.style.display = 'none';
-            }
-            
-            // Show the modal
-            const modalElement = document.getElementById('logDetailsModal');
-            console.log('Modal element:', modalElement);
-            
-            if (typeof bootstrap !== 'undefined') {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-                console.log('Modal shown');
-            } else {
-                console.error('Bootstrap not found');
-                alert('Bootstrap not loaded');
-            }
-            
-        } catch (error) {
-            console.error('Error displaying log details:', error);
-            alert('Error displaying log details: ' + error.message);
+            const detailsText = Object.entries(details)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n');
+                
+            navigator.clipboard.writeText(detailsText).then(() => {
+                alert('Log details copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy to clipboard');
+            });
         }
-    }
-    
-    // Copy log details to clipboard
-    function copyLogDetails() {
-        const details = {
-            id: document.getElementById('modal-id').textContent,
-            action: document.getElementById('modal-action').textContent,
-            entity: document.getElementById('modal-entity').textContent,
-            customerId: document.getElementById('modal-customerid').textContent,
-            date: document.getElementById('modal-date').textContent,
-            ipAddress: document.getElementById('modal-ip').textContent,
-            userAgent: document.getElementById('modal-useragent').textContent,
-            description: document.getElementById('modal-description').textContent,
-            metadata: document.getElementById('modal-metadata').textContent
-        };
-        
-        const detailsText = Object.entries(details)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join('\n');
-            
-        navigator.clipboard.writeText(detailsText).then(() => {
-            alert('Log details copied to clipboard!');
-        }).catch(() => {
-            alert('Failed to copy to clipboard');
-        });
-    }
-
-    // Auto-refresh every 30 seconds
-    setInterval(function() {
-        const refreshBtn = document.querySelector('[onclick="refreshLogs()"]');
-        if (refreshBtn) {
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        }
-    }, 30000);
-</script>
+    </script>
+}
