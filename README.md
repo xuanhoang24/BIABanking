@@ -11,6 +11,7 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 | **Authentication** | JWT Bearer Tokens |
 | **Real-time** | SignalR |
 | **Infrastructure** | Docker, Docker Compose, Nginx |
+| **Monitoring** | New Relic APM |
 | **Email** | Resend API |
 
 ## Features
@@ -69,30 +70,23 @@ A comprehensive banking system simulation built with ASP.NET Core 9.0, featuring
 - Database migrations
 - Nginx reverse proxy
 - Email notifications via Resend
+- Application Performance Monitoring (APM) via New Relic
 - Secure API architecture with MVC pattern
 
 ## Architecture
 The application follows a clean architecture pattern with clear separation of concerns:
-```
-   ┌─────────────┐
-   │   Browser   │
-   └──────┬──────┘
-          │
-┌─────────▼──────────┐
-│       NGINX        │
-└────┬────────────┬──┘
-     │            │
-┌────▼─────┐      │
-│   MVC    │──────│
-│(Frontend)│      │
-└──────────┘  ┌───▼────────┐
-              │    API     │
-              │ (Backend)  │
-              └───┬────────┘
-                  │
-              ┌───▼──────┐
-              │ Database │
-              └──────────┘
+
+```mermaid
+graph TB
+    Browser[Browser] --> NGINX[NGINX Reverse Proxy]
+    NGINX --> MVC[ASP.NET Core MVC]
+    NGINX --> API[ASP.NET Core API]
+    MVC --> API
+    API --> DB[(SQLite Database)]
+    MVC --> NR[New Relic APM]
+    API --> NR
+    API --> SH[SignalR Hub]
+    API --> RS[Resend Email]
 ```
 
 ## Clean Architecture Layers
@@ -117,6 +111,10 @@ RESEND_API_KEY=your-resend-api-key
 RESEND_FROM_EMAIL=noreply@yourdomain.com
 RESEND_FROM_NAME=BIABank
 
+# New Relic Configuration
+NEW_RELIC_LICENSE_KEY=your-new-relic-license-key
+NEW_RELIC_API_KEY=your-new-relic-api-key
+
 # Application Settings
 APP_BASE_URL=https://yourdomain.com
 ```
@@ -125,6 +123,26 @@ APP_BASE_URL=https://yourdomain.com
 The application uses SQLite by default. The connection string is configured in:
 - **Development**: `appsettings.Development.json`
 - **Production**: Docker environment variables
+
+### New Relic Monitoring
+
+The application includes New Relic APM integration for performance monitoring.
+
+**Setup:**
+1. Get your New Relic license key and API key from your [New Relic account](https://one.newrelic.com/)
+2. Add keys to your `.env` file:
+   ```env
+   NEW_RELIC_LICENSE_KEY=your-license-key
+   NEW_RELIC_API_KEY=your-api-key
+   ```
+3. Build the base image first:
+   ```bash
+   docker-compose build dotnet-newrelic-base
+   ```
+
+**Monitored Applications:**
+- `BIABank-API` - Backend API service
+- `BIABank-MVC` - Frontend web application
 
 ## Getting Started
 
