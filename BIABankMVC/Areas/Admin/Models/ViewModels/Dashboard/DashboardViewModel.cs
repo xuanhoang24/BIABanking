@@ -6,5 +6,6 @@ namespace BankingSystemMVC.Areas.Admin.Models.ViewModels.Dashboard
     {
         public DashboardStatsViewModel Stats { get; set; } = new();
         public List<AuditLogViewModel> RecentAuditLogs { get; set; } = new();
+        public SystemStatusViewModel? SystemStatus { get; set; }
     }
 }

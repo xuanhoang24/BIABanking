@@ -10,6 +10,9 @@
       - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
       - RESEND_FROM_NAME=${RESEND_FROM_NAME}
       - AppSettings__BaseUrl=${APP_BASE_URL}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=BIABank-API
+      - NEW_RELIC_API_KEY=${NEW_RELIC_API_KEY}
     volumes:
       - sqlite_data:/app/data
     restart: unless-stopped
@@ -23,6 +26,8 @@
       - ASPNETCORE_ENVIRONMENT=Production
       - ApiSettings__BaseUrl=http://api:8080/
       - Jwt__Key=${JWT_SECRET_KEY}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=BIABank-MVC
     restart: unless-stopped
 
   nginx:
@@ -39,6 +44,11 @@
       - web
       - api
     restart: unless-stopped
+
+  dotnet-newrelic-base:
+      build:
+        context: ./docker/dotnet-newrelic-base
+      image: dotnet-newrelic-base
 
 volumes:
   sqlite_data:

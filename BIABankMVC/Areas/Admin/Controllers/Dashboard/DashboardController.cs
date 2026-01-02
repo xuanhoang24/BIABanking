@@ -25,11 +25,13 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Dashboard
         {
             var logs = await _auditApi.GetRecentAsync();
             var stats = await _dashboardApi.GetDashboardStatsAsync();
+            var systemStatus = await _dashboardApi.GetSystemStatusAsync();
 
             var viewModel = new DashboardViewModel
             {
                 Stats = stats ?? new DashboardStatsViewModel(),
-                RecentAuditLogs = logs ?? new List<AuditLogViewModel>()
+                RecentAuditLogs = logs ?? new List<AuditLogViewModel>(),
+                SystemStatus = systemStatus
             };
 
             return View(viewModel);
@@ -47,6 +49,13 @@ namespace BankingSystemMVC.Areas.Admin.Controllers.Dashboard
         {
             var logs = await _auditApi.GetRecentAsync();
             return PartialView("_RecentActivity", logs ?? new List<AuditLogViewModel>());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSystemStatus()
+        {
+            var systemStatus = await _dashboardApi.GetSystemStatusAsync();
+            return PartialView("_SystemStatus", systemStatus);
         }
     }
 }

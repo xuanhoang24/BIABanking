@@ -1,0 +1,111 @@
+@model BankingSystemMVC.Areas.Admin.Models.ViewModels.Dashboard.SystemStatusViewModel
+
+@if (Model == null)
+{
+    <div class="text-center py-4">
+        <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+        <p class="text-muted mt-2">Unable to fetch status</p>
+    </div>
+}
+else
+{
+    @* API Server *@
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+            <span class="status-dot bg-success me-2"></span>
+            <span>API Server</span>
+        </div>
+        <span class="badge bg-success">Online</span>
+    </div>
+    
+    <div class="row g-2 mb-3">
+        <div class="col-6">
+            <div class="text-center p-2 border rounded">
+                <div class="small text-muted">Uptime</div>
+                <div class="fw-semibold">@FormatUptime(Model.Api.Uptime)</div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center p-2 border rounded">
+                <div class="small text-muted">Memory</div>
+                <div class="fw-semibold">@Model.Api.MemoryUsageMB MB</div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-3" />
+
+    @* Application Monitoring *@
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <span class="small text-muted">Application Monitoring</span>
+    </div>
+
+    @if (Model.Applications.Any())
+    {
+        foreach (var app in Model.Applications)
+        {
+            <div class="d-flex align-items-center justify-content-between mb-2 p-2 border rounded">
+                <div class="d-flex align-items-center">
+                    <span class="@GetHealthDotClass(app.HealthStatus) me-2"></span>
+                    <span class="small">@app.AppName</span>
+                </div>
+                @if (app.Reporting)
+                {
+                    <span class="badge bg-success-subtle text-success small">Live</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary-subtle text-secondary small">Offline</span>
+                }
+            </div>
+        }
+        
+        <a href="https://one.newrelic.com" target="_blank" class="btn btn-sm btn-outline-primary w-100 mt-2">
+            <i class="bi bi-box-arrow-up-right me-1"></i>View Details in New Relic
+        </a>
+    }
+    else if (!string.IsNullOrEmpty(Model.NewRelicError))
+    {
+        <div class="small text-muted text-center py-2">
+            <i class="bi bi-exclamation-circle me-1"></i>@Model.NewRelicError
+        </div>
+    }
+    else
+    {
+        <div class="small text-muted text-center py-2">
+            No monitoring data available
+        </div>
+    }
+
+    <hr class="my-3" />
+    
+    <div class="text-center">
+        <small class="text-muted">Updated @Model.Timestamp.ToString("HH:mm:ss") UTC</small>
+    </div>
+}
+
+@functions {
+    string FormatUptime(TimeSpan uptime)
+    {
+        if (uptime.TotalDays >= 1) return $"{(int)uptime.TotalDays}d {uptime.Hours}h";
+        if (uptime.TotalHours >= 1) return $"{(int)uptime.TotalHours}h {uptime.Minutes}m";
+        return $"{uptime.Minutes}m {uptime.Seconds}s";
+    }
+
+    string GetHealthDotClass(string status) => status?.ToLower() switch
+    {
+        "green" => "status-dot bg-success",
+        "yellow" => "status-dot bg-warning",
+        "red" => "status-dot bg-danger",
+        _ => "status-dot bg-secondary"
+    };
+}
+
+<style>
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+</style>

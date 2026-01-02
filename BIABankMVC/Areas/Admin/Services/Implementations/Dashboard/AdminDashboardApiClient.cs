@@ -30,5 +30,23 @@ namespace BankingSystemMVC.Areas.Admin.Services.Implementations.Dashboard
                 return null;
             }
         }
+
+        public async Task<SystemStatusViewModel?> GetSystemStatusAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("api/admin/systemstatus");
+                
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonHelper.Deserialize<SystemStatusViewModel>(json);
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

@@ -5,5 +5,6 @@ namespace BankingSystemMVC.Areas.Admin.Services.Interfaces.Dashboard
     public interface IAdminDashboardApiClient
     {
         Task<DashboardStatsViewModel?> GetDashboardStatsAsync();
+        Task<SystemStatusViewModel?> GetSystemStatusAsync();
     }
 }
