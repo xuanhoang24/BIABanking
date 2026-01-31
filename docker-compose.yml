@@ -2,6 +2,8 @@
   api:
     container_name: biabank-api
     build: ./BIABankAPI
+    depends_on:
+      - dotnet-newrelic-base
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/BIABankDb.db
